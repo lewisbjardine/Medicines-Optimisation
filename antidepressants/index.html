@@ -4,356 +4,17 @@
   <meta charset="UTF-8" />
   <title>Switch &amp; Stop AD</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <style>
-:root {
-  --nhs-blue: #005eb8;
-  --nhs-light-blue: #e5f0f9;
-  --nhs-grey: #425563;
-  --nhs-white: #ffffff;
-}
-
-body {
-  margin: 0;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  background: #f5f5f5;
-  color: #222;
-}
-
-header {
-  background: var(--nhs-blue);
-  color: var(--nhs-white);
-  padding: 1rem 1.5rem;
-}
-
-header h1 {
-  margin: 0;
-  font-size: 1.5rem;
-}
-
-header p {
-  margin: 0.25rem 0 0;
-  font-size: 0.9rem;
-  opacity: 0.9;
-}
-
-main {
-  max-width: 960px;
-  margin: 1.5rem auto;
-  padding: 0 1rem 2rem;
-}
-
-.tabs {
-  display: flex;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
-  flex-wrap: wrap;
-}
-
-.tab-button {
-  border: 1px solid var(--nhs-blue);
-  background: var(--nhs-white);
-  color: var(--nhs-blue);
-  padding: 0.5rem 0.9rem;
-  border-radius: 999px;
-  font-size: 0.95rem;
-  cursor: pointer;
-}
-
-.tab-button.active {
-  background: var(--nhs-blue);
-  color: var(--nhs-white);
-}
-
-.card {
-  background: var(--nhs-white);
-  border-radius: 0.5rem;
-  padding: 1rem 1.2rem;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.06);
-  margin-bottom: 1rem;
-}
-
-.card h2 {
-  margin-top: 0;
-  font-size: 1.2rem;
-  color: var(--nhs-grey);
-}
-
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 0.8rem 1.5rem;
-}
-
-/* 2×2 layout for switching header row: 
-   | Current AD | New AD |
-   | Current dose | Starting dose | */
-.switch-grid {
-  grid-template-columns: repeat(2, minmax(220px, 1fr));
-}
-
-.field label {
-  display: block;
-  font-size: 0.9rem;
-  font-weight: 600;
-  margin-bottom: 0.25rem;
-}
-
-.field select,
-.field input {
-  width: 100%;
-  padding: 0.4rem 0.5rem;
-  font-size: 0.95rem;
-  border-radius: 0.25rem;
-  border: 1px solid #ccc;
-  box-sizing: border-box;
-}
-
-.button-row {
-  margin-top: 1rem;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-button.primary {
-  background: var(--nhs-blue);
-  color: var(--nhs-white);
-  border: none;
-  padding: 0.6rem 1.1rem;
-  font-size: 0.95rem;
-  border-radius: 0.3rem;
-  cursor: pointer;
-}
-
-button.secondary {
-  background: var(--nhs-light-blue);
-  color: var(--nhs-grey);
-  border: none;
-  padding: 0.6rem 1.1rem;
-  font-size: 0.9rem;
-  border-radius: 0.3rem;
-  cursor: pointer;
-}
-
-button.primary:disabled,
-button.secondary:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.outputs {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1rem;
-}
-
-@media (min-width: 768px) {
-  .outputs {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-.output-box {
-  padding: 0.5rem;
-  border-radius: 0.3rem;
-  background: #fafafa;
-  border: 1px solid #ddd;
-  font-family: "SFMono-Regular", ui-monospace, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-  font-size: 0.9rem;
-  white-space: pre-wrap;
-  word-wrap: break-word;
-  min-height: 120px;
-  clear: both;
-}
-
-.output-label {
-  font-size: 0.85rem;
-  font-weight: 600;
-  margin-bottom: 0.25rem;
-  color: var(--nhs-grey);
-}
-
-.disclaimer {
-  font-size: 0.8rem;
-  color: #555;
-  margin-top: 0.5rem;
-}
-
-a.guideline-link {
-  color: var(--nhs-blue);
-  text-decoration: none;
-}
-
-a.guideline-link:hover {
-  text-decoration: underline;
-}
-
-.hidden {
-  display: none;
-}
-
-.copy-btn {
-  float: right;
-  margin-bottom: 4px;
-  background: var(--nhs-blue);
-  color: white;
-  border: none;
-  padding: 4px 10px;
-  font-size: 0.8rem;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.copy-btn.copied {
-  background: #2e7d32;
-}
-
-.taper-profile-row {
-  margin-top: 1rem;
-  font-size: 0.85rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-}
-
-.taper-profile-label {
-  font-weight: 600;
-  color: var(--nhs-grey);
-}
-
-.taper-profile-button {
-  border: 1px solid var(--nhs-blue);
-  background: var(--nhs-white);
-  color: var(--nhs-blue);
-  padding: 0.2rem 0.6rem;
-  border-radius: 999px;
-  font-size: 0.8rem;
-  cursor: pointer;
-}
-
-.taper-profile-button.active {
-  background: var(--nhs-blue);
-  color: var(--nhs-white);
-}
-
-.modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.4);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 999;
-}
-
-.modal {
-  background: var(--nhs-white);
-  max-width: 700px;
-  width: 95%;
-  max-height: 80vh;
-  overflow-y: auto;
-  border-radius: 0.5rem;
-  padding: 1rem 1.2rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-}
-
-.modal h3 {
-  margin-top: 0;
-  font-size: 1.1rem;
-  color: var(--nhs-grey);
-}
-
-.modal-options {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  margin-top: 0.5rem;
-}
-
-.modal-option {
-  border: 1px solid #ddd;
-  border-radius: 0.4rem;
-  padding: 0.6rem 0.7rem;
-  cursor: pointer;
-  background: #fafafa;
-}
-
-.modal-option.selected {
-  border-color: var(--nhs-blue);
-  box-shadow: 0 0 0 1px var(--nhs-blue);
-  background: #f0f6fd;
-}
-
-.modal-option-title {
-  font-weight: 600;
-  font-size: 0.95rem;
-  margin-bottom: 0.25rem;
-}
-
-.modal-option-body {
-  font-size: 0.85rem;
-  white-space: pre-wrap;
-}
-
-.modal-footer {
-  margin-top: 0.75rem;
-  display: flex;
-  justify-content: flex-end;
-  gap: 0.5rem;
-}
-
-.modal-footer button {
-  padding: 0.5rem 0.9rem;
-  font-size: 0.9rem;
-  border-radius: 0.3rem;
-  border: none;
-  cursor: pointer;
-}
-
-.btn-cancel {
-  background: #eee;
-  color: #333;
-}
-
-.btn-confirm {
-  background: var(--nhs-blue);
-  color: white;
-}
-
-.btn-confirm:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-footer {
-  max-width: 960px;
-  margin: 0 auto 1rem;
-  padding: 0 1rem;
-  font-size: 0.75rem;
-  color: #777;
-  text-align: right;
-}
-
-  </style>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 <header>
   <h1>Switch &amp; Stop AD</h1>
   <p>Helper for switching and stopping antidepressants in UK general practice (beta).</p>
+  <p><a href="../index.html" style="color:white;text-decoration:underline;">&larr; Back to Medicines Optimisation home</a></p>
 </header>
 
 <main>
   <!-- Global toggle for common vs all antidepressants -->
-  <div style="text-align:right; margin-bottom:0.5rem;">
-    <button
-      id="toggleAntidepressantList"
-      type="button"
-      style="background:none;border:none;color:#005eb8;padding:0;font-size:0.85rem;text-decoration:underline;cursor:pointer;"
-    >
-      Show all antidepressants ▼
-    </button>
-  </div>
 
   <div class="tabs">
     <button class="tab-button active" data-tab="switching">Switching</button>
@@ -669,7 +330,7 @@ footer {
       id: "mirtazapine",
       name: "Mirtazapine",
       class: "NaSSA",
-      dailyDoses: [15, 30, 45],
+      dailyDoses: [7.5, 15, 22.5, 30, 37.5, 45],
       halfLife: "medium",
       withdrawalRisk: "medium",
       ukLicensed: true,
@@ -956,8 +617,10 @@ footer {
   }
 
   // Populate drug lists with collapsed/expanded behaviour
+  
   function populateDrugSelect(selectEl, showAll, preferredValue) {
     selectEl.innerHTML = "";
+
     const baseList = showAll
       ? sortedAntidepressants
       : sortedAntidepressants.filter(d => commonVisibleIds.includes(d.id));
@@ -977,10 +640,30 @@ footer {
       selectEl.appendChild(opt);
     });
 
+    // Separator
+    const sep = document.createElement("option");
+    sep.disabled = true;
+    sep.textContent = "────────────";
+    selectEl.appendChild(sep);
+
+    // Meta option: show/hide all
+    const meta = document.createElement("option");
+    meta.value = showAll ? "__HIDE_EXTRA__" : "__SHOW_ALL__";
+    meta.textContent = showAll
+      ? "Hide extra antidepressants… ▲"
+      : "Show all antidepressants… ▼";
+    meta.style.fontWeight = "bold";
+    selectEl.appendChild(meta);
+
+    // Restore preferred selection if possible
     if (preferredValue && [...selectEl.options].some(o => o.value === preferredValue)) {
       selectEl.value = preferredValue;
-    } else if (selectEl.options.length) {
-      selectEl.selectedIndex = 0;
+    } else {
+      // Default to first real drug if available
+      const firstReal = [...selectEl.options].find(o => o.value && !o.disabled && !o.value.startsWith("__"));
+      if (firstReal) {
+        selectEl.value = firstReal.value;
+      }
     }
   }
 
@@ -1995,12 +1678,11 @@ footer {
       }, 1500);
     }
 
-    const option = e.target.closest(".modal-option");
-    if (option) {
+    if (e.target.classList.contains("modal-option")) {
       const options = document.querySelectorAll(".modal-option");
       options.forEach(o => o.classList.remove("selected"));
-      option.classList.add("selected");
-      selectedTaperOptionId = option.dataset.optionId;
+      e.target.classList.add("selected");
+      selectedTaperOptionId = e.target.dataset.optionId;
       document.getElementById("taperModalConfirm").disabled = false;
     }
 
@@ -2081,7 +1763,64 @@ footer {
     document.querySelector(`.tab-button[data-tab="${initialTab}"]`).classList.add("active");
     Object.keys(tabs).forEach(id => {
       tabs[id].classList.toggle("hidden", id !== initialTab);
+    
+    // Additional handler: respond to meta show/hide options inside dropdowns
+    function handleMetaOption(selectEl, doseSelect) {
+      const val = selectEl.value;
+      if (val === "__SHOW_ALL__" || val === "__HIDE_EXTRA__") {
+        // Toggle global flag
+        showAllAntidepressants = (val === "__SHOW_ALL__");
+        saveState({ showAllAntidepressants });
+
+        const currentFrom = fromDrugSelect.value;
+        const currentTo = toDrugSelect.value;
+        const currentStop = stopDrugSelect.value;
+
+        populateDrugSelect(fromDrugSelect, showAllAntidepressants, currentFrom);
+        populateDrugSelect(toDrugSelect, showAllAntidepressants, currentTo);
+        populateDrugSelect(stopDrugSelect, showAllAntidepressants, currentStop);
+
+        populateDoseSelect(fromDrugSelect.value, fromDoseSelect, state.fromDose);
+        populateToDrugDose(toDrugSelect.value, toDrugDoseSelect, state.toDrugDose);
+        populateDoseSelect(stopDrugSelect.value, stopDoseSelect, state.stopDose);
+      }
+    }
+
+    fromDrugSelect.addEventListener("change", () => {
+      handleMetaOption(fromDrugSelect, fromDoseSelect);
     });
+    toDrugSelect.addEventListener("change", () => {
+      handleMetaOption(toDrugSelect, toDrugDoseSelect);
+    });
+    stopDrugSelect.addEventListener("change", () => {
+      handleMetaOption(stopDrugSelect, stopDoseSelect);
+    });
+
+    // Collapse back to common list when clicking outside antidepressant selects
+    document.addEventListener("click", (ev) => {
+      const isInSelect =
+        ev.target.closest("#fromDrug") ||
+        ev.target.closest("#toDrug") ||
+        ev.target.closest("#stopDrug");
+
+      if (!isInSelect && showAllAntidepressants) {
+        showAllAntidepressants = false;
+        saveState({ showAllAntidepressants });
+
+        const currentFrom = fromDrugSelect.value;
+        const currentTo = toDrugSelect.value;
+        const currentStop = stopDrugSelect.value;
+
+        populateDrugSelect(fromDrugSelect, showAllAntidepressants, currentFrom);
+        populateDrugSelect(toDrugSelect, showAllAntidepressants, currentTo);
+        populateDrugSelect(stopDrugSelect, showAllAntidepressants, currentStop);
+
+        populateDoseSelect(fromDrugSelect.value, fromDoseSelect, state.fromDose);
+        populateToDrugDose(toDrugSelect.value, toDrugDoseSelect, state.toDrugDose);
+        populateDoseSelect(stopDrugSelect.value, stopDoseSelect, state.stopDose);
+      }
+    });
+});
 
     const profileButtons = document.querySelectorAll(".taper-profile-button");
     profileButtons.forEach(btn => {
