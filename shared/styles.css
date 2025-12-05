@@ -1,1 +1,226 @@
-/* shared styles placeholder */
+/* ----------------------------------------------
+   GLOBAL NHS STYLE — EXACTLY MATCHING ORIGINAL
+---------------------------------------------- */
+
+:root {
+  --nhs-blue: #005eb8;
+  --nhs-light-blue: #0072ce;
+  --nhs-dark-blue: #003087;
+  --nhs-grey: #f0f4f5;
+  --nhs-text: #212b32;
+  --nhs-border: #d8dde0;
+}
+
+/* RESET */
+body, h1, h2, h3, p, button, select, input, label {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  color: var(--nhs-text);
+}
+
+body {
+  background: #ffffff;
+  line-height: 1.5;
+  padding-bottom: 50px;
+}
+
+/* HEADER */
+header {
+  background: var(--nhs-blue);
+  color: white;
+  padding: 20px;
+  border-bottom: 5px solid var(--nhs-dark-blue);
+  margin-bottom: 20px;
+  text-align: center;
+}
+header h1 {
+  color: white;
+  margin-bottom: 8px;
+}
+
+/* RETURN TO HOMEPAGE BUTTON */
+.return-home {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: var(--nhs-light-blue);
+  color: white !important;
+  padding: 8px 14px;
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: bold;
+}
+.return-home:hover {
+  background: var(--nhs-dark-blue);
+}
+
+/* CARD BLOCKS */
+.card {
+  background: var(--nhs-grey);
+  padding: 20px;
+  border-radius: 6px;
+  border: 1px solid var(--nhs-border);
+  margin-bottom: 20px;
+}
+
+/* LABELS */
+label {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 5px;
+}
+
+/* SELECT INPUTS */
+select {
+  padding: 8px;
+  font-size: 14px;
+  width: 100%;
+  border-radius: 4px;
+  border: 1px solid var(--nhs-border);
+}
+
+/* BUTTONS */
+button {
+  padding: 10px 16px;
+  background: var(--nhs-blue);
+  border: none;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 10px;
+  font-size: 14px;
+}
+button:hover {
+  background: var(--nhs-dark-blue);
+}
+
+.secondary {
+  background: #ffffff;
+  color: var(--nhs-blue);
+  border: 2px solid var(--nhs-blue);
+}
+.secondary:hover {
+  background: var(--nhs-grey);
+}
+
+/* GRID LAYOUT */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+/* TABS */
+.tabs {
+  display: flex;
+  margin-bottom: 15px;
+}
+
+.tab-button {
+  flex: 1;
+  padding: 10px;
+  text-align: center;
+  background: var(--nhs-grey);
+  border: 1px solid var(--nhs-border);
+  cursor: pointer;
+  font-weight: bold;
+}
+.tab-button.active {
+  background: var(--nhs-blue);
+  color: white;
+  border-bottom: 2px solid var(--nhs-dark-blue);
+}
+
+.tab.hidden {
+  display: none;
+}
+
+/* OUTPUT BOXES */
+.output-box {
+  background: white;
+  border: 1px solid var(--nhs-border);
+  padding: 10px;
+  white-space: pre-wrap;
+  min-height: 90px;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+/* COPY BUTTONS */
+.copy-btn {
+  float: right;
+  background: var(--nhs-light-blue);
+  padding: 6px 12px;
+  font-size: 12px;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.copy-btn:hover {
+  background: var(--nhs-dark-blue);
+}
+
+/* TAPER PROFILE BUTTONS */
+.taper-profile-row {
+  margin-top: 15px;
+}
+.taper-profile-button {
+  display: inline-block;
+  margin-right: 8px;
+  background: white;
+  color: var(--nhs-blue);
+  border: 2px solid var(--nhs-blue);
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.taper-profile-button.active {
+  background: var(--nhs-blue);
+  color: white;
+}
+
+/* MODAL */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+}
+.modal-overlay.hidden {
+  display: none;
+}
+
+.modal {
+  background: white;
+  padding: 20px;
+  border-radius: 6px;
+  width: 90%;
+  max-width: 500px;
+}
+
+.modal-option {
+  border: 1px solid var(--nhs-border);
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+.modal-option.selected {
+  border-color: var(--nhs-blue);
+  background: var(--nhs-grey);
+}
+
+/* FOOTER */
+footer {
+  margin-top: 40px;
+  padding: 20px;
+  text-align: center;
+  opacity: 0.6;
+  font-size: 14px;
+}
