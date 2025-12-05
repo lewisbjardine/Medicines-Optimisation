@@ -2,146 +2,200 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Antidepressant Switching & Stopping</title>
+  <title>Antidepressant Switching & Tapering – Medicines Optimisation</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <!-- Shared NHS styling -->
-  <link rel="stylesheet" href="../shared/styles.css" />
-
-  <!-- Module-specific styling -->
-  <link rel="stylesheet" href="styles.css" />
+  <!-- Styles -->
+  <link rel="stylesheet" href="../shared/styles.css">
+  <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
-<header class="site-header">
-  <h1>Antidepressant Switching & Stopping</h1>
-  <p>
-    Evidence-informed guidance for switching between antidepressants and planning tapering.
-  </p>
+
+<header>
+  <h1>Antidepressant Switching & Tapering Tool</h1>
+  <p>This tool supports clinicians in planning safe switches and gradual dose reductions.</p>
 </header>
 
 <main>
-  <p><a href="../index.html">&larr; Back to toolkit home</a></p>
 
   <!-- Tabs -->
   <div class="tabs">
-    <button class="tab-button active" data-tab="switching">Switching</button>
-    <button class="tab-button" data-tab="stopping">Stopping / Cessation</button>
+    <button class="tab-button active" data-tab="switchTab">Switch Antidepressant</button>
+    <button class="tab-button" data-tab="stopTab">Stop / Taper Antidepressant</button>
   </div>
 
   <!-- SWITCHING TAB -->
-  <section id="switching" class="tab card">
-    <h2>Switch between antidepressants</h2>
+  <section id="switchTab" class="tab">
 
-    <div class="grid switch-grid">
-      <div class="field">
-        <label for="fromDrug">Current antidepressant</label>
-        <select id="fromDrug"></select>
+    <div class="card">
+      <h2>Switching Plan</h2>
+
+      <div class="grid switch-grid">
+        <div class="field">
+          <label for="fromDrug">Current antidepressant</label>
+          <select id="fromDrug"></select>
+        </div>
+
+        <div class="field">
+          <label for="fromDose">Current daily dose</label>
+          <select id="fromDose"></select>
+        </div>
+
+        <div class="field">
+          <label for="toDrug">New antidepressant</label>
+          <select id="toDrug"></select>
+        </div>
+
+        <div class="field">
+          <label for="toDrugDose">Recommended starting dose</label>
+          <select id="toDrugDose"></select>
+        </div>
       </div>
 
-      <div class="field">
-        <label for="toDrug">New antidepressant</label>
-        <select id="toDrug"></select>
+      <div class="button-row">
+        <button id="generateSwitch" class="primary">Generate Switching Plan</button>
+        <button id="clearSwitch" class="secondary">Clear</button>
       </div>
+    </div>
 
-      <div class="field">
-        <label for="fromDose">Current dose (mg/day)</label>
-        <select id="fromDose"></select>
-      </div>
+    <!-- Outputs -->
+    <div class="card">
+      <h2>Outputs</h2>
 
-      <div class="field">
-        <label for="toDrugDose">Starting dose (mg/day)</label>
-        <select id="toDrugDose"></select>
+      <div class="outputs">
+
+        <div>
+          <div class="output-label">Clinician Summary
+            <button class="copy-btn" data-target="switchClinician">Copy</button>
+          </div>
+          <pre id="switchClinician" class="output-box"></pre>
+        </div>
+
+        <div>
+          <div class="output-label">SMS to Patient
+            <button class="copy-btn" data-target="switchSMS">Copy</button>
+          </div>
+          <pre id="switchSMS" class="output-box"></pre>
+        </div>
+
+        <div>
+          <div class="output-label">Tablet / Capsule Helper
+            <button class="copy-btn" data-target="switchTablets">Copy</button>
+          </div>
+          <pre id="switchTablets" class="output-box"></pre>
+        </div>
+
       </div>
     </div>
 
-    <div class="button-row">
-      <button class="primary" id="generateSwitch">Generate plan</button>
-      <button class="secondary" id="clearSwitch">Clear</button>
-    </div>
-
-    <div class="outputs">
-      <div>
-        <div class="output-label">Clinician note</div>
-        <button class="copy-btn" data-target="switchClinician">Copy</button>
-        <div id="switchClinician" class="output-box"></div>
-
-        <div class="output-label" style="margin-top:1rem;">Tablet / capsule counts</div>
-        <button class="copy-btn" data-target="switchTablets">Copy</button>
-        <div id="switchTablets" class="output-box"></div>
-      </div>
-
-      <div>
-        <div class="output-label">Patient SMS version</div>
-        <button class="copy-btn" data-target="switchSMS">Copy</button>
-        <div id="switchSMS" class="output-box"></div>
-      </div>
-    </div>
   </section>
 
-  <!-- STOPPING TAB -->
-  <section id="stopping" class="tab card hidden">
-    <h2>Plan antidepressant cessation</h2>
 
-    <div class="grid">
-      <div class="field">
-        <label for="stopDrug">Antidepressant</label>
-        <select id="stopDrug"></select>
+  <!-- STOPPING / TAPERING TAB -->
+  <section id="stopTab" class="tab hidden">
+
+    <div class="card">
+      <h2>Tapering / Stopping Plan</h2>
+
+      <div class="grid switch-grid">
+
+        <div class="field">
+          <label for="stopDrug">Antidepressant to reduce</label>
+          <select id="stopDrug"></select>
+        </div>
+
+        <div class="field">
+          <label for="stopDose">Current daily dose</label>
+          <select id="stopDose"></select>
+        </div>
+
+        <div class="field">
+          <label for="duration">Duration of use</label>
+          <select id="duration">
+            <option value="">Select duration…</option>
+            <option value="short">Short (&lt; 6 weeks)</option>
+            <option value="medium">6 weeks – 6 months</option>
+            <option value="long">6 months – 2 years</option>
+            <option value="very_long">&gt; 2 years</option>
+          </select>
+        </div>
+
       </div>
 
-      <div class="field">
-        <label for="stopDose">Current dose (mg/day)</label>
-        <select id="stopDose"></select>
+      <!-- Taper profile -->
+      <div class="taper-profile-row">
+        <span class="taper-profile-label">Taper profile:</span>
+        <button class="taper-profile-button active" data-profile="standard">Standard</button>
+        <button class="taper-profile-button" data-profile="extended">Extended</button>
+        <button class="taper-profile-button" data-profile="slow">Slow</button>
       </div>
 
-      <div class="field">
-        <label for="duration">Duration of continuous use</label>
-        <select id="duration">
-          <option value="short">&lt; 6 weeks</option>
-          <option value="medium">6 weeks – 6 months</option>
-          <option value="long">6 – 24 months</option>
-          <option value="very_long">&gt; 2 years</option>
-        </select>
+      <div class="button-row">
+        <button id="generateStop" class="primary">Generate Taper Plan</button>
+        <button id="clearStop" class="secondary">Clear</button>
       </div>
+
     </div>
 
-    <div class="taper-profile-row">
-      <span class="taper-profile-label">Taper profile:</span>
-      <button class="taper-profile-button active" data-profile="standard">Standard</button>
-      <button class="taper-profile-button" data-profile="extended">Extended</button>
-      <button class="taper-profile-button" data-profile="slow">Slow</button>
-    </div>
+    <!-- Outputs -->
+    <div class="card">
+      <h2>Outputs</h2>
 
-    <div class="button-row">
-      <button class="primary" id="generateStop">Generate taper</button>
-      <button class="secondary" id="clearStop">Clear</button>
-    </div>
+      <div class="outputs">
 
-    <div class="outputs">
-      <div>
-        <div class="output-label">Clinician note</div>
-        <button class="copy-btn" data-target="stopClinician">Copy</button>
-        <div id="stopClinician" class="output-box"></div>
+        <div>
+          <div class="output-label">Clinician Summary
+            <button class="copy-btn" data-target="stopClinician">Copy</button>
+          </div>
+          <pre id="stopClinician" class="output-box"></pre>
+        </div>
 
-        <div class="output-label" style="margin-top:1rem;">Tablet / capsule counts</div>
-        <button class="copy-btn" data-target="stopTablets">Copy</button>
-        <div id="stopTablets" class="output-box"></div>
+        <div>
+          <div class="output-label">SMS to Patient
+            <button class="copy-btn" data-target="stopSMS">Copy</button>
+          </div>
+          <pre id="stopSMS" class="output-box"></pre>
+        </div>
+
+        <div>
+          <div class="output-label">Tablet / Capsule Helper
+            <button class="copy-btn" data-target="stopTablets">Copy</button>
+          </div>
+          <pre id="stopTablets" class="output-box"></pre>
+        </div>
+
       </div>
 
-      <div>
-        <div class="output-label">Patient SMS version</div>
-        <button class="copy-btn" data-target="stopSMS">Copy</button>
-        <div id="stopSMS" class="output-box"></div>
-      </div>
     </div>
+
   </section>
 
 </main>
 
+
+<!-- MODAL -->
+<div id="taperModal" class="modal-overlay hidden" aria-hidden="true">
+  <div class="modal">
+    <h3 id="taperModalTitle">Choose taper option</h3>
+    <p id="taperModalDescription"></p>
+
+    <div id="taperModalOptions" class="modal-options"></div>
+
+    <div class="modal-footer">
+      <button id="taperModalCancel" class="btn-cancel">Cancel</button>
+      <button id="taperModalConfirm" class="btn-confirm" disabled>Confirm</button>
+    </div>
+  </div>
+</div>
+
+
 <footer>
-  <p>Antidepressant Switching &amp; Stopping – Medicines Optimisation Toolkit</p>
+  Medicines Optimisation Toolkit – Antidepressant Module
 </footer>
 
+<!-- SCRIPT -->
 <script src="module.js"></script>
+
 </body>
 </html>
