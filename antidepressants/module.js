@@ -1,6 +1,6 @@
 // ============================
 // Antidepressant Switch & Stop Tool
-// Restored full behaviour
+// Fully restored behaviour
 // ============================
 
 // ---- GLOBAL STATE ----
@@ -19,6 +19,7 @@ const HIDE_EXTRA_VALUE = "__HIDE_EXTRA__";
 
 // ---- ANTIDEPRESSANT DATA ----
 const antidepressants = [
+  // -------- SSRIs ----------
   {
     id: "sertraline",
     name: "Sertraline",
@@ -139,7 +140,7 @@ const antidepressants = [
     geriatricStart: 30
   },
 
-  // -------- NaSSA ----------
+  // -------- NaSSA / atypical ----------
   {
     id: "mirtazapine",
     name: "Mirtazapine",
@@ -166,8 +167,6 @@ const antidepressants = [
     recommendedStart: 10,
     geriatricStart: 5
   },
-
-  // -------- OTHER ----------
   {
     id: "agomelatine",
     name: "Agomelatine",
@@ -209,7 +208,6 @@ const antidepressants = [
     recommendedStart: 25,
     geriatricStart: 10
   },
-
   {
     id: "clomipramine",
     name: "Clomipramine",
@@ -223,7 +221,6 @@ const antidepressants = [
     recommendedStart: 25,
     geriatricStart: 10
   },
-
   {
     id: "dosulepin",
     name: "Dosulepin (dothiepin – not recommended)",
@@ -237,7 +234,6 @@ const antidepressants = [
     recommendedStart: 25,
     geriatricStart: 25
   },
-
   {
     id: "doxepin",
     name: "Doxepin",
@@ -251,7 +247,6 @@ const antidepressants = [
     recommendedStart: 25,
     geriatricStart: 10
   },
-
   {
     id: "imipramine",
     name: "Imipramine",
@@ -264,14 +259,7 @@ const antidepressants = [
     unitStrengths: [50, 25, 10],
     recommendedStart: 25,
     geriatricStart: 10
-  }
-];
-
-// END OF PART 1
-// ============================
-// module.js — PART 2
-// ============================
-
+  },
   {
     id: "lofepramine",
     name: "Lofepramine",
@@ -285,7 +273,6 @@ const antidepressants = [
     recommendedStart: 70,
     geriatricStart: 70
   },
-
   {
     id: "nortriptyline",
     name: "Nortriptyline",
@@ -299,7 +286,6 @@ const antidepressants = [
     recommendedStart: 25,
     geriatricStart: 10
   },
-
   {
     id: "trimipramine",
     name: "Trimipramine",
@@ -313,7 +299,6 @@ const antidepressants = [
     recommendedStart: 25,
     geriatricStart: 10
   },
-
   {
     id: "mianserin",
     name: "Mianserin",
@@ -329,7 +314,6 @@ const antidepressants = [
   },
 
   // ------------ MAOIs (specialist only) ------------
-
   {
     id: "phenelzine",
     name: "Phenelzine (MAOI – specialist only)",
@@ -344,7 +328,6 @@ const antidepressants = [
     recommendedStart: 15,
     geriatricStart: 15
   },
-
   {
     id: "tranylcypromine",
     name: "Tranylcypromine (MAOI – specialist only)",
@@ -359,7 +342,6 @@ const antidepressants = [
     recommendedStart: 10,
     geriatricStart: 10
   },
-
   {
     id: "isocarboxazid",
     name: "Isocarboxazid (MAOI – specialist only)",
@@ -374,7 +356,6 @@ const antidepressants = [
     recommendedStart: 10,
     geriatricStart: 10
   },
-
   {
     id: "moclobemide",
     name: "Moclobemide (reversible MAOI – specialist only)",
@@ -397,10 +378,6 @@ const antidepressants = [
 
 function getDrugById(id) {
   return antidepressants.find(d => d.id === id) || null;
-}
-
-function formatDose(d) {
-  return `${d} mg`;
 }
 
 function describeHalfLife(drug) {
@@ -429,7 +406,6 @@ function describeWithdrawalRisk(drug) {
 
 const fromDrugSelect = document.getElementById("fromDrug");
 const fromDoseSelect = document.getElementById("fromDose");
-
 const toDrugSelect = document.getElementById("toDrug");
 const toDrugDoseSelect = document.getElementById("toDrugDose");
 
@@ -453,9 +429,7 @@ const clearStopButton = document.getElementById("clearStop");
 
 const tabButtons = document.querySelectorAll(".tab-button");
 const tabs = document.querySelectorAll(".tab");
-
 const copyButtons = document.querySelectorAll(".copy-btn");
-
 const taperProfileButtons = document.querySelectorAll(".taper-profile-button");
 
 const taperModal = document.getElementById("taperModal");
@@ -465,9 +439,8 @@ const taperModalOptions = document.getElementById("taperModalOptions");
 const taperModalCancel = document.getElementById("taperModalCancel");
 const taperModalConfirm = document.getElementById("taperModalConfirm");
 
-// END OF PART 2
 // ============================
-// PART 3 — Dropdown Population & UI Helpers
+// Dropdowns
 // ============================
 
 function populateDrugSelect(selectEl, showAll = false, selectedValue = null) {
@@ -503,7 +476,6 @@ function populateDoseSelect(drugSelect, doseSelect) {
   const drug = getDrugById(drugSelect.value);
   doseSelect.innerHTML = "";
   if (!drug) return;
-
   drug.dailyDoses.forEach(d => {
     const opt = document.createElement("option");
     opt.value = d;
@@ -542,7 +514,7 @@ function handleDrugSelectChange(selectEl, doseSelect) {
   }
 }
 
-// Click outside to collapse "show all" list
+// collapse back from "show all" if click outside
 document.addEventListener("click", (ev) => {
   const isDropdown =
     ev.target.closest("#fromDrug") ||
@@ -556,7 +528,7 @@ document.addEventListener("click", (ev) => {
 });
 
 // ============================
-// Copy Buttons
+// Copy buttons
 // ============================
 
 copyButtons.forEach(btn => {
@@ -564,7 +536,6 @@ copyButtons.forEach(btn => {
     const targetId = btn.dataset.target;
     const el = document.getElementById(targetId);
     if (!el) return;
-
     const text = el.textContent || "";
 
     navigator.clipboard.writeText(text).then(
@@ -592,14 +563,13 @@ tabButtons.forEach(btn => {
   btn.addEventListener("click", () => {
     tabButtons.forEach(b => b.classList.remove("active"));
     btn.classList.add("active");
-
     const tabName = btn.dataset.tab;
     tabs.forEach(t => t.classList.toggle("hidden", t.id !== tabName));
   });
 });
 
 // ============================
-// Taper Profiles
+// Taper profile
 // ============================
 
 function setTaperProfile(profile) {
@@ -620,7 +590,7 @@ taperProfileButtons.forEach(btn => {
 });
 
 // ============================
-// Modal Helpers
+// Modal helpers
 // ============================
 
 function openTaperModal(context, options) {
@@ -640,12 +610,10 @@ function openTaperModal(context, options) {
     div.dataset.id = opt.id;
 
     const title = document.createElement("div");
-    title.className = "modal-option-title";
     title.textContent = opt.title;
     div.appendChild(title);
 
     const body = document.createElement("div");
-    body.className = "modal-option-body";
     body.textContent = opt.description;
     div.appendChild(body);
 
@@ -665,7 +633,6 @@ function openTaperModal(context, options) {
 function closeTaperModal() {
   taperModal.classList.add("hidden");
   if (lastFocusedElementBeforeModal) lastFocusedElementBeforeModal.focus();
-
   pendingTaperContext = null;
   pendingTaperOptions = [];
   selectedTaperOptionId = null;
@@ -678,7 +645,6 @@ taperModalConfirm.addEventListener("click", () => {
     closeTaperModal();
     return;
   }
-
   const chosen = pendingTaperOptions.find(o => o.id === selectedTaperOptionId);
   if (!chosen) return closeTaperModal();
 
@@ -689,21 +655,18 @@ taperModalConfirm.addEventListener("click", () => {
   closeTaperModal();
 });
 
-// Close modal when clicking background
 taperModal.addEventListener("click", e => {
   if (e.target === taperModal) closeTaperModal();
 });
 
-// Close modal on ESC
 document.addEventListener("keydown", e => {
   if (e.key === "Escape" && !taperModal.classList.contains("hidden")) {
     closeTaperModal();
   }
 });
 
-// END OF PART 3
 // ============================
-// PART 4 — Switching Logic
+// Switching logic
 // ============================
 
 function clearSwitchOutputs() {
@@ -762,7 +725,6 @@ function generateSwitchPlan() {
   const toHighRisk =
     toDrug.withdrawalRisk === "high" || toDrug.withdrawalRisk === "very_high";
 
-  // ----- SSRI → SSRI (simple switch)
   if (fromDrug.class === "SSRI" && toDrug.class === "SSRI" && !fromHighRisk && !toHighRisk) {
     clinician +=
       "1. Direct switch recommended: stop the current SSRI one day and start the new SSRI the next day.\n";
@@ -773,11 +735,7 @@ function generateSwitchPlan() {
       `We are changing your antidepressant from ${fromDrug.name} to ${toDrug.name}. ` +
       `You will stop ${fromDrug.name} one day and start ${toDrug.name} the next at ${toDose} mg. ` +
       `Please contact us if symptoms worsen or side effects occur.`;
-
-  }
-
-  // ----- Fluoxetine special case (long half-life)
-  else if (fromDrug.id === "fluoxetine") {
+  } else if (fromDrug.id === "fluoxetine") {
     clinician +=
       "Fluoxetine has a very long half-life. Recommended strategy:\n";
     clinician += "1. Stop fluoxetine.\n";
@@ -787,43 +745,29 @@ function generateSwitchPlan() {
     sms =
       `We are switching you from fluoxetine to ${toDrug.name}. ` +
       "After stopping fluoxetine, there will be a short gap before starting the new medicine.";
-
-  }
-
-  // ----- TCA → SSRI
-  else if (fromDrug.class === "TCA" && toDrug.class === "SSRI") {
+  } else if (fromDrug.class === "TCA" && toDrug.class === "SSRI") {
     clinician +=
-      "1. Reduce TCA dose by 50% for 1–2 weeks.\n";
-    clinician +=
-      "2. Start SSRI at low dose while continuing reduced TCA.\n";
-    clinician +=
+      "1. Reduce TCA dose by 50% for 1–2 weeks.\n" +
+      "2. Start SSRI at low dose while continuing reduced TCA.\n" +
       "3. Stop TCA when SSRI tolerated.\n";
 
     sms =
       `We are gradually changing you from ${fromDrug.name} to ${toDrug.name}. ` +
       "We will reduce your current dose before introducing the new medicine.";
-
-  }
-
-  // ----- SSRI → SNRI (e.g., sertraline → venlafaxine)
-  else if (fromDrug.class === "SSRI" && toDrug.class === "SNRI") {
+  } else if (fromDrug.class === "SSRI" && toDrug.class === "SNRI") {
     clinician +=
-      "1. A direct switch or short cross-taper is acceptable depending on symptoms.\n";
-    clinician += "2. Start SNRI at a low dose.\n";
+      "1. A direct switch or short cross-taper is acceptable depending on symptoms.\n" +
+      "2. Start SNRI at a low dose.\n";
 
     sms =
       `We are changing from ${fromDrug.name} to ${toDrug.name}. ` +
       "Your clinician will introduce the new medicine gradually.";
-
-  }
-
-  // ----- Default complex switch behaviour
-  else {
+  } else {
     clinician +=
-      "This switch is more complex. Recommended approach:\n";
-    clinician += "1. Gradual taper of current antidepressant.\n";
-    clinician += "2. After reduction, introduce new antidepressant cautiously.\n";
-    clinician += "3. Consider specialist input in complex patients.\n";
+      "This switch is more complex. Recommended approach:\n" +
+      "1. Gradual taper of current antidepressant.\n" +
+      "2. After reduction, introduce new antidepressant cautiously.\n" +
+      "3. Consider specialist input in complex patients.\n";
 
     sms =
       `We are changing your antidepressant from ${fromDrug.name} to ${toDrug.name}. ` +
@@ -842,7 +786,7 @@ function generateSwitchPlan() {
 }
 
 // ============================
-// STOPPING / TAPERING LOGIC
+// Stopping / tapering
 // ============================
 
 function clearStopOutputs() {
@@ -862,7 +806,6 @@ function generateStopPlan() {
   const drugId = stopDrugSelect.value;
   const dose = parseFloat(stopDoseSelect.value);
   const duration = durationSelect.value;
-
   const drug = getDrugById(drugId);
 
   if (!drug || !dose || !duration) {
@@ -877,68 +820,49 @@ function generateStopPlan() {
 
   clinician += `Stopping plan for ${drug.name}.\n`;
   clinician += `Current dose: ${dose} mg daily.\n\n`;
-
-  clinician +=
-    `Half-life: ${describeHalfLife(drug)}.\n` +
-    `Withdrawal risk: ${describeWithdrawalRisk(drug)}.\n\n`;
+  clinician += `Half-life: ${describeHalfLife(drug)}.\n`;
+  clinician += `Withdrawal risk: ${describeWithdrawalRisk(drug)}.\n\n`;
+  clinician += `Selected taper profile: ${taperProfile.toUpperCase()}\n\n`;
 
   const highWithdrawal =
     drug.withdrawalRisk === "high" || drug.withdrawalRisk === "very_high";
 
-  clinician += `Selected taper profile: ${taperProfile.toUpperCase()}\n\n`;
-
-  // Build taper text
   let taperText = "";
   let smsCore = "";
 
-  // ----- SHORT DURATION (<6 weeks)
   if (duration === "short") {
     if (taperProfile === "standard") {
-      taperText +=
-        "- Reduce dose by ~50% for 1–2 weeks, then stop.\n";
+      taperText += "- Reduce dose by ~50% for 1–2 weeks, then stop.\n";
       smsCore = "We will reduce your dose by half for 1–2 weeks, then stop.";
     } else if (taperProfile === "extended") {
-      taperText +=
-        "- Reduce dose over 2–4 weeks with 25–50% steps.\n";
+      taperText += "- Reduce dose over 2–4 weeks with 25–50% steps.\n";
       smsCore = "We will reduce your dose more gradually over a few weeks.";
     } else {
-      taperText +=
-        "- Reduce dose by ~25% every 2–4 weeks.\n";
+      taperText += "- Reduce dose by ~25% every 2–4 weeks.\n";
       smsCore = "We will taper very gradually with small reductions.";
     }
-  }
-
-  // ----- MEDIUM DURATION (6w–6m)
-  else if (duration === "medium") {
+  } else if (duration === "medium") {
     if (taperProfile === "standard") {
       taperText +=
         "- Reduce dose in 2–3 steps over 4–8 weeks (e.g., 50% every 2–4 weeks).\n";
-      smsCore =
-        "Your dose will be reduced over 1–2 months at a moderate pace.";
+      smsCore = "Your dose will be reduced over 1–2 months at a moderate pace.";
     } else if (taperProfile === "extended") {
-      taperText +=
-        "- Reduce dose by 25–33% every 3–4 weeks.\n";
+      taperText += "- Reduce dose by 25–33% every 3–4 weeks.\n";
       smsCore = "We will taper your dose gradually over several weeks.";
     } else {
-      taperText +=
-        "- Reduce dose by 10–25% every 4–6 weeks.\n";
+      taperText += "- Reduce dose by 10–25% every 4–6 weeks.\n";
       smsCore = "We will taper very slowly with small reductions.";
     }
-  }
-
-  // ----- LONG TERM (>6 months OR high withdrawal)
-  else if (duration === "long" || duration === "very_long" || highWithdrawal) {
+  } else if (duration === "long" || duration === "very_long" || highWithdrawal) {
     if (taperProfile === "standard") {
       taperText +=
         "- Reduce 25–50% every 2–4 weeks; smaller reductions as dose becomes low.\n";
       smsCore = "We will reduce your medicine gradually over several months.";
     } else if (taperProfile === "extended") {
-      taperText +=
-        "- Reduce dose by 10–25% every 4–6 weeks.\n";
+      taperText += "- Reduce dose by 10–25% every 4–6 weeks.\n";
       smsCore = "We will make modest reductions every few weeks.";
     } else {
-      taperText +=
-        "- Reduce dose by 5–10% every 4–8+ weeks.\n";
+      taperText += "- Reduce dose by 5–10% every 4–8+ weeks.\n";
       smsCore = "We will taper your dose very slowly with small changes.";
     }
   }
@@ -954,7 +878,6 @@ function generateStopPlan() {
     `• ${drug.name}: UK strengths ${drug.unitStrengths.join(" mg, ")} mg.\n` +
     "Consider liquid or smaller strengths for small reductions.";
 
-  // modal required?
   const needsModal =
     (duration !== "short") &&
     (highWithdrawal || duration === "long" || duration === "very_long") &&
@@ -1002,19 +925,17 @@ function generateStopPlan() {
 }
 
 // ============================
-// Event Listeners
+// Event listeners & init
 // ============================
 
 fromDrugSelect.addEventListener("change", () => {
   handleDrugSelectChange(fromDrugSelect, fromDoseSelect);
   clearSwitchOutputs();
 });
-
 toDrugSelect.addEventListener("change", () => {
   handleDrugSelectChange(toDrugSelect, toDrugDoseSelect);
   clearSwitchOutputs();
 });
-
 stopDrugSelect.addEventListener("change", () => {
   handleDrugSelectChange(stopDrugSelect, stopDoseSelect);
   clearStopOutputs();
@@ -1022,38 +943,22 @@ stopDrugSelect.addEventListener("change", () => {
 
 fromDoseSelect.addEventListener("change", clearSwitchOutputs);
 toDrugDoseSelect.addEventListener("change", clearSwitchOutputs);
-
 stopDoseSelect.addEventListener("change", clearStopOutputs);
 durationSelect.addEventListener("change", clearStopOutputs);
 
 generateSwitchButton.addEventListener("click", generateSwitchPlan);
 clearSwitchButton.addEventListener("click", clearSwitchOutputs);
-
 generateStopButton.addEventListener("click", generateStopPlan);
 clearStopButton.addEventListener("click", clearStopOutputs);
 
-// END OF PART 4
-// ============================
-// PART 5 — INITIALISATION
-// ============================
-
 document.addEventListener("DOMContentLoaded", () => {
-  // Populate dropdowns
   initialiseDropdowns();
-
-  // Default taper profile
   setTaperProfile("standard");
 
-  // Clear output areas on load
-  switchClinicianOutput.textContent = "";
-  switchSMSOutput.textContent = "";
-  switchTabletsOutput.textContent = "";
-  stopClinicianOutput.textContent = "";
-  stopSMSOutput.textContent = "";
-  stopTabletsOutput.textContent = "";
+  clearSwitchOutputs();
+  clearStopOutputs();
 });
 
-
 // ============================
-// END OF FULL MODULE.JS
+// END OF MODULE
 // ============================
