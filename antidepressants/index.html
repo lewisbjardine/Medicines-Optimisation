@@ -1,1 +1,170 @@
-<h1>Antidepressant module placeholder</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Antidepressant Switching & Tapering</title>
+
+  <!-- Load shared NHS styling -->
+  <link rel="stylesheet" href="../shared/styles.css">
+</head>
+
+<body>
+
+<!-- Return to homepage -->
+<a href="https://lewisbjardine.github.io/Medicines-Optimisation/" class="return-home">← Homepage</a>
+
+<header>
+  <h1>Switch & Stop Antidepressants</h1>
+  <p>Clinical helper for switching and tapering antidepressants in UK general practice.</p>
+</header>
+
+<main>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab-button active" data-tab="switchTab">Switching</button>
+    <button class="tab-button" data-tab="stopTab">Stopping / Tapering</button>
+  </div>
+
+  <!-- SWITCH TAB -->
+  <section id="switchTab" class="tab">
+    <div class="card">
+      <h2>Switch antidepressant</h2>
+
+      <div class="grid">
+        <div>
+          <label>Current antidepressant</label>
+          <select id="fromDrug"></select>
+        </div>
+
+        <div>
+          <label>Current dose</label>
+          <select id="fromDose"></select>
+        </div>
+
+        <div>
+          <label>New antidepressant</label>
+          <select id="toDrug"></select>
+        </div>
+
+        <div>
+          <label>Suggested starting dose</label>
+          <select id="toDrugDose"></select>
+        </div>
+      </div>
+
+      <button id="generateSwitch">Generate plan</button>
+      <button class="secondary" id="clearSwitch">Clear</button>
+    </div>
+
+    <div class="card">
+      <h2>Outputs</h2>
+
+      <div>
+        <div>Clinician summary
+          <button class="copy-btn" data-target="switchClinician">Copy</button>
+        </div>
+        <pre id="switchClinician" class="output-box"></pre>
+
+        <div>SMS for patient
+          <button class="copy-btn" data-target="switchSMS">Copy</button>
+        </div>
+        <pre id="switchSMS" class="output-box"></pre>
+
+        <div>Tablet / capsule helper
+          <button class="copy-btn" data-target="switchTablets">Copy</button>
+        </div>
+        <pre id="switchTablets" class="output-box"></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- STOP / TAPER TAB -->
+  <section id="stopTab" class="tab hidden">
+    <div class="card">
+      <h2>Plan antidepressant cessation</h2>
+
+      <div class="grid">
+
+        <div>
+          <label>Antidepressant</label>
+          <select id="stopDrug"></select>
+        </div>
+
+        <div>
+          <label>Current dose</label>
+          <select id="stopDose"></select>
+        </div>
+
+        <div>
+          <label>Duration of use</label>
+          <select id="duration">
+            <option value="">Select…</option>
+            <option value="short">&lt; 6 weeks</option>
+            <option value="medium">6 weeks – 6 months</option>
+            <option value="long">6 months – 2 years</option>
+            <option value="very_long">&gt; 2 years</option>
+          </select>
+        </div>
+
+      </div>
+
+      <!-- TAPER PROFILE -->
+      <div class="taper-profile-row">
+        <span style="font-weight:bold;">Taper profile:</span>
+        <button class="taper-profile-button active" data-profile="standard">Standard</button>
+        <button class="taper-profile-button" data-profile="extended">Extended</button>
+        <button class="taper-profile-button" data-profile="slow">Slow</button>
+      </div>
+
+      <button id="generateStop">Generate taper</button>
+      <button class="secondary" id="clearStop">Clear</button>
+    </div>
+
+    <div class="card">
+      <h2>Outputs</h2>
+
+      <div>
+        <div>Clinician summary
+          <button class="copy-btn" data-target="stopClinician">Copy</button>
+        </div>
+        <pre id="stopClinician" class="output-box"></pre>
+
+        <div>SMS for patient
+          <button class="copy-btn" data-target="stopSMS">Copy</button>
+        </div>
+        <pre id="stopSMS" class="output-box"></pre>
+
+        <div>Tablet / capsule helper
+          <button class="copy-btn" data-target="stopTablets">Copy</button>
+        </div>
+        <pre id="stopTablets" class="output-box"></pre>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- MODAL -->
+<div id="taperModal" class="modal-overlay hidden">
+  <div class="modal">
+
+    <h3 id="taperModalTitle"></h3>
+    <p id="taperModalDescription"></p>
+
+    <div id="taperModalOptions" class="modal-options"></div>
+
+    <button class="secondary" id="taperModalCancel">Cancel</button>
+    <button id="taperModalConfirm">Confirm</button>
+  </div>
+</div>
+
+<footer>
+  Medicines Optimisation Toolkit
+</footer>
+
+<!-- Full restored JS logic -->
+<script src="module.js"></script>
+
+</body>
+</html>
