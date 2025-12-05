@@ -1,1 +1,191 @@
-body { font-family: sans-serif; }
+/* =========================================================
+   NHS BLUE THEME — SHARED GLOBAL STYLES
+   Applies to ALL modules in Medicines-Optimisation toolkit
+   ========================================================= */
+
+/* -------------------------
+   NHS COLOUR VARIABLES
+-------------------------- */
+:root {
+  --nhs-blue: #005eb8;
+  --nhs-dark-blue: #003087;
+  --nhs-light-blue: #41b6e6;
+  --nhs-aqua: #00a9ce;
+  --nhs-green: #009639;
+  --nhs-yellow: #ffb81c;
+  --nhs-warm-yellow: #ffcd60;
+  --nhs-red: #da291c;
+  --nhs-dark-red: #a01716;
+
+  --nhs-grey-1: #768692;
+  --nhs-grey-2: #425563;
+  --nhs-grey-3: #d4d4d4;
+  --nhs-grey-4: #f0f4f5;
+
+  --nhs-white: #ffffff;
+
+  --border-radius: 0.5rem;
+  --max-content-width: 900px;
+}
+
+/* -------------------------
+   BASE TYPOGRAPHY & LAYOUT
+-------------------------- */
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, Helvetica, Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background: var(--nhs-grey-4);
+  color: #222;
+  line-height: 1.5;
+}
+
+h1, h2, h3 {
+  font-weight: 700;
+  color: var(--nhs-dark-blue);
+  margin-top: 0;
+}
+
+p, label, select, input, button {
+  font-size: 1rem;
+}
+
+/* -------------------------
+   HEADER
+-------------------------- */
+.site-header {
+  background: var(--nhs-blue);
+  color: var(--nhs-white);
+  padding: 1.5rem 1rem;
+  text-align: center;
+}
+
+.site-header h1 {
+  margin: 0 0 0.3rem;
+  font-size: 1.6rem;
+}
+
+.site-header p {
+  margin: 0;
+  font-size: 0.95rem;
+  opacity: 0.95;
+}
+
+/* -------------------------
+   MAIN CONTAINER
+-------------------------- */
+main {
+  max-width: var(--max-content-width);
+  margin: 1.5rem auto 3rem;
+  padding: 0 1rem;
+}
+
+/* -------------------------
+   CARD
+-------------------------- */
+.card {
+  background: var(--nhs-white);
+  padding: 1.3rem 1.5rem;
+  border-radius: var(--border-radius);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+  margin-bottom: 1.5rem;
+}
+
+/* -------------------------
+   BUTTONS
+-------------------------- */
+button,
+.btn {
+  padding: 0.55rem 1.2rem;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  border: none;
+  font-size: 0.95rem;
+}
+
+.primary {
+  background: var(--nhs-blue);
+  color: var(--nhs-white);
+}
+
+.primary:hover {
+  background: var(--nhs-dark-blue);
+}
+
+.secondary {
+  background: var(--nhs-grey-3);
+  color: #222;
+}
+
+.secondary:hover {
+  background: var(--nhs-grey-2);
+  color: var(--nhs-white);
+}
+
+/* -------------------------
+   INPUTS & SELECTS
+-------------------------- */
+input, select {
+  width: 100%;
+  padding: 0.4rem 0.5rem;
+  border: 1px solid var(--nhs-grey-3);
+  border-radius: var(--border-radius);
+  background: var(--nhs-white);
+}
+
+input:focus, select:focus {
+  outline: 2px solid var(--nhs-aqua);
+}
+
+/* -------------------------
+   FIELDS
+-------------------------- */
+.field {
+  margin-bottom: 1rem;
+}
+
+.field label {
+  display: block;
+  margin-bottom: 0.25rem;
+  font-weight: 600;
+  color: var(--nhs-grey-2);
+}
+
+/* -------------------------
+   LAYOUT GRIDS
+-------------------------- */
+.grid {
+  display: grid;
+  gap: 1rem;
+}
+
+@media (min-width: 700px) {
+  .grid-2 {
+    grid-template-columns: 1fr 1fr;
+  }
+  .grid-3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* -------------------------
+   BACK LINK
+-------------------------- */
+a {
+  color: var(--nhs-blue);
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* -------------------------
+   FOOTER
+-------------------------- */
+footer {
+  text-align: center;
+  padding: 2rem 1rem;
+  color: var(--nhs-grey-2);
+  font-size: 0.9rem;
+}
