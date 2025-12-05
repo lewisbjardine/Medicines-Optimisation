@@ -1,0 +1,159 @@
+/* Antidepressant Module – Specific Styles */
+
+/* Tabs */
+.tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.tab-button {
+  border: 1px solid var(--nhs-blue);
+  background: var(--nhs-white);
+  color: var(--nhs-blue);
+  padding: 0.5rem 0.9rem;
+  border-radius: 999px;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.tab-button.active {
+  background: var(--nhs-blue);
+  color: var(--nhs-white);
+}
+
+/* Cards & grids */
+.switch-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+/* Output areas */
+.outputs {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .outputs {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.output-box {
+  padding: 0.5rem;
+  border-radius: 0.3rem;
+  background: #fafafa;
+  border: 1px solid #ddd;
+  font-family: monospace;
+  font-size: 0.9rem;
+  white-space: pre-wrap;
+  min-height: 120px;
+}
+
+.copy-btn {
+  float: right;
+  margin-bottom: 4px;
+  background: var(--nhs-blue);
+  color: white;
+  border: none;
+  padding: 4px 10px;
+  font-size: 0.8rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.copy-btn.copied {
+  background: #2e7d32;
+}
+
+/* Taper profile buttons */
+.taper-profile-row {
+  margin-top: 1rem;
+  font-size: 0.85rem;
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.taper-profile-label {
+  font-weight: 600;
+  color: var(--nhs-grey);
+}
+
+.taper-profile-button {
+  border: 1px solid var(--nhs-blue);
+  background: var(--nhs-white);
+  color: var(--nhs-blue);
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.taper-profile-button.active {
+  background: var(--nhs-blue);
+  color: var(--nhs-white);
+}
+
+/* Modal styling */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.modal {
+  background: var(--nhs-white);
+  max-width: 700px;
+  width: 95%;
+  max-height: 80vh;
+  overflow-y: auto;
+  border-radius: 0.5rem;
+  padding: 1rem 1.2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.modal h3 {
+  margin-top: 0;
+  font-size: 1.1rem;
+  color: var(--nhs-grey);
+}
+
+.modal-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.modal-option {
+  border: 1px solid #ddd;
+  border-radius: 0.4rem;
+  padding: 0.6rem 0.7rem;
+  cursor: pointer;
+  background: #fafafa;
+}
+
+.modal-option.selected {
+  border-color: var(--nhs-blue);
+  background: #f0f6fd;
+}
+
+.modal-option-title {
+  font-weight: 600;
+}
+
+.modal-option-body {
+  font-size: 0.85rem;
+}
+
+.hidden {
+  display: none;
+}
