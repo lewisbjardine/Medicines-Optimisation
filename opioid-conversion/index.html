@@ -361,7 +361,7 @@ main {
 
 .opioid-row {
   display: grid;
-  grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.8fr) minmax(0, 0.7fr) auto;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.8fr) auto;
   gap: 0.6rem;
   align-items: end;
   margin-bottom: 0.6rem;
@@ -415,6 +415,24 @@ button.secondary {
   margin-top: 0.6rem;
 }
 
+
+.small-select {
+  padding: 0.2rem 0.4rem;
+  font-size: 0.85rem;
+  margin-top: 0.2rem;
+}
+
+.header-with-icon {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-with-icon img.header-icon {
+  height: 48px;
+  width: 48px;
+}
+
 .output-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px,1fr));
@@ -445,11 +463,13 @@ button.secondary {
 </style>
 </head>
 <body>
-  <header>
-    <h1>Opioid conversion &amp; breakthrough dosing</h1>
+  <header class="header-with-icon">
+    <div><h1>Opioid conversion &amp; breakthrough dosing</h1>
     <p>Convert between opioids via oral morphine equivalent (OMED) for adults in UK practice.</p>
     <p class="small">Approximate guidance only – always consult SPS / BNF / local palliative care guidelines and use clinical judgement.</p>
     <p><a href="../index.html" style="color:white;text-decoration:underline;">&larr; Back to Medicines Optimisation home</a></p>
+    </div>
+    <img src="../shared/icons/app-icon.png" alt="Medicines Optimisation" class="header-icon" />
   </header>
 
   <main>
@@ -504,7 +524,14 @@ button.secondary {
           <div class="output-box" id="targetOutput"></div>
         </div>
         <div>
-          <strong>Breakthrough / PRN opioid suggestion</strong>
+          <strong>Breakthrough / PRN opioid suggestion</strong><br>
+          <label for="brForm" class="small">Breakthrough formulation</label>
+          <select id="brForm" class="small-select">
+            <option value="oramorph">Oramorph (oral morphine IR)</option>
+            <option value="sc_morphine">SC morphine</option>
+            <option value="diamorphine">Diamorphine SC</option>
+            <option value="oxynorm">Oxynorm (oxycodone IR)</option>
+          </select>
           <div class="output-box" id="prnOutput"></div>
         </div>
       </div>
@@ -600,7 +627,8 @@ function createOpioidRow(idx) {
         <option value="oral_morphine">Oral morphine (mg/24h)</option>
         <option value="oral_codeine">Oral codeine / dihydrocodeine (mg/24h)</option>
         <option value="oral_tramadol">Oral tramadol (mg/24h)</option>
-        <option value="oral_oxycodone">Oral oxycodone (mg/24h)</option>
+        <option value="oral_oxycodone_ir">Oxycodone IR (immediate-release, mg/24h)</option>
+        <option value="oral_oxycodone_mr">Oxycodone MR (modified-release, mg/24h)</option>
         <option value="fentanyl_patch">Fentanyl patch (mcg/hour)</option>
         <option value="buprenorphine_patch">Buprenorphine patch (mcg/hour)</option>
         <option value="sc_morphine">SC / IV morphine (mg/24h)</option>
@@ -610,10 +638,6 @@ function createOpioidRow(idx) {
     <div>
       <label>Total daily dose</label>
       <input type="number" min="0" step="0.1" class="dose-input" />
-    </div>
-    <div>
-      <label>Comments (optional)</label>
-      <input type="text" class="comment-input" placeholder="e.g. PRN doses, renal impairment" />
     </div>
     <div>
       <button type="button" class="secondary remove-row-btn">Remove</button>
@@ -662,21 +686,21 @@ function initOpioidTool() {
     rows.forEach(row => {
       const opioidKey = row.querySelector(".opioid-select").value;
       const doseVal = parseFloat(row.querySelector(".dose-input").value || "0");
-      const comment = row.querySelector(".comment-input").value.trim();
       if (!doseVal || !opioidFactors[opioidKey]) {
         return;
       }
       const omed = opioidFactors[opioidKey].toMorphine(doseVal);
       totalOmed += omed;
       let line = `${opioidFactors[opioidKey].label}: ${doseVal} → ~${Math.round(omed)} mg OMED`;
-      if (comment) line += ` (${comment})`;
       parts.push(line);
     });
 
+    
     const omedBox = document.getElementById("omedOutput");
     const targetBox = document.getElementById("targetOutput");
     const prnBox = document.getElementById("prnOutput");
     const noteBox = document.getElementById("clinicianNoteOutput");
+    const brForm = document.getElementById("brForm");
 
     if (totalOmed === 0) {
       omedBox.textContent = "No valid doses entered.";
@@ -687,10 +711,76 @@ function initOpioidTool() {
     }
 
     const omedRounded = Math.round(totalOmed);
-    omedBox.textContent = `Approximate total oral morphine equivalent: ${omedRounded} mg/24h.\n(This is an estimate – check SPS / BNF tables and consider dose reduction for frailty or co-morbidity.)`;
+    omedBox.innerHTML = `<strong>Approximate total oral morphine equivalent: ${omedRounded} mg/24h.</strong><br>(This is an estimate – check SPS / BNF tables and consider dose reduction for frailty or co-morbidity.)`;
 
     const targetKey = document.getElementById("targetOpioid").value;
     const frailty = parseFloat(document.getElementById("frailtyFactor").value || "1");
+    const suggestFn = targetSuggestions[targetKey];
+
+    // Auto-select breakthrough formulation if target is SC morphine or diamorphine
+    if (brForm) {
+      if (targetKey === "sc_morphine") {
+        brForm.value = "sc_morphine";
+      } else if (targetKey === "sc_diamorphine") {
+        brForm.value = "diamorphine";
+      } else if (!brForm.value) {
+        brForm.value = "oramorph";
+      }
+    }
+
+    if (suggestFn) {
+      const targetText = suggestFn(omedRounded, frailty) || "";
+      const firstSentenceEnd = targetText.indexOf(".") + 1;
+      const boldedTarget =
+        firstSentenceEnd > 0
+          ? `<strong>${targetText.slice(0, firstSentenceEnd)}</strong>${targetText.slice(firstSentenceEnd)}`
+          : `<strong>${targetText}</strong>`;
+      targetBox.innerHTML = boldedTarget.replace(/\n/g, "<br>");
+    } else {
+      targetBox.textContent = "Target opioid suggestion not available for this selection.";
+    }
+
+    // Breakthrough: total daily oral morphine ÷ 6 (typical 4-hourly PRN), adjusted by formulation
+    let basePrn = (omedRounded * frailty) / 6;
+    let prnDrug = "Morphine immediate-release (e.g. Oramorph)";
+    let prnDose = basePrn;
+
+    if (brForm) {
+      const form = brForm.value || "oramorph";
+      if (form === "sc_morphine") {
+        prnDrug = "Morphine SC";
+        prnDose = basePrn / 2;
+      } else if (form === "diamorphine") {
+        prnDrug = "Diamorphine SC";
+        prnDose = basePrn / 3;
+      } else if (form === "oxynorm") {
+        prnDrug = "Oxycodone IR (Oxynorm)";
+        prnDose = basePrn / 2;
+      }
+    }
+
+    // Round to nearest 2.5 mg for oral / 1 mg for SC
+    const roundTo = (label) =>
+      /SC/.test(label) ? Math.max(1, Math.round(prnDose)) : Math.max(2.5, Math.round(prnDose / 2.5) * 2.5);
+    const roundedPrn = roundTo(prnDrug);
+
+    prnBox.innerHTML =
+      `Suggested breakthrough dose based on adjusted OMED:<br><strong>• ${prnDrug}: ${roundedPrn} mg up to 4-hourly PRN.</strong><br>` +
+      `Always check local palliative care guidance, especially in renal impairment or high baseline doses.`;
+
+    // Clinician note
+    const noteLines = [];
+    noteLines.push(`Approximate total OMED: ~${omedRounded} mg/24h (estimate only).`);
+    if (parts.length) {
+      noteLines.push("Current opioids:");
+      parts.forEach(p => noteLines.push(" - " + p));
+    }
+    noteLines.push(`Target opioid: ${document.getElementById("targetOpioid").selectedOptions[0].text}, with dose reduction factor ${frailty}.`);
+    noteLines.push(`Breakthrough: ${prnDrug} approx ${roundedPrn} mg up to 4-hourly PRN (adjust per guidance, renal function, age, frailty).`);
+    noteLines.push("Plan discussed with patient; advised to report sedation, confusion, hallucinations, uncontrolled pain, or side effects promptly. Consider specialist palliative care / pain advice if unstable or high dose.");
+
+    noteBox.textContent = noteLines.join("\n");
+t.getElementById("frailtyFactor").value || "1");
     const suggestFn = targetSuggestions[targetKey];
 
     if (suggestFn) {
