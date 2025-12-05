@@ -1,1 +1,470 @@
-<h1>Medicines Optimisation Toolkit Homepage</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Medicines Optimisation Toolkit</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+:root {
+  --nhs-blue: #005eb8;
+  --nhs-light-blue: #e5f0f9;
+  --nhs-grey: #425563;
+  --nhs-white: #ffffff;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: #f5f5f5;
+  color: #222;
+}
+
+header {
+  background: var(--nhs-blue);
+  color: var(--nhs-white);
+  padding: 1rem 1.5rem;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+header p {
+  margin: 0.25rem 0 0;
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+main {
+  max-width: 960px;
+  margin: 1.5rem auto;
+  padding: 0 1rem 2rem;
+}
+
+.tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.tab-button {
+  border: 1px solid var(--nhs-blue);
+  background: var(--nhs-white);
+  color: var(--nhs-blue);
+  padding: 0.5rem 0.9rem;
+  border-radius: 999px;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.tab-button.active {
+  background: var(--nhs-blue);
+  color: var(--nhs-white);
+}
+
+.card {
+  background: var(--nhs-white);
+  border-radius: 0.5rem;
+  padding: 1rem 1.2rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.06);
+  margin-bottom: 1rem;
+}
+
+.card h2 {
+  margin-top: 0;
+  font-size: 1.2rem;
+  color: var(--nhs-grey);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.8rem 1.5rem;
+}
+
+/* 2×2 layout for switching header row: 
+   | Current AD | New AD |
+   | Current dose | Starting dose | */
+.switch-grid {
+  grid-template-columns: repeat(2, minmax(220px, 1fr));
+}
+
+.field label {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.field select,
+.field input {
+  width: 100%;
+  padding: 0.4rem 0.5rem;
+  font-size: 0.95rem;
+  border-radius: 0.25rem;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+.button-row {
+  margin-top: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+button.primary {
+  background: var(--nhs-blue);
+  color: var(--nhs-white);
+  border: none;
+  padding: 0.6rem 1.1rem;
+  font-size: 0.95rem;
+  border-radius: 0.3rem;
+  cursor: pointer;
+}
+
+button.secondary {
+  background: var(--nhs-light-blue);
+  color: var(--nhs-grey);
+  border: none;
+  padding: 0.6rem 1.1rem;
+  font-size: 0.9rem;
+  border-radius: 0.3rem;
+  cursor: pointer;
+}
+
+button.primary:disabled,
+button.secondary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.outputs {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .outputs {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.output-box {
+  padding: 0.5rem;
+  border-radius: 0.3rem;
+  background: #fafafa;
+  border: 1px solid #ddd;
+  font-family: "SFMono-Regular", ui-monospace, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 0.9rem;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  min-height: 120px;
+  clear: both;
+}
+
+.output-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  color: var(--nhs-grey);
+}
+
+.disclaimer {
+  font-size: 0.8rem;
+  color: #555;
+  margin-top: 0.5rem;
+}
+
+a.guideline-link {
+  color: var(--nhs-blue);
+  text-decoration: none;
+}
+
+a.guideline-link:hover {
+  text-decoration: underline;
+}
+
+.hidden {
+  display: none;
+}
+
+.copy-btn {
+  float: right;
+  margin-bottom: 4px;
+  background: var(--nhs-blue);
+  color: white;
+  border: none;
+  padding: 4px 10px;
+  font-size: 0.8rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.copy-btn.copied {
+  background: #2e7d32;
+}
+
+.taper-profile-row {
+  margin-top: 1rem;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.taper-profile-label {
+  font-weight: 600;
+  color: var(--nhs-grey);
+}
+
+.taper-profile-button {
+  border: 1px solid var(--nhs-blue);
+  background: var(--nhs-white);
+  color: var(--nhs-blue);
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.taper-profile-button.active {
+  background: var(--nhs-blue);
+  color: var(--nhs-white);
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.modal {
+  background: var(--nhs-white);
+  max-width: 700px;
+  width: 95%;
+  max-height: 80vh;
+  overflow-y: auto;
+  border-radius: 0.5rem;
+  padding: 1rem 1.2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.modal h3 {
+  margin-top: 0;
+  font-size: 1.1rem;
+  color: var(--nhs-grey);
+}
+
+.modal-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.modal-option {
+  border: 1px solid #ddd;
+  border-radius: 0.4rem;
+  padding: 0.6rem 0.7rem;
+  cursor: pointer;
+  background: #fafafa;
+}
+
+.modal-option.selected {
+  border-color: var(--nhs-blue);
+  box-shadow: 0 0 0 1px var(--nhs-blue);
+  background: #f0f6fd;
+}
+
+.modal-option-title {
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-bottom: 0.25rem;
+}
+
+.modal-option-body {
+  font-size: 0.85rem;
+  white-space: pre-wrap;
+}
+
+.modal-footer {
+  margin-top: 0.75rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.modal-footer button {
+  padding: 0.5rem 0.9rem;
+  font-size: 0.9rem;
+  border-radius: 0.3rem;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-cancel {
+  background: #eee;
+  color: #333;
+}
+
+.btn-confirm {
+  background: var(--nhs-blue);
+  color: white;
+}
+
+.btn-confirm:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+footer {
+  max-width: 960px;
+  margin: 0 auto 1rem;
+  padding: 0 1rem;
+  font-size: 0.75rem;
+  color: #777;
+  text-align: right;
+}
+
+
+/* Homepage-specific layout */
+main.home {
+  max-width: 1100px;
+  margin: 1.5rem auto 2.5rem;
+  padding: 0 1rem 2rem;
+}
+
+.home-intro {
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.home-intro p {
+  margin: 0.35rem 0;
+}
+
+.module-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(260px,1fr));
+  gap: 1rem;
+}
+
+.module-card {
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  padding: 1.25rem 1.4rem 1.4rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.module-card h2 {
+  margin-top: 0;
+  margin-bottom: 0.4rem;
+  font-size: 1.1rem;
+}
+
+.module-card p {
+  margin: 0.25rem 0 0.75rem;
+  font-size: 0.9rem;
+}
+
+.module-card a.primary-link {
+  display: inline-block;
+  padding: 0.45rem 1rem;
+  border-radius: 4px;
+  background: var(--nhs-blue);
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.module-card a.primary-link:hover {
+  background: #004b93;
+}
+
+.module-card .tag {
+  display: inline-block;
+  margin-left: 0.35rem;
+  font-size: 0.75rem;
+  padding: 0.1rem 0.4rem;
+  border-radius: 999px;
+  background: #e5f0f9;
+  color: #00395d;
+}
+
+.disclaimer {
+  font-size: 0.8rem;
+  color: #333;
+  margin-top: 1.2rem;
+}
+
+footer {
+  text-align: center;
+  font-size: 0.8rem;
+  color: #555;
+  padding: 1rem 0 1.5rem;
+}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Medicines Optimisation Toolkit</h1>
+    <p>Helper tools for safe prescribing in UK general practice.</p>
+    <p style="margin-top:0.35rem;font-size:0.9rem;">For use by prescribers only. Always check BNF, local guidance and use clinical judgement.</p>
+  </header>
+
+  <main class="home">
+    <section class="home-intro">
+      <p>This toolkit brings together small, focused calculators to support complex prescribing decisions in UK general practice.</p>
+      <p class="disclaimer"><strong>Important:</strong> These tools are <em>decision aids</em>, not a substitute for clinical assessment, up-to-date guidance or specialist advice. Doses are approximate and may need adjustment for age, frailty, comorbidity and renal / hepatic impairment.</p>
+    </section>
+
+    <section class="module-grid">
+      <article class="module-card">
+        <h2>Switch &amp; Stop Antidepressants <span class="tag">Live</span></h2>
+        <p>Plans proportional tapers and switches between common UK antidepressants using realistic BNF tablet strengths.</p>
+        <a class="primary-link" href="antidepressants/index.html">Open antidepressant tool</a>
+      </article>
+
+      <article class="module-card">
+        <h2>Opioid Conversion &amp; Breakthrough Dosing <span class="tag">Beta</span></h2>
+        <p>Convert between opioids via oral morphine equivalent dose (OMED) and suggest breakthrough and rescue dosing.</p>
+        <a class="primary-link" href="opioid-conversion/index.html">Open opioid conversion</a>
+      </article>
+
+      <article class="module-card">
+        <h2>Dependence-forming Medicines Tapering <span class="tag">Planned</span></h2>
+        <p>Planned module for tapering of benzodiazepines, Z-drugs, codeine/tramadol and other dependence-forming medicines.</p>
+      </article>
+
+      <article class="module-card">
+        <h2>Steroid Tapering <span class="tag">Planned</span></h2>
+        <p>Planned module for prednisolone and other steroid tapering, taking duration of use and adrenal suppression risk into account.</p>
+      </article>
+
+      <article class="module-card">
+        <h2>Renal Dose Checker <span class="tag">Planned</span></h2>
+        <p>Planned module to summarise renal dose adjustments with eGFR / creatinine clearance calculators and prescribing notes.</p>
+      </article>
+    </section>
+  </main>
+
+  <footer>
+    <p>Always cross-check with BNF, SPCs and local guidelines. Use at your own clinical discretion.</p>
+  </footer>
+</body>
+</html>
