@@ -5,87 +5,104 @@
   <title>Renal Dose Calculator</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <!-- Shared NHS styling -->
+  <!-- MUST LOAD SHARED NHS STYLING FIRST -->
   <link rel="stylesheet" href="../shared/styles.css" />
 
-  <!-- Local styles for search dropdown clarity -->
+  <!-- Local tweaks only -->
   <style>
-    /* Ensure suggestions text visible against NHS theme */
-    .search-suggestions button {
-      color: #1a1a1a !important;
+    .search-suggestions {
+      border: 1px solid #d0d7de;
       background: #ffffff;
-      padding: 0.5rem 0.7rem;
-      font-size: 0.95rem;
+      border-radius: 6px;
+      margin-top: 2px;
+      position: absolute;
+      width: 100%;
+      z-index: 50;
+      display: none;
+    }
+    .search-suggestions button {
+      width: 100%;
       text-align: left;
+      background: white;
+      color: #111 !important;
+      padding: 0.5rem 0.7rem;
+      border: none;
+      font-size: 0.95rem;
+      cursor: pointer;
     }
     .search-suggestions button:hover {
-      background: #f0f6fd !important;
-      color: #000 !important;
+      background: #e8f1fb;
     }
-    .search-suggestions {
-      z-index: 40 !important;
-      border: 1px solid #d0d7de;
-      border-radius: 0.5rem;
-      background: #ffffff;
+
+    /* green highlight for recommended band */
+    .renal-band.highlight {
+      border-color: #0f766e;
+      background: #ecfdf5;
+      box-shadow: 0 0 0 1px rgba(15,118,110,0.3);
     }
   </style>
 
-  <!-- Load database FIRST -->
-  <script src="drugs.js" type="module"></script>
-  <!-- Load app logic AFTER -->
-  <script src="app.js" type="module"></script>
+  <!-- Load database then app logic -->
+  <script type="module" src="drugs.js"></script>
+  <script type="module" src="app.js"></script>
 </head>
 
 <body>
+
+  <!-- MATCHED TO OPIOID MODULE HEADER -->
   <header>
     <h1>Renal Dose Calculator</h1>
     <p class="subtitle">
-      Highlights dose adjustments by eGFR.  
-      Always verify with BNF, SPS, Renal Drug Handbook & local guidance.
+      Prototype tool – renal dose adjustments using eGFR/CrCl.  
+      Always verify with BNF, SPS, Renal Drug Handbook & local guidelines.
     </p>
     <a href="../index.html" class="return-home">Back to Medicines Optimisation home</a>
   </header>
 
-  <main class="card" style="max-width:960px;margin:1.5rem auto;padding:1.5rem;">
+  <!-- SEARCH VIEW -->
+  <main class="card" id="search-view" style="max-width:960px;margin:1.5rem auto;padding:1.5rem;">
     <h2>Search for a medicine</h2>
 
-    <!-- eGFR -->
-    <div class="field">
-      <label for="egfr-input">eGFR (mL/min/1.73m²)</label>
-      <input type="number" id="egfr-input" placeholder="Enter current eGFR (optional)" />
-    </div>
+    <label class="field">
+      <span>eGFR (mL/min/1.73m²)</span>
+      <input type="number" id="egfr-input" placeholder="Optional (e.g. 32)" />
+    </label>
 
-    <!-- Search box -->
-    <div class="field" style="position:relative;">
-      <label for="drug-search">Medicine name</label>
-      <input type="text" id="drug-search" placeholder="Start typing e.g. ‘gaba’, ‘metf’, ‘api’" autocomplete="off" />
-      <div id="search-suggestions" class="search-suggestions hidden"></div>
-    </div>
+    <label class="field" style="position:relative;">
+      <span>Medicine name</span>
+      <input id="drug-search" type="text" autocomplete="off"
+             placeholder="Start typing (e.g. ‘metf’, ‘gaba’, ‘apix’)" />
+      <div id="search-suggestions" class="search-suggestions"></div>
+    </label>
 
-    <p style="font-size:0.85rem;color:#555;">Type at least 2 letters to see results. Click a drug to open its renal dosing information.</p>
+    <p style="font-size:0.85rem;opacity:0.8;margin-top:4px;">
+      Type at least 2 letters to see matching medicines.
+    </p>
   </main>
 
   <!-- DRUG DETAIL VIEW -->
-  <section id="drug-view" class="card hidden" style="max-width:960px;margin:1.5rem auto;padding:1.5rem;">
-    <button id="back-button" class="secondary" style="margin-bottom:1rem;">← Back to search</button>
+  <section id="drug-view" class="card hidden"
+           style="max-width:960px;margin:1.5rem auto;padding:1.5rem;">
 
-    <h2 id="drug-name"></h2>
-    <p id="drug-class" style="opacity:0.8;"></p>
+    <button id="back-button" class="secondary">← Back to search</button>
+
+    <h2 id="drug-name" style="margin-top:1rem;"></h2>
+    <p id="drug-class" class="subtitle"></p>
     <div id="drug-tags" class="chips-row"></div>
 
     <h3>Usual dosing</h3>
     <p id="drug-usual-dose"></p>
 
     <h3>Renal dosing bands</h3>
-    <p id="egfr-summary"></p>
+    <p id="egfr-summary" style="opacity:0.8;"></p>
     <ul id="renal-bands"></ul>
 
     <h3>Notes & cautions</h3>
     <ul id="drug-notes"></ul>
 
     <p style="font-size:0.8rem;opacity:0.7;margin-top:1rem;">
-      Always cross-check with BNF ‘Prescribing in Renal Impairment’, drug monographs,
-      SPS DOAC guidance, local renal guidelines & the Renal Drug Handbook.
+      Always confirm with BNF 'Prescribing in Renal Impairment', SPC, SPS DOAC guidance  
+      and your local renal / formulary guidance.
     </p>
   </section>
 
