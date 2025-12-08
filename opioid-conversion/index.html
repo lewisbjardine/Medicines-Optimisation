@@ -100,7 +100,7 @@
     }
     .modal-options {
       margin: 0.5rem 0 0.75rem;
-      max-height: 200px;
+      max-height: 240px;
       overflow-y: auto;
     }
     .modal-options label {
@@ -239,19 +239,19 @@
     // ===== Conversion tables =====
     const opioidFactors = {
       oral_codeine: {
-        toMorphine: dose => dose * 0.1, // 10 mg codeine ≈ 1 mg oral morphine
+        toMorphine: dose => dose * 0.1,
         label: "Codeine (oral)"
       },
       oral_tramadol: {
-        toMorphine: dose => dose * 0.1, // 10 mg tramadol ≈ 1 mg oral morphine
+        toMorphine: dose => dose * 0.1,
         label: "Tramadol (oral)"
       },
       oral_morphine: {
-        toMorphine: dose => dose, // 1 mg = 1 mg OMED
+        toMorphine: dose => dose,
         label: "Morphine (oral)"
       },
       oral_oxycodone_ir: {
-        toMorphine: dose => dose * 1.5, // 1 mg oxycodone ≈ 1.5 mg oral morphine (conservative)
+        toMorphine: dose => dose * 1.5,
         label: "Oxycodone IR (oral)"
       },
       oral_oxycodone_mr: {
@@ -259,31 +259,31 @@
         label: "Oxycodone MR (oral)"
       },
       fentanyl_patch: {
-        toMorphine: dose => dose * 2.4, // 25 mcg/h ≈ 60 mg OMED → 1 mcg/h ≈ 2.4 mg OMED
+        toMorphine: dose => dose * 2.4,
         label: "Fentanyl patch (mcg/hour)"
       },
       sc_morphine: {
-        toMorphine: dose => dose * 2, // SC ≈ 2 × oral potency
+        toMorphine: dose => dose * 2,
         label: "Morphine SC (24h)"
       },
       sc_diamorphine: {
-        toMorphine: dose => dose * 3, // diamorphine ≈ 3 × oral morphine
+        toMorphine: dose => dose * 3,
         label: "Diamorphine SC (24h)"
       }
     };
 
-    // Buprenorphine patch approximate OMED bands (BNF-aligned palliative care guidance)
+    // Buprenorphine patch approximate OMED bands
     const buprenorphineTable = [
-      { omed: 12,  strength: 5,    freq: "every 7 days",  label: "5 mcg/hour (BuTrans/Butec 7-day)" },
-      { omed: 24,  strength: 10,   freq: "every 7 days",  label: "10 mcg/hour (7-day)" },
-      { omed: 36,  strength: 15,   freq: "every 7 days",  label: "15 mcg/hour (7-day)" },
-      { omed: 48,  strength: 20,   freq: "every 7 days",  label: "20 mcg/hour (7-day)" },
+      { omed: 12,  strength: 5,    freq: "every 7 days",   label: "5 mcg/hour (BuTrans/Butec 7-day)" },
+      { omed: 24,  strength: 10,   freq: "every 7 days",   label: "10 mcg/hour (7-day)" },
+      { omed: 36,  strength: 15,   freq: "every 7 days",   label: "15 mcg/hour (7-day)" },
+      { omed: 48,  strength: 20,   freq: "every 7 days",   label: "20 mcg/hour (7-day)" },
       { omed: 84,  strength: 35,   freq: "every 3–4 days", label: "35 mcg/hour (Transtec 4-day)" },
       { omed: 126, strength: 52.5, freq: "every 3–4 days", label: "52.5 mcg/hour (4-day)" },
       { omed: 168, strength: 70,   freq: "every 3–4 days", label: "70 mcg/hour (4-day)" }
     ];
 
-    // Fentanyl patch bands (approximate, from morphine → fentanyl tables)
+    // Fentanyl patch bands
     const fentanylTable = [
       { min: 30,  max: 60,  strength: 12,  label: "12 mcg/hour (72-hour)" },
       { min: 60,  max: 90,  strength: 25,  label: "25 mcg/hour (72-hour)" },
@@ -380,10 +380,9 @@
         const id = "doseChoice_" + index;
         const wrapper = document.createElement("label");
         wrapper.htmlFor = id;
-        wrapper.innerHTML = `
-          <input type="radio" name="doseChoice" id="${id}" value="${index}">
-          ${opt.label} – covers approximately ${opt.omedText}
-        `;
+        wrapper.innerHTML =
+          '<input type="radio" name="doseChoice" id="' + id + '" value="' + index + '"> ' +
+          opt.label + " – covers approximately " + opt.omedText;
         optionsContainer.appendChild(wrapper);
       });
 
@@ -421,13 +420,13 @@
     }
 
     // ===== Target suggestion helpers =====
-    
+
     function getBuprenorphineOptions(adjOMED) {
-      // If within single-patch range, offer nearest single and any close neighbours.
       const maxSingle = Math.max(...buprenorphineTable.map(row => row.omed));
       const options = [];
 
       if (adjOMED <= maxSingle) {
+        // Single patch range: nearest + neighbours within ±30%
         let nearest = buprenorphineTable.reduce((best, row) =>
           Math.abs(row.omed - adjOMED) < Math.abs(best.omed - adjOMED) ? row : best
         );
@@ -444,13 +443,13 @@
             freq: row.freq,
             label: row.label,
             omed: row.omed,
-            omedText: `${row.omed} mg/24h oral morphine`
+            omedText: row.omed + " mg/24h oral morphine"
           });
         });
         return options;
       }
 
-      // Above single-patch range – consider combinations of two patches of the same frequency.
+      // Above single patch range – combos of two patches with same frequency
       const byFreq = buprenorphineTable.reduce((acc, row) => {
         acc[row.freq] = acc[row.freq] || [];
         acc[row.freq].push(row);
@@ -465,22 +464,20 @@
             const b = arr[j];
             const totalOmed = a.omed + b.omed;
             const totalStrength = a.strength + b.strength;
-            // Only keep combinations that are in a sensible band around required OMED
             if (totalOmed >= adjOMED * 0.5 && totalOmed <= adjOMED * 1.5) {
               options.push({
                 type: "combo",
                 strength: totalStrength,
-                freq,
-                label: `${a.strength} + ${b.strength} micrograms/hour (${freq})`,
+                freq: freq,
+                label: a.strength + " + " + b.strength + " micrograms/hour (" + freq + ")",
                 omed: totalOmed,
-                omedText: `≈ ${totalOmed} mg/24h oral morphine`
+                omedText: "≈ " + totalOmed + " mg/24h oral morphine"
               });
             }
           }
         }
       });
 
-      // If for some reason we found nothing, fall back to the highest single patch
       if (!options.length) {
         const maxRow = buprenorphineTable[buprenorphineTable.length - 1];
         options.push({
@@ -489,27 +486,17 @@
           freq: maxRow.freq,
           label: maxRow.label,
           omed: maxRow.omed,
-          omedText: `${maxRow.omed} mg/24h oral morphine`
+          omedText: maxRow.omed + " mg/24h oral morphine"
         });
       }
 
-      // Sort by how close to adjOMED
       options.sort((a, b) => Math.abs(a.omed - adjOMED) - Math.abs(b.omed - adjOMED));
       return options;
     }
 
-      });
-      // Map to include text for clinician
-      return options.map(row => ({
-        ...row,
-        omedText: `${row.omed} mg/24h oral morphine`
-      }));
-    }
-
-    
     function getFentanylOptions(adjOMED) {
       const options = [];
-      // If within standard single-patch range, use main band +/- neighbours
+      // Single patch banding up to ~360 mg
       const main = fentanylTable.find(row => adjOMED >= row.min && adjOMED < row.max);
       if (main && adjOMED <= 360) {
         const idx = fentanylTable.indexOf(main);
@@ -518,24 +505,24 @@
         if (idx < fentanylTable.length - 1) neighbours.push(fentanylTable[idx + 1]);
         const all = [main, ...neighbours];
         all.forEach(row => {
+          const mid = row.max === Infinity ? row.min : (row.min + row.max) / 2;
           options.push({
             type: "single",
             strength: row.strength,
             label: row.label,
-            omed: (row.min + (isFinite(row.max) ? row.max : row.min)) / 2,
+            omed: mid,
             omedText: row.max === Infinity
-              ? `≥ ${row.min} mg/24h oral morphine`
-              : `${row.min}–${row.max} mg/24h oral morphine`
+              ? "≥ " + row.min + " mg/24h oral morphine"
+              : row.min + "–" + row.max + " mg/24h oral morphine"
           });
         });
-        // Sort by closeness
         options.sort((a, b) => Math.abs(a.omed - adjOMED) - Math.abs(b.omed - adjOMED));
         return options;
       }
 
-      // Above usual range – consider two-patch combinations.
+      // Higher ranges – combinations of two patches
       const strengths = [12, 25, 37, 50, 62, 75, 87, 100];
-      const potencyPerMcg = 2.4; // 1 mcg/hour ≈ 2.4 mg/24h oral morphine
+      const potencyPerMcg = 2.4; // 1 mcg/hour ≈ 2.4 mg OMED
 
       for (let i = 0; i < strengths.length; i++) {
         for (let j = i; j < strengths.length; j++) {
@@ -547,95 +534,80 @@
             options.push({
               type: "combo",
               strength: totalStrength,
-              label: `${s1} + ${s2} mcg/hour (total ${totalStrength} mcg/hour, 72-hour patches)`,
+              label: s1 + " + " + s2 + " mcg/hour (total " + totalStrength + " mcg/hour, 72-hour patches)",
               omed: totalOmed,
-              omedText: `≈ ${Math.round(totalOmed)} mg/24h oral morphine`
+              omedText: "≈ " + Math.round(totalOmed) + " mg/24h oral morphine"
             });
           }
         }
       }
 
       if (!options.length) {
-        // Fall back to single highest patch
         const last = fentanylTable[fentanylTable.length - 1];
         options.push({
           type: "single",
           strength: last.strength,
           label: last.label,
           omed: adjOMED,
-          omedText: `≥ ${last.min} mg/24h oral morphine`
+          omedText: "≥ " + last.min + " mg/24h oral morphine"
         });
       }
 
       options.sort((a, b) => Math.abs(a.omed - adjOMED) - Math.abs(b.omed - adjOMED));
-      return op
-      if (targetKey === "buprenorphine_patch") {
-        const options = getBuprenorphineOptions(adjOMED);
-        if (options.length > 1) {
-          openDoseChoiceModal(
-            baseContext,
-            options,
-            `Adjusted OMED ≈ ${Math.round(adjOMED)} mg/24 h sits between or above standard buprenorphine patch bands. Please choose the most appropriate patch or patch combination, taking frailty, comorbidity and clinical context into account.`
-          );
-          if (convertBtn) convertBtn.disabled = true;
-          targetBox.innerHTML =
-            "Multiple buprenorphine patch strengths or combinations are clinically possible at this OMED. Please choose one in the dose selection dialog.";
-          noteBox.value = "";
-          return;
-        } else if (options.length === 1) {
-          finaliseOutputsWithChoice(baseContext, options[0]);
-          if (convertBtn) convertBtn.disabled = true;
-          return;
-        } else {
-          targetBox.textContent =
-            "Adjusted OMED is too low or atypical for standard buprenorphine patch conversion – consider an alternative opioid or seek specialist advice.";
-        }
-      } else if (targetKey === "fentanyl_patch") {
-        const options = getFentanylOptions(adjOMED);
-        if (options.length > 1) {
-          openDoseChoiceModal(
-            baseContext,
-            options,
-            `Adjusted OMED ≈ ${Math.round(adjOMED)} mg/24 h lies across more than one fentanyl patch band or requires more than one patch. Please choose the most appropriate option, taking frailty and clinical context into account.`
-          );
-          if (convertBtn) convertBtn.disabled = true;
-          targetBox.innerHTML =
-            "Multiple fentanyl patch strengths or combinations are clinically possible at this OMED. Please choose one in the dose selection dialog.";
-          noteBox.value = "";
-          return;
-        } else if (options.length === 1) {
-          finaliseOutputsWithChoice(baseContext, options[0]);
-          if (convertBtn) convertBtn.disabled = true;
-          return;
-        } else {
-          targetBox.textContent =
-            "Adjusted OMED is outside the usual range for standard fentanyl patch conversion
-        if (targetKey === "oral_morphine") {
-          const idealBd = adjOMED / 2;
-          const strengths = [10, 15, 30, 60, 100, 200]; // common MR tablet strengths (mg)
-          let lower = strengths[0];
-          let higher = strengths[strengths.length - 1];
+      return options;
+    }
 
-          for (let i = 0; i < strengths.length; i++) {
-            if (strengths[i] <= idealBd) {
-              lower = strengths[i];
-            }
-            if (strengths[i] >= idealBd) {
-              higher = strengths[i];
-              break;
-            }
-          }
+    function renderBuprenorphineChoice(adjOMED, choice) {
+      if (choice.type === "combo") {
+        return (
+          "<strong>Buprenorphine patches: " + choice.label + ".</strong><br>" +
+          "Based on adjusted OMED ≈ " + Math.round(adjOMED) + " mg/24 h and standard buprenorphine patch bands (" +
+          choice.omedText + "). Choose lower strengths in frailty or if uncertain, and titrate with local palliative-care guidance."
+        );
+      }
+      return (
+        "<strong>Buprenorphine patch: " + choice.strength + " micrograms/hour, " + choice.freq + ".</strong><br>" +
+        "Based on adjusted OMED ≈ " + Math.round(adjOMED) + " mg/24 h and standard buprenorphine patch bands (" +
+        choice.omedText + ")."
+      );
+    }
 
-          let html = `<strong>Oral morphine: ≈ ${Math.round(adjOMED)} mg/24 h total.</strong><br>` +
-                     `Aim for a 12-hour MR regimen using commonly available tablet strengths.<br>` +
-                     `Closest lower BNF MR dose: ${lower} mg twice daily (total ${lower * 2} mg/24 h).<br>`;
-          if (higher !== lower) {
-            html += `Higher alternative BNF MR dose: ${higher} mg twice daily (total ${higher * 2} mg/24 h).<br>`;
-          }
-          html += `Round down in frailty or if there are safety concerns, and always cross-check with the BNF and local guidance.`;
-          targetHtml = html;
-        } else if (targetKey === "oral_oxycodone") {
-utput");
+    function renderFentanylChoice(adjOMED, choice) {
+      if (choice.type === "combo") {
+        return (
+          "<strong>Fentanyl patches: " + choice.label + ".</strong><br>" +
+          "Based on adjusted OMED ≈ " + Math.round(adjOMED) + " mg/24 h and standard fentanyl patch conversion bands (" +
+          choice.omedText + "). Monitor closely for sedation and toxicity."
+        );
+      }
+      return (
+        "<strong>Fentanyl patch: " + choice.strength + " micrograms/hour (72-hour patch).</strong><br>" +
+        "Based on adjusted OMED ≈ " + Math.round(adjOMED) + " mg/24 h and standard fentanyl patch conversion bands (" +
+        choice.omedText + ")."
+      );
+    }
+
+    // ===== Core calculation =====
+    function calculateConversion() {
+      const rows = document.querySelectorAll(".opioid-row");
+      let totalOmed = 0;
+      const parts = [];
+
+      rows.forEach(row => {
+        const select = row.querySelector(".opioid-select");
+        const doseInput = row.querySelector(".dose-input");
+        if (!select || !doseInput) return;
+
+        const key = select.value;
+        const doseVal = parseFloat(doseInput.value);
+        if (!doseVal || !opioidFactors[key]) return;
+
+        const omed = opioidFactors[key].toMorphine(doseVal);
+        totalOmed += omed;
+        parts.push(opioidFactors[key].label + ": " + doseVal + " → ~" + Math.round(omed) + " mg OMED");
+      });
+
+      const omedBox = document.getElementById("omedOutput");
       const targetBox = document.getElementById("targetOutput");
       const prnBox = document.getElementById("prnOutput");
       const noteBox = document.getElementById("clinicianNoteOutput");
@@ -656,12 +628,12 @@ utput");
       const targetKey = document.getElementById("targetOpioid").value;
 
       omedBox.innerHTML =
-        `<strong>Approximate total oral morphine equivalent: ${omedRounded} mg/24 h.</strong><br>` +
-        `(Adjusted for frailty factor ${frailty}: ≈ ${Math.round(adjOMED)} mg/24 h).<br>` +
-        `These are estimates based on UK BNF-aligned opioid conversion tables – always cross-check with local guidance.`;
+        "<strong>Approximate total oral morphine equivalent: " + omedRounded + " mg/24 h.</strong><br>" +
+        "(Adjusted for frailty factor " + frailty + ": ≈ " + Math.round(adjOMED) + " mg/24 h).<br>" +
+        "These are estimates based on UK BNF-aligned opioid conversion tables – always cross-check with local guidance.";
 
       // PRN base from adjusted OMED
-      const basePrn = adjOMED / 6; // ~1/6 of total daily dose
+      const basePrn = adjOMED / 6;
       let prnDrug = "Morphine immediate-release (e.g. Oramorph)";
       let prnDose = basePrn;
 
@@ -681,19 +653,18 @@ utput");
       const isSC = /SC/.test(prnDrug);
       const roundedPrn = isSC ? Math.max(1, Math.round(prnDose)) : roundTo(prnDose, 2.5, 2.5);
       prnBox.innerHTML =
-        `Suggested breakthrough dose (approx.):<br>` +
-        `<strong>• ${prnDrug}: ${roundedPrn} mg up to 4-hourly PRN.</strong><br>` +
-        `Adjust for renal function, age, frailty and local guidance.`;
+        "Suggested breakthrough dose (approx.):<br>" +
+        "<strong>• " + prnDrug + ": " + roundedPrn + " mg up to 4-hourly PRN.</strong><br>" +
+        "Adjust for renal function, age, frailty and local guidance.";
 
-      // If buprenorphine or fentanyl and multiple options exist, invoke modal
       const baseContext = {
-        omedRounded,
-        adjOMED,
-        frailty,
-        targetKey,
-        parts,
-        prnDrug,
-        roundedPrn
+        omedRounded: omedRounded,
+        adjOMED: adjOMED,
+        frailty: frailty,
+        targetKey: targetKey,
+        parts: parts,
+        prnDrug: prnDrug,
+        roundedPrn: roundedPrn
       };
 
       if (targetKey === "buprenorphine_patch") {
@@ -702,11 +673,14 @@ utput");
           openDoseChoiceModal(
             baseContext,
             options,
-            "The adjusted OMED sits between standard buprenorphine patch strengths. Please choose the most appropriate patch, taking frailty and clinical context into account."
+            "Adjusted OMED ≈ " + Math.round(adjOMED) +
+            " mg/24 h sits between or above standard buprenorphine patch bands. " +
+            "Please choose the most appropriate patch or patch combination, taking frailty, comorbidity and clinical context into account."
           );
           if (convertBtn) convertBtn.disabled = true;
           targetBox.innerHTML =
-            "Multiple buprenorphine patch strengths are clinically possible at this OMED. Please choose one in the dose selection dialog.";
+            "Multiple buprenorphine patch strengths or combinations are clinically possible at this OMED. " +
+            "Please choose one in the dose selection dialog.";
           noteBox.value = "";
           return;
         } else if (options.length === 1) {
@@ -715,7 +689,7 @@ utput");
           return;
         } else {
           targetBox.textContent =
-            "Adjusted OMED is too low or atypical for standard buprenorphine patch conversion – consider an alternative opioid or specialist advice.";
+            "Adjusted OMED is too low or atypical for standard buprenorphine patch conversion – consider an alternative opioid or seek specialist advice.";
         }
       } else if (targetKey === "fentanyl_patch") {
         const options = getFentanylOptions(adjOMED);
@@ -723,11 +697,14 @@ utput");
           openDoseChoiceModal(
             baseContext,
             options,
-            "More than one fentanyl patch strength could be considered at this adjusted OMED. Please choose one, taking frailty and clinical context into account."
+            "Adjusted OMED ≈ " + Math.round(adjOMED) +
+            " mg/24 h lies across more than one fentanyl patch band or requires more than one patch. " +
+            "Please choose the most appropriate option, taking frailty and clinical context into account."
           );
           if (convertBtn) convertBtn.disabled = true;
           targetBox.innerHTML =
-            "Multiple fentanyl patch strengths are clinically possible at this OMED. Please choose one in the dose selection dialog.";
+            "Multiple fentanyl patch strengths or combinations are clinically possible at this OMED. " +
+            "Please choose one in the dose selection dialog.";
           noteBox.value = "";
           return;
         } else if (options.length === 1) {
@@ -739,26 +716,174 @@ utput");
             "Adjusted OMED is outside the usual range for standard fentanyl patch conversion – consider alternative regimen or specialist advice.";
         }
       } else {
-        // Other target opioids: handle directly without modal
+        // Non-patch targets (oral morphine/oxycodone, SC morphine/diamorphine)
         let targetHtml = "";
         if (targetKey === "oral_morphine") {
-          const bd = roundTo(adjOMED / 2, 5, 5);
+          const idealBd = adjOMED / 2;
+          const strengths = [10, 15, 30, 60, 100, 200];
+          let lower = strengths[0];
+          let higher = strengths[strengths.length - 1];
+
+          for (let i = 0; i < strengths.length; i++) {
+            if (strengths[i] <= idealBd) {
+              lower = strengths[i];
+            }
+            if (strengths[i] >= idealBd) {
+              higher = strengths[i];
+              break;
+            }
+          }
+
           targetHtml =
-            `<strong>Oral morphine: ≈ ${Math.round(adjOMED)} mg/24 h total.</strong><br>` +
-            `For example: ${bd} mg MR twice daily (plus breakthrough as above), rounding down if concerned.`;
+            "<strong>Oral morphine: ≈ " + Math.round(adjOMED) + " mg/24 h total.</strong><br>" +
+            "Aim for a 12-hour MR regimen using commonly available tablet strengths.<br>" +
+            "Closest lower BNF MR dose: " + lower + " mg twice daily (total " + (lower * 2) + " mg/24 h).<br>";
+          if (higher !== lower) {
+            targetHtml +=
+              "Higher alternative BNF MR dose: " + higher + " mg twice daily (total " + (higher * 2) + " mg/24 h).<br>";
+          }
+          targetHtml +=
+            "Round down in frailty or if there are safety concerns, and always cross-check with the BNF and local guidance.";
         } else if (targetKey === "oral_oxycodone") {
-          const oxy = adjOMED / 1.5;
-          const bd = roundTo(oxy / 2, 2.5, 2.5);
+          const oxyTotal = adjOMED / 1.5;
+          const bd = roundTo(oxyTotal / 2, 2.5, 2.5);
           targetHtml =
-            `<strong>Oral oxycodone: ≈ ${Math.round(oxy)} mg/24 h total.</strong><br>` +
-            `For example: ${bd} mg MR twice daily (plus breakthrough), rounding down and checking BNF-licensed strengths.`;
+            "<strong>Oral oxycodone: ≈ " + Math.round(oxyTotal) + " mg/24 h total.</strong><br>" +
+            "For example: " + bd + " mg MR twice daily (plus breakthrough), rounding down and checking BNF-licensed strengths.";
         } else if (targetKey === "sc_morphine") {
           const sc = adjOMED / 2;
           targetHtml =
-            `<strong>Morphine SC: ≈ ${Math.round(sc)} mg/24 h via syringe driver.</strong><br>` +
-            `Dose assumes SC morphine ≈ 2 × oral morphine potency. Adjust per local palliative care guidance.`;
+            "<strong>Morphine SC: ≈ " + Math.round(sc) + " mg/24 h via syringe driver.</strong><br>" +
+            "Dose assumes SC morphine ≈ 2 × oral morphine potency. Adjust per local palliative care guidance.";
         } else if (targetKey === "sc_diamorphine") {
           const dia = adjOMED / 3;
           targetHtml =
-            `<strong>Diamorphine SC: ≈ ${Math.round(dia)} mg/24 h via syringe driver.</strong><br>` +
-            `Dose assumes diamorphi
+            "<strong>Diamorphine SC: ≈ " + Math.round(dia) + " mg/24 h via syringe driver.</strong><br>" +
+            "Dose assumes diamorphine ≈ 3 × oral morphine potency. Consider renal function and seek specialist advice if unsure.";
+        }
+
+        targetBox.innerHTML = targetHtml;
+
+        const noteLines = [];
+        noteLines.push("Approximate total OMED: ~" + omedRounded + " mg/24 h (estimate).");
+        noteLines.push("Frailty factor applied: " + frailty + " → adjusted OMED ≈ " + Math.round(adjOMED) + " mg/24 h.");
+        if (parts.length) {
+          noteLines.push("Current opioids contributing to OMED:");
+          parts.forEach(p => noteLines.push(" - " + p));
+        }
+        noteLines.push("Target opioid: " + document.getElementById("targetOpioid").selectedOptions[0].text + ".");
+        noteLines.push(
+          "Breakthrough: " + prnDrug + " approx " + roundedPrn +
+          " mg up to 4-hourly PRN (adjust for renal function, age, frailty and local guidance)."
+        );
+        noteLines.push("Conversion factors (approximate, BNF-aligned):");
+        noteLines.push(" - Codeine/tramadol → oral morphine: ~0.1 (10 mg → ~1 mg oral morphine).");
+        noteLines.push(" - Oxycodone → oral morphine: ~1.5 (10 mg → ~15 mg oral morphine).");
+        noteLines.push(" - SC morphine ≈ 2 × oral morphine potency; diamorphine SC ≈ 3 × oral morphine.");
+        noteLines.push(" - Buprenorphine and fentanyl patches based on standard UK palliative care tables (BNF / SPS / local guidelines).");
+        noteLines.push("These doses are a guide only; monitor closely and seek specialist palliative care input if unstable or high dose.");
+        noteBox.value = noteLines.join("\n");
+
+        if (convertBtn) convertBtn.disabled = true;
+      }
+    }
+
+    function finaliseOutputsWithChoice(ctx, choice) {
+      const targetBox = document.getElementById("targetOutput");
+      const noteBox = document.getElementById("clinicianNoteOutput");
+      const prnBox = document.getElementById("prnOutput");
+      const targetKey = ctx.targetKey;
+
+      let targetHtml = "";
+      let targetLine = "";
+
+      if (targetKey === "buprenorphine_patch") {
+        targetHtml = renderBuprenorphineChoice(ctx.adjOMED, choice);
+        if (choice.type === "combo") {
+          targetLine = "Target opioid: Buprenorphine patches – " + choice.label +
+                       ", covering approximately " + choice.omedText + ".";
+        } else {
+          targetLine = "Target opioid: Buprenorphine patch " + choice.strength +
+                       " mcg/hour (" + choice.freq + "), covering approximately " + choice.omedText + ".";
+        }
+      } else if (targetKey === "fentanyl_patch") {
+        targetHtml = renderFentanylChoice(ctx.adjOMED, choice);
+        if (choice.type === "combo") {
+          targetLine = "Target opioid: Fentanyl patches – " + choice.label +
+                       ", covering approximately " + choice.omedText + ".";
+        } else {
+          targetLine = "Target opioid: Fentanyl patch " + choice.strength +
+                       " mcg/hour (72-hour), mapped to " + choice.omedText + ".";
+        }
+      }
+
+      targetBox.innerHTML = targetHtml;
+
+      const noteLines = [];
+      noteLines.push("Approximate total OMED: ~" + ctx.omedRounded + " mg/24 h (estimate).");
+      noteLines.push("Frailty factor applied: " + ctx.frailty +
+                     " → adjusted OMED ≈ " + Math.round(ctx.adjOMED) + " mg/24 h.");
+      if (ctx.parts && ctx.parts.length) {
+        noteLines.push("Current opioids contributing to OMED:");
+        ctx.parts.forEach(p => noteLines.push(" - " + p));
+      }
+      noteLines.push(targetLine);
+      noteLines.push(
+        "Breakthrough: " + ctx.prnDrug + " approx " + ctx.roundedPrn +
+        " mg up to 4-hourly PRN (adjust for renal function, age, frailty and local guidance)."
+      );
+      noteLines.push("Conversion factors (approximate, BNF-aligned):");
+      noteLines.push(" - Codeine/tramadol → oral morphine: ~0.1 (10 mg → ~1 mg oral morphine).");
+      noteLines.push(" - Oxycodone → oral morphine: ~1.5 (10 mg → ~15 mg oral morphine).");
+      noteLines.push(" - SC morphine ≈ 2 × oral morphine potency; diamorphine SC ≈ 3 × oral morphine.");
+      noteLines.push(" - Buprenorphine and fentanyl patches based on standard UK palliative care tables (BNF / SPS / local guidelines).");
+      noteLines.push("These doses are a guide only; monitor closely and seek specialist palliative care input if unstable or high dose.");
+      noteBox.value = noteLines.join("\n");
+
+      prnBox.innerHTML +=
+        "\nUse a lower dose and longer interval if concerned about over-sedation or toxicity.";
+    }
+
+    function initOpioidTool() {
+      const addBtn = document.getElementById("addOpioidBtn");
+      const clearBtn = document.getElementById("clearOpioidsBtn");
+      const convertBtn = document.getElementById("convertBtn");
+      const clearOutputsBtn = document.getElementById("clearOutputsBtn");
+      const copyBtn = document.getElementById("copyClinicianBtn");
+      const targetSel = document.getElementById("targetOpioid");
+      const frailtySel = document.getElementById("frailtyFactor");
+      const brForm = document.getElementById("brForm");
+      const modalConfirm = document.getElementById("doseModalConfirm");
+      const modalCancel = document.getElementById("doseModalCancel");
+
+      addBtn.addEventListener("click", addOpioidRow);
+      clearBtn.addEventListener("click", clearOpioidRows);
+      convertBtn.addEventListener("click", calculateConversion);
+      clearOutputsBtn.addEventListener("click", () => {
+        clearOutputs();
+        convertBtn.disabled = false;
+      });
+      copyBtn.addEventListener("click", () => {
+        const note = document.getElementById("clinicianNoteOutput").value;
+        if (!note) return;
+        navigator.clipboard.writeText(note).then(() => {
+          copyBtn.textContent = "Copied";
+          setTimeout(() => (copyBtn.textContent = "Copy"), 1500);
+        }).catch(() => {});
+      });
+
+      targetSel.addEventListener("change", markDirty);
+      frailtySel.addEventListener("change", markDirty);
+      brForm.addEventListener("change", markDirty);
+
+      modalConfirm.addEventListener("click", handleDoseChoiceConfirm);
+      modalCancel.addEventListener("click", handleDoseChoiceCancel);
+
+      clearOpioidRows();
+      convertBtn.disabled = false;
+    }
+
+    window.addEventListener("DOMContentLoaded", initOpioidTool);
+  </script>
+</body>
+</html>
