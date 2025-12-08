@@ -12,12 +12,12 @@
 }
 
 /* RESET */
-body, h1, h2, h3, p, button, select, input, label {
+body, button, select, input, label {
   margin: 0;
   padding: 0;
   font-family: Arial, Helvetica, sans-serif;
-  color: var(--nhs-text);
 }
+
 
 body {
   background: #ffffff;
@@ -32,8 +32,10 @@ header {
   padding: 20px;
   border-bottom: 5px solid var(--nhs-dark-blue);
   margin-bottom: 20px;
-  text-align: center;
+  text-align: left;   /* ← IMPORTANT */
+  position: relative; /* for home button */
 }
+
 header h1 {
   color: white;
   margin-bottom: 8px;
