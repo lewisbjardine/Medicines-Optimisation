@@ -4,15 +4,8 @@
   <meta charset="UTF-8" />
   <title>Opioid conversion & breakthrough dosing</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="stylesheet" href="../shared/styles.css">
-
+  <link rel="stylesheet" href="../shared/styles.css" />
   <style>
-header {
-  background: var(--nhs-blue);
-  color: var(--nhs-white);
-  padding: 1rem 1.5rem;
-}
-
     body {
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       margin: 0;
@@ -112,6 +105,38 @@ header {
       font-family: inherit;
       font-size: 0.9rem;
     }
+  
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    .modal-overlay.hidden {
+      display: none;
+    }
+    .modal {
+      background: #ffffff;
+      max-width: 480px;
+      width: 90%;
+      padding: 1rem 1.25rem;
+      border-radius: 4px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+    }
+    .modal h2 {
+      margin-top: 0;
+      margin-bottom: 0.5rem;
+    }
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.5rem;
+      margin-top: 0.75rem;
+    }
+
   </style>
 </head>
 <body>
@@ -198,39 +223,101 @@ header {
     </section>
   </main>
 
+  
+  <div id="doseChoiceModal" class="modal-overlay hidden">
+    <div class="modal">
+      <h2>Choose target opioid dose</h2>
+      <p id="doseChoiceExplanation"></p>
+      <div id="doseChoiceOptions"></div>
+      <div class="modal-actions">
+        <button type="button" id="doseChoiceCancel" class="secondary">Cancel</button>
+        <button type="button" id="doseChoiceConfirm" class="primary" disabled>Confirm selection</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     const opioidFactors = {
       oral_codeine: {
         toMorphine: dose => dose / 10,
-        label: "Codeine (oral)"
+        label: "Codeine (oral)",
+        factor: "10 mg codeine ≈ 1 mg oral morphine (×0.1)",
+        ref: "SPS opioid conversion guidance"
       },
       oral_tramadol: {
         toMorphine: dose => dose / 10,
-        label: "Tramadol (oral)"
+        label: "Tramadol (oral)",
+        factor: "10 mg tramadol ≈ 1 mg oral morphine (×0.1)",
+        ref: "SPS opioid conversion guidance"
       },
       oral_morphine: {
         toMorphine: dose => dose,
-        label: "Morphine (oral)"
+        label: "Morphine (oral)",
+        factor: "1 mg oral morphine = 1 mg OMED",
+        ref: "Standard reference"
       },
       oral_oxycodone_ir: {
         toMorphine: dose => dose * 2,
-        label: "Oxycodone IR (oral)"
+        label: "Oxycodone IR (oral)",
+        factor: "1 mg oral oxycodone ≈ 2 mg oral morphine",
+        ref: "SPS opioid conversion guidance"
       },
       oral_oxycodone_mr: {
         toMorphine: dose => dose * 2,
-        label: "Oxycodone MR (oral)"
+        label: "Oxycodone MR (oral)",
+        factor: "1 mg oral oxycodone ≈ 2 mg oral morphine",
+        ref: "SPS opioid conversion guidance"
       },
       fentanyl_patch: {
         toMorphine: dose => dose * 3,
-        label: "Fentanyl patch (mcg/hour)"
+        label: "Fentanyl patch (mcg/hour)",
+        factor: "1 microgram/hour fentanyl patch ≈ 3 mg OMED per 24h (approximate)",
+        ref: "NW palliative care opioid chart"
       },
       sc_morphine: {
         toMorphine: dose => dose * 2,
-        label: "Morphine SC (24h)"
+        label: "Morphine SC (24h)",
+        factor: "SC morphine ≈ 2 × oral morphine potency",
+        ref: "SPS opioid conversion guidance"
       },
       sc_diamorphine: {
         toMorphine: dose => dose * 3,
-        label: "Diamorphine SC (24h)"
+        label: "Diamorphine SC (24h)",
+        factor: "SC diamorphine ≈ 3 × oral morphine potency",
+        ref: "SPS opioid conversion guidance"
+      }
+    };
+
+    const targetFactorMeta = {
+      oral_morphine: {
+        description: "Oral morphine total 24h dose",
+        factor: "1 mg oral morphine = 1 mg OMED",
+        ref: "Standard reference"
+      },
+      oral_oxycodone: {
+        description: "Oral oxycodone total 24h dose",
+        factor: "1 mg oral oxycodone ≈ 2 mg oral morphine",
+        ref: "SPS opioid conversion guidance"
+      },
+      fentanyl_patch: {
+        description: "Transdermal fentanyl patch",
+        factor: "1 microgram/hour ≈ 3 mg OMED per 24h (approximate)",
+        ref: "NW palliative care opioid chart"
+      },
+      transdermal_buprenorphine: {
+        description: "Transdermal buprenorphine patch",
+        factor: "Approx oral morphine:buprenorphine ≈ 30:1 at higher doses (see SPS)",
+        ref: "SPS opioid conversion guidance"
+      },
+      sc_morphine: {
+        description: "Morphine SC (24h infusion)",
+        factor: "SC morphine ≈ 2 × oral morphine potency",
+        ref: "SPS opioid conversion guidance"
+      },
+      sc_diamorphine: {
+        description: "Diamorphine SC (24h infusion)",
+        factor: "SC diamorphine ≈ 3 × oral morphine potency",
+        ref: "SPS opioid conversion guidance"
       }
     };
 
@@ -238,59 +325,113 @@ header {
       oral_morphine: (omed, frailty) => {
         const adj = omed * frailty;
         const bd = Math.round(adj / 2 / 2.5) * 2.5;
-        return `<strong>Approximate equivalent oral morphine: ${Math.round(adj)} mg/24h (e.g. ${bd} mg MR twice daily).</strong><br>
-                Use available MR strengths; consider lower doses in frailty or renal impairment.`;
+        return {
+          text: `<strong>Approximate equivalent oral morphine: ${Math.round(adj)} mg/24h (e.g. ${bd} mg MR twice daily).</strong><br>
+                Use available MR strengths; consider lower doses in frailty or renal impairment.`,
+          choiceRequired: false
+        };
       },
       oral_oxycodone: (omed, frailty) => {
         const adj = omed * frailty;
         const oxy = adj / 2;
         const bd = Math.round(oxy / 2 / 2.5) * 2.5;
-        return `<strong>Approximate equivalent oral oxycodone: ${Math.round(oxy)} mg/24h (e.g. ${bd} mg MR twice daily).</strong><br>
-                Check BNF strengths (e.g. 5, 10, 20, 40 mg) and round down if concerned.`;
+        return {
+          text: `<strong>Approximate equivalent oral oxycodone: ${Math.round(oxy)} mg/24h (e.g. ${bd} mg MR twice daily).</strong><br>
+                Check BNF strengths (e.g. 5, 10, 20, 40 mg) and round down if concerned.`,
+          choiceRequired: false
+        };
       },
       fentanyl_patch: (omed, frailty) => {
         const adj = omed * frailty;
-        const fent = adj / 3;
-        const strengths = [12, 25, 37, 50, 75, 100];
-        const nearest = strengths.reduce((a, b) =>
-          Math.abs(b - fent) < Math.abs(a - fent) ? b : a
+        const fentIdeal = adj / 3;
+        const strengths = [
+          { strength: 12, approxOmed: 36 },
+          { strength: 25, approxOmed: 75 },
+          { strength: 37, approxOmed: 111 },
+          { strength: 50, approxOmed: 150 },
+          { strength: 75, approxOmed: 225 },
+          { strength: 100, approxOmed: 300 }
+        ];
+        const sorted = strengths.slice().sort((a, b) =>
+          Math.abs(a.approxOmed - adj) - Math.abs(b.approxOmed - adj)
         );
-        return `<strong>Approximate fentanyl patch: ${nearest} micrograms/hour.</strong><br>
-                Estimate based on ~${Math.round(fent)} micrograms/hour; available BNF strengths include 12, 25, 37, 50, 75, 100 mcg/h. Consider starting at a lower strength and titrating.`;
+        const primary = sorted[0];
+        const secondary = sorted[1];
+        const options = [primary];
+        if (secondary && Math.abs(secondary.approxOmed - adj) <= Math.max(20, 0.3 * adj)) {
+          options.push(secondary);
+        }
+        if (options.length === 1) {
+          const o = options[0];
+          return {
+            text: `<strong>Approximate fentanyl patch: ${o.strength} micrograms/hour.</strong><br>
+                   Estimated coverage: ~${o.approxOmed} mg OMED/24h (patient OMED: ~${Math.round(adj)} mg/24h).`,
+            choiceRequired: false
+          };
+        }
+        return {
+          choiceRequired: true,
+          modality: "fentanyl",
+          options,
+          explanation: `Based on an adjusted total OMED of ~${Math.round(adj)} mg/24h and a conversion of approximately 1 microgram/hour fentanyl ≈ 3 mg oral morphine per 24h, more than one licensed fentanyl patch strength could be appropriate. Please choose the most clinically appropriate option.`
+        };
       },
       transdermal_buprenorphine: (omed, frailty) => {
         const adj = omed * frailty;
-        const estimated = adj / 10;
-        const patch7 = [5, 10, 15, 20];
-        const patch4 = [35, 52.5, 70];
-        const nearest = (list, val) =>
-          list.reduce((a, b) =>
-            Math.abs(b - val) < Math.abs(a - val) ? b : a
-          );
-        let choice, patchType;
-        if (estimated <= 20) {
-          choice = nearest(patch7, estimated);
-          patchType = "7-day patch (e.g. BuTrans/Butec)";
-        } else {
-          choice = nearest(patch4, estimated);
-          patchType = "4-day patch (e.g. Transtec)";
+        const patches = [
+          { strength: 5, approxOmed: 12, patchType: "7-day (e.g. BuTrans/Butec)" },
+          { strength: 10, approxOmed: 24, patchType: "7-day (e.g. BuTrans/Butec)" },
+          { strength: 15, approxOmed: 36, patchType: "7-day (e.g. BuTrans/Butec)" },
+          { strength: 20, approxOmed: 48, patchType: "7-day (e.g. BuTrans/Butec)" },
+          { strength: 35, approxOmed: 84, patchType: "4-day (e.g. Transtec)" },
+          { strength: 52.5, approxOmed: 126, patchType: "4-day (e.g. Transtec)" },
+          { strength: 70, approxOmed: 168, patchType: "4-day (e.g. Transtec)" }
+        ];
+        const sorted = patches.slice().sort((a, b) =>
+          Math.abs(a.approxOmed - adj) - Math.abs(b.approxOmed - adj)
+        );
+        const primary = sorted[0];
+        const secondary = sorted[1];
+        const options = [primary];
+        if (secondary && Math.abs(secondary.approxOmed - adj) <= Math.max(20, 0.3 * adj)) {
+          options.push(secondary);
         }
-        return `<strong>Approximate buprenorphine patch: ${choice} micrograms/hour, ${patchType}.</strong><br>
-                Estimated requirement: ~${Math.round(estimated)} micrograms/hour from total OMED. Check BNF-licensed strengths and consider starting at a lower patch strength in frailty.`;
+        if (options.length === 1) {
+          const o = options[0];
+          return {
+            text: `<strong>Approximate buprenorphine patch: ${o.strength} micrograms/hour, ${o.patchType}.</strong><br>
+                   Estimated OMED coverage: ~${o.approxOmed} mg/24h (patient OMED: ~${Math.round(adj)} mg/24h).`,
+            choiceRequired: false
+          };
+        }
+        return {
+          choiceRequired: true,
+          modality: "buprenorphine",
+          options,
+          explanation: `Based on an adjusted total OMED of ~${Math.round(adj)} mg/24h and an approximate oral morphine:buprenorphine ratio of ~30:1 at higher doses, more than one licensed buprenorphine patch strength could be appropriate. Please choose the most clinically appropriate option.`
+        };
       },
       sc_morphine: (omed, frailty) => {
         const adj = omed * frailty;
         const sc = adj / 2;
-        return `<strong>Approximate morphine SC (24h syringe driver): ${Math.round(sc)} mg/24h.</strong><br>
-                Typically given via continuous SC infusion; adjust per local palliative care guidance.`;
+        return {
+          text: `<strong>Approximate morphine SC (24h syringe driver): ${Math.round(sc)} mg/24h.</strong><br>
+                 Typically given via continuous SC infusion; adjust per local palliative care guidance.`,
+          choiceRequired: false
+        };
       },
       sc_diamorphine: (omed, frailty) => {
         const adj = omed * frailty;
         const dia = adj / 3;
-        return `<strong>Approximate diamorphine SC (24h syringe driver): ${Math.round(dia)} mg/24h.</strong><br>
-                Consider lower starting doses in frailty or renal impairment; seek specialist advice if unsure.`;
+        return {
+          text: `<strong>Approximate diamorphine SC (24h syringe driver): ${Math.round(dia)} mg/24h.</strong><br>
+                 Consider lower starting doses in frailty or renal impairment; seek specialist advice if unsure.`,
+          choiceRequired: false
+        };
       }
     };
+
+    let doseChoiceState = null;
 
     function clearOutputs() {
       document.getElementById("omedOutput").textContent = "";
@@ -358,10 +499,85 @@ header {
       return Math.max(min, rounded);
     }
 
+    function openDoseChoiceModal(state) {
+      doseChoiceState = state;
+      const modal = document.getElementById("doseChoiceModal");
+      const explEl = document.getElementById("doseChoiceExplanation");
+      const optionsEl = document.getElementById("doseChoiceOptions");
+      const confirmBtn = document.getElementById("doseChoiceConfirm");
+
+      explEl.textContent = state.explanation;
+      optionsEl.innerHTML = "";
+      confirmBtn.disabled = true;
+
+      state.options.forEach((opt, index) => {
+        const wrapper = document.createElement("label");
+        wrapper.style.display = "block";
+        wrapper.style.marginBottom = "0.4rem";
+        const radio = document.createElement("input");
+        radio.type = "radio";
+        radio.name = "doseChoiceOption";
+        radio.value = String(index);
+        radio.style.marginRight = "0.4rem";
+        radio.addEventListener("change", () => {
+          doseChoiceState.selectedIndex = index;
+          confirmBtn.disabled = false;
+        });
+        wrapper.appendChild(radio);
+        const text = document.createElement("span");
+        text.innerHTML = `<strong>${opt.strength} micrograms/hour</strong> – ${opt.patchType || ""} (covers ~${opt.approxOmed} mg OMED/24h).`;
+        wrapper.appendChild(text);
+        optionsEl.appendChild(wrapper);
+      });
+
+      modal.classList.remove("hidden");
+    }
+
+    function closeDoseChoiceModal() {
+      const modal = document.getElementById("doseChoiceModal");
+      modal.classList.add("hidden");
+      doseChoiceState = null;
+    }
+
+    function applyDoseChoice() {
+      if (!doseChoiceState || doseChoiceState.selectedIndex == null) return;
+
+      const state = doseChoiceState;
+      const option = state.options[state.selectedIndex];
+      const targetBox = document.getElementById("targetOutput");
+      const noteBox = document.getElementById("clinicianNoteOutput");
+      const convertBtn = document.getElementById("convertBtn");
+
+      const targetMeta = targetFactorMeta[state.targetKey] || null;
+
+      targetBox.innerHTML =
+        `<strong>Approximate ${state.targetKey === "transdermal_buprenorphine" ? "buprenorphine" : "fentanyl"} patch: ${option.strength} micrograms/hour${option.patchType ? ", " + option.patchType : ""}.</strong><br>
+         Estimated OMED coverage: ~${option.approxOmed} mg/24h (patient adjusted OMED: ~${Math.round(state.adjustedOmed)} mg/24h).`;
+
+      const noteLines = [];
+      noteLines.push(`Approximate total OMED: ~${state.omedRounded} mg/24h (estimate only).`);
+      if (state.parts && state.parts.length) {
+        noteLines.push("Current opioids:");
+        state.parts.forEach(p => noteLines.push(" - " + p));
+      }
+      noteLines.push(`Target opioid: ${state.targetLabel} – ${option.strength} micrograms/hour${option.patchType ? " " + option.patchType : ""}.`);
+      if (targetMeta) {
+        noteLines.push(`Target opioid conversion factor used: ${targetMeta.factor} [${targetMeta.ref}].`);
+      }
+      noteLines.push(`Breakthrough: ${state.prnDrug} approx ${state.roundedPrn} mg up to 4-hourly PRN (adjust for renal function, age, frailty and local guidance).`);
+      noteLines.push("Plan discussed with patient; advised to report sedation, confusion, hallucinations, uncontrolled pain, or side-effects promptly. Consider specialist palliative care / pain advice if unstable or high dose.");
+
+      noteBox.value = noteLines.join("\n");
+
+      if (convertBtn) convertBtn.disabled = true;
+      closeDoseChoiceModal();
+    }
+
     function calculate() {
       const rows = document.querySelectorAll(".opioid-row");
       let totalOmed = 0;
       const parts = [];
+      const factorNotes = [];
 
       rows.forEach(row => {
         const select = row.querySelector(".opioid-select");
@@ -372,9 +588,18 @@ header {
         const doseVal = parseFloat(doseInput.value);
         if (!doseVal || !opioidFactors[key]) return;
 
-        const omed = opioidFactors[key].toMorphine(doseVal);
+        const meta = opioidFactors[key];
+        const omed = meta.toMorphine(doseVal);
         totalOmed += omed;
-        parts.push(`${opioidFactors[key].label}: ${doseVal} → ~${Math.round(omed)} mg OMED`);
+        let line = `${meta.label}: ${doseVal} → ~${Math.round(omed)} mg OMED`;
+        if (meta.factor) {
+          line += ` (conversion: ${meta.factor} [${meta.ref}])`;
+          const summary = `${meta.label}: ${meta.factor} [${meta.ref}]`;
+          if (!factorNotes.includes(summary)) {
+            factorNotes.push(summary);
+          }
+        }
+        parts.push(line);
       });
 
       const omedBox = document.getElementById("omedOutput");
@@ -397,9 +622,11 @@ header {
         `<strong>Approximate total oral morphine equivalent: ${omedRounded} mg/24h.</strong><br>` +
         `(This is an estimate – check SPS/BNF guidance and consider dose reduction for frailty or co-morbidity.)`;
 
-      const targetKey = document.getElementById("targetOpioid").value;
+      const targetSelect = document.getElementById("targetOpioid");
+      const targetKey = targetSelect.value;
+      const targetLabel = targetSelect.selectedOptions[0].text;
       const frailty = parseFloat(document.getElementById("frailtyFactor").value || "1");
-      const suggestFn = targetSuggestions[targetKey];
+      const suggest = targetSuggestions[targetKey];
 
       if (brForm) {
         if (targetKey === "sc_morphine") {
@@ -411,13 +638,15 @@ header {
         }
       }
 
-      if (suggestFn) {
-        const targetText = suggestFn(omedRounded, frailty) || "";
-        targetBox.innerHTML = targetText.replace(/\n/g, "<br>");
-      } else {
+      if (!suggest) {
         targetBox.textContent = "Target opioid suggestion not available for this selection.";
+        return;
       }
 
+      const suggestion = suggest(omedRounded, frailty);
+
+      // PRN calculation (same regardless of target choice)
+      const targetMeta = targetFactorMeta[targetKey] || null;
       let basePrn = (omedRounded * frailty) / 6;
       let prnDrug = "Morphine immediate-release (e.g. Oramorph)";
       let prnDose = basePrn;
@@ -437,14 +666,37 @@ header {
       }
 
       const isSC = /SC/.test(prnDrug);
-      const roundedPrn = isSC ?
-        Math.max(1, Math.round(prnDose)) :
-        roundTo(prnDose, 2.5, 2.5);
+      const roundedPrn = isSC
+        ? Math.max(1, Math.round(prnDose))
+        : roundTo(prnDose, 2.5, 2.5);
 
       prnBox.innerHTML =
         `Suggested breakthrough dose based on adjusted OMED:<br>` +
         `<strong>• ${prnDrug}: ${roundedPrn} mg up to 4-hourly PRN.</strong><br>` +
         `Always check local palliative care guidance, especially in renal impairment or high baseline doses.`;
+
+      // If multiple target dose options, open modal and defer final note/target
+      if (suggestion.choiceRequired) {
+        const state = {
+          modality: suggestion.modality,
+          targetKey,
+          targetLabel,
+          omedRounded,
+          adjustedOmed: omedRounded * frailty,
+          parts,
+          factorNotes,
+          prnDrug,
+          roundedPrn,
+          options: suggestion.options,
+          explanation: suggestion.explanation
+        };
+        openDoseChoiceModal(state);
+        if (convertBtn) convertBtn.disabled = true;
+        return;
+      }
+
+      // Single clear option – write target and full clinician note now
+      targetBox.innerHTML = suggestion.text.replace(/\n/g, "<br>");
 
       const noteLines = [];
       noteLines.push(`Approximate total OMED: ~${omedRounded} mg/24h (estimate only).`);
@@ -452,7 +704,14 @@ header {
         noteLines.push("Current opioids:");
         parts.forEach(p => noteLines.push(" - " + p));
       }
-      noteLines.push(`Target opioid: ${document.getElementById("targetOpioid").selectedOptions[0].text}, with dose reduction factor ${frailty}.`);
+      noteLines.push(`Target opioid: ${targetLabel}, with dose reduction factor ${frailty}.`);
+      if (targetMeta) {
+        noteLines.push(`Target opioid conversion factor used: ${targetMeta.factor} [${targetMeta.ref}].`);
+      }
+      if (factorNotes.length) {
+        noteLines.push("Conversion factors applied for current opioids:");
+        factorNotes.forEach(f => noteLines.push(" - " + f));
+      }
       noteLines.push(`Breakthrough: ${prnDrug} approx ${roundedPrn} mg up to 4-hourly PRN (adjust for renal function, age, frailty and local guidance).`);
       noteLines.push("Plan discussed with patient; advised to report sedation, confusion, hallucinations, uncontrolled pain, or side-effects promptly. Consider specialist palliative care / pain advice if unstable or high dose.");
 
@@ -470,6 +729,8 @@ header {
       const targetSel = document.getElementById("targetOpioid");
       const frailtySel = document.getElementById("frailtyFactor");
       const brForm = document.getElementById("brForm");
+      const modalCancel = document.getElementById("doseChoiceCancel");
+      const modalConfirm = document.getElementById("doseChoiceConfirm");
 
       addBtn.addEventListener("click", addOpioidRow);
       clearBtn.addEventListener("click", clearOpioidRows);
@@ -491,11 +752,19 @@ header {
       frailtySel.addEventListener("change", markDirty);
       brForm.addEventListener("change", markDirty);
 
+      modalCancel.addEventListener("click", () => {
+        closeDoseChoiceModal();
+        clearOutputs();
+        convertBtn.disabled = false;
+      });
+      modalConfirm.addEventListener("click", applyDoseChoice);
+
       clearOpioidRows();
       convertBtn.disabled = false;
     }
 
     window.addEventListener("DOMContentLoaded", initOpioidTool);
+
   </script>
 </body>
 </html>
