@@ -565,6 +565,8 @@ const opioidFactors = {
 
   // Oral oxycodone ~ 1:2 (10 mg oxycodone ≈ 20 mg morphine)
   oral_oxycodone:     { toMorphine: dose => dose * 2,            label: "Oral oxycodone (mg/24h)" },
+  oral_oxycodone_ir:  { toMorphine: dose => dose * 2,            label: "Oxycodone IR (immediate-release, mg/24h)" },
+  oral_oxycodone_mr:  { toMorphine: dose => dose * 2,            label: "Oxycodone MR (modified-release, mg/24h)" },
 
   // Fentanyl patch: rough factor ~ 3 mg oral morphine per 1 mcg/hr
   fentanyl_patch:     { toMorphine: dose => dose * 3,            label: "Transdermal fentanyl patch (mcg/hour)" },
@@ -646,9 +648,24 @@ function createOpioidRow(idx) {
   return row;
 }
 
+
 function initOpioidTool() {
-  const container = documen("\n");
-("\n");
+  const container = document.getElementById("current-opioids");
+  const addBtn = document.getElementById("addOpioidBtn");
+  const clearBtn = document.getElementById("clearOpioidsBtn");
+  const convertBtn = document.getElementById("convertBtn");
+  const clearOutBtn = document.getElementById("clearOutputsBtn");
+  const copyClinBtn = document.getElementById("copyClinicianBtn");
+
+  function addRow() {
+    const idx = container.children.length;
+    const row = createOpioidRow(idx);
+    container.appendChild(row);
+  }
+
+  function clearRows() {
+    container.innerHTML = "";
+    addRow();
   }
 
   function clearOutputs() {
@@ -656,6 +673,71 @@ function initOpioidTool() {
     document.getElementById("targetOutput").textContent = "";
     document.getElementById("prnOutput").textContent = "";
     document.getElementById("clinicianNoteOutput").textContent = "";
+  }
+
+  function calculate() {
+    const rows = container.querySelectorAll(".opioid-row");
+    let totalOmed = 0;
+    const parts = [];
+
+    rows.forEach(row => {
+      const select = row.querySelector(".opioid-select");
+      const doseInput = row.querySelector(".dose-input");
+      if (!select || !doseInput) return;
+      const key = select.value;
+      const dose = parseFloat(doseInput.value);
+      if (!dose || !opioidFactors[key]) return;
+      const omed = opioidFactors[key].toMorphine(dose);
+      totalOmed += omed;
+      parts.push(`${opioidFactors[key].label}: ${dose} → ~${Math.round(omed)} mg OMED`);
+    });
+
+    const omedBox = document.getElementById("omedOutput");
+    const targetBox = document.getElementById("targetOutput");
+    const prnBox = document.getElementById("prnOutput");
+    const noteBox = document.getElementById("clinicianNoteOutput");
+
+    if (totalOmed === 0) {
+      omedBox.textContent = "No valid opioid doses entered.";
+      targetBox.textContent = "";
+      prnBox.textContent = "";
+      noteBox.textContent = "";
+      return;
+    }
+
+    const omedRounded = Math.round(totalOmed);
+    const frailty = parseFloat(document.getElementById("frailtyFactor").value || "1");
+    const targetKey = document.getElementById("targetOpioid").value;
+    const suggestFn = targetSuggestions[targetKey];
+
+    omedBox.textContent =
+      `Approximate total oral morphine equivalent: ${omedRounded} mg/24h.` +
+      `\n(This is an estimate – check SPS / BNF tables and consider dose reduction for frailty/co-morbidity.)`;
+
+    if (suggestFn) {
+      targetBox.textContent = suggestFn(omedRounded, frailty);
+    } else {
+      targetBox.textContent = "Target opioid suggestion not available for this selection.";
+    }
+
+    // Simple PRN: total daily oral morphine ÷ 6 (4-hourly) and rounded
+    const prnDose = Math.max(2.5, Math.round((omedRounded * frailty) / 6 / 2.5) * 2.5);
+    prnBox.textContent =
+      `Suggested breakthrough dose based on adjusted OMED:` +
+      `\n• Morphine immediate-release (e.g. Oramorph): ${prnDose} mg up to 4-hourly PRN.` +
+      `\nAlways check local palliative care guidance, especially in renal impairment or high baseline doses.`;
+
+    const noteLines = [];
+    noteLines.push(`Approximate total OMED: ~${omedRounded} mg/24h (estimate only).`);
+    if (parts.length) {
+      noteLines.push("Current opioids:");
+      parts.forEach(p => noteLines.push(" - " + p));
+    }
+    noteLines.push(`Target opioid: ${document.getElementById("targetOpioid").selectedOptions[0].text}, with dose reduction factor ${frailty}.`);
+    noteLines.push(`Breakthrough: IR morphine approx ${prnDose} mg 4-hourly PRN (adjust per guidance, renal function, age, frailty).`);
+    noteLines.push("Plan discussed with patient; advised to report uncontrolled pain, sedation, confusion or side-effects. Consider specialist palliative care / pain advice if unstable or high dose.");
+
+    noteBox.textContent = noteLines.join("\n");
   }
 
   addBtn.addEventListener("click", addRow);
@@ -674,6 +756,7 @@ function initOpioidTool() {
 
   clearRows();
 }
+
 
 document.addEventListener("DOMContentLoaded", initOpioidTool);
   </script>
