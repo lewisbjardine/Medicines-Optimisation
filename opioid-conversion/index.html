@@ -1,129 +1,729 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="utf-8">
-<title>Opioid Conversion</title>
-<link rel="stylesheet" href="../shared/styles.css">
-<style>
-.modal {
-  display:none; position:fixed; top:0; left:0; width:100%; height:100%;
-  background:rgba(0,0,0,0.5); justify-content:center; align-items:center;
-}
-.modal-content {
-  background:#fff; padding:20px; border-radius:6px; max-width:400px;
-}
-</style>
+  <meta charset="UTF-8" />
+  <title>Opioid conversion & breakthrough dosing</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- Use shared NHS branding styles -->
+  <link rel="stylesheet" href="../shared/styles.css" />
+  <style>
+    main {
+      max-width: 960px;
+      margin: 1.5rem auto;
+      padding: 1rem;
+      background: #ffffff;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      border-radius: 4px;
+    }
+    .section {
+      margin-bottom: 1.5rem;
+    }
+    .opioid-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr) auto;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+      align-items: end;
+    }
+    .opioid-row label {
+      display: block;
+      font-size: 0.85rem;
+      margin-bottom: 0.1rem;
+    }
+    .opioid-row select,
+    .opioid-row input {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 0.3rem 0.4rem;
+    }
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+    .output-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1rem;
+    }
+    .output-box {
+      border: 1px solid #d8dde0;
+      border-radius: 4px;
+      padding: 0.6rem;
+      min-height: 3rem;
+      background: #f5f8fa;
+      white-space: pre-wrap;
+      font-size: 0.9rem;
+    }
+    .output-box strong {
+      font-weight: 600;
+      color: #000;
+    }
+    textarea {
+      width: 100%;
+      min-height: 7rem;
+      box-sizing: border-box;
+      resize: vertical;
+      font-family: inherit;
+      font-size: 0.9rem;
+    }
+    .small-select {
+      padding: 0.2rem 0.4rem;
+      font-size: 0.85rem;
+      margin: 0.2rem 0;
+    }
+    /* Modal styles */
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.4);
+      z-index: 999;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-backdrop.active {
+      display: flex;
+    }
+    .modal {
+      background: #ffffff;
+      max-width: 480px;
+      width: 100%;
+      border-radius: 6px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+      padding: 1rem 1.2rem 1.2rem;
+    }
+    .modal h2 {
+      margin-top: 0;
+      font-size: 1.1rem;
+    }
+    .modal-options {
+      margin: 0.5rem 0 0.75rem;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+    .modal-options label {
+      display: block;
+      margin-bottom: 0.35rem;
+      font-size: 0.9rem;
+    }
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+    button.primary {
+      background: #005eb8;
+      border-color: #005eb8;
+      color: #ffffff;
+    }
+    button.primary:disabled {
+      background: #999999 !important;
+      border-color: #777777 !important;
+      color: #eeeeee !important;
+      cursor: not-allowed;
+    }
+    button.secondary {
+      background: #ffffff;
+      border-color: #005eb8;
+      color: #005eb8;
+    }
+    button.small {
+      font-size: 0.8rem;
+      padding: 0.2rem 0.5rem;
+    }
+  </style>
 </head>
 <body>
-<header>
-<h1>Opioid conversion & breakthrough dosing</h1>
-<p class="subtitle">BNF‑aligned opioid switching tool</p>
-<a class="return-home" href="../index.html">Back to Medicines Optimisation home</a>
-</header>
+  <header>
+    <h1>Opioid conversion &amp; breakthrough dosing</h1>
+    <p class="subtitle">
+      Approximate opioid conversion helper for adults, using UK BNF-aligned palliative-care tables.
+      Does not replace local guidelines or specialist advice.
+    </p>
+    <a href="../index.html" class="return-home">Back to Medicines Optimisation home</a>
+  </header>
 
-<main>
-<div>
-<h2>Current opioids</h2>
-<div id="opioidRows"></div>
-<button id="addOP">Add opioid</button>
-</div>
+  <main>
+    <section class="section">
+      <h2>1. Current opioid use</h2>
+      <p style="font-size:0.9rem;">
+        Enter all regular opioids (24-hour totals). Include frequent PRN doses if clinically relevant.
+      </p>
+      <div id="opioidRows"></div>
+      <div class="button-row">
+        <button type="button" id="addOpioidBtn" class="primary">Add another opioid</button>
+        <button type="button" id="clearOpioidsBtn" class="secondary">Clear all</button>
+      </div>
+    </section>
 
-<h2>Target opioid</h2>
-<select id="targetOp">
-<option value="bupe">Buprenorphine patch</option>
-<option value="fent">Fentanyl patch</option>
-</select>
-<button id="calcBtn">Calculate</button>
+    <section class="section">
+      <h2>2. Target opioid &amp; frailty</h2>
+      <div class="opioid-row" style="grid-template-columns: minmax(0,1.5fr) minmax(0,1fr);">
+        <div>
+          <label for="targetOpioid">Target opioid</label>
+          <select id="targetOpioid">
+            <option value="oral_morphine">Oral morphine (24h total)</option>
+            <option value="oral_oxycodone">Oral oxycodone (24h total)</option>
+            <option value="fentanyl_patch">Fentanyl patch</option>
+            <option value="buprenorphine_patch">Buprenorphine patch</option>
+            <option value="sc_morphine">Morphine SC (24h syringe driver)</option>
+            <option value="sc_diamorphine">Diamorphine SC (24h syringe driver)</option>
+          </select>
+        </div>
+        <div>
+          <label for="frailtyFactor">Dose reduction factor</label>
+          <select id="frailtyFactor">
+            <option value="1">None (fit adult)</option>
+            <option value="0.75">Mild frailty / age &gt; 65</option>
+            <option value="0.5">Significant frailty / high risk</option>
+          </select>
+        </div>
+      </div>
 
-<h2>Outputs</h2>
-<div id="targetOutput"></div>
-<textarea id="clinicianNote" style="width:100%;height:120px;"></textarea>
-</main>
+      <div class="button-row" style="margin-top:0.75rem;">
+        <button type="button" id="convertBtn" class="primary">Calculate conversion</button>
+        <button type="button" id="clearOutputsBtn" class="secondary">Clear outputs</button>
+      </div>
+    </section>
 
-<!-- Modal -->
-<div class="modal" id="doseModal">
-  <div class="modal-content">
-    <h3>Choose dose</h3>
-    <div id="modalOptions"></div>
-    <button id="modalConfirm">Confirm</button>
-    <button id="modalCancel">Cancel</button>
+    <section class="section">
+      <h2>3. Outputs</h2>
+      <div class="output-grid">
+        <div>
+          <strong>Total oral morphine equivalent (OMED)</strong>
+          <div class="output-box" id="omedOutput"></div>
+        </div>
+        <div>
+          <strong>Suggested target opioid regimen</strong>
+          <div class="output-box" id="targetOutput"></div>
+        </div>
+        <div>
+          <strong>Breakthrough / PRN opioid suggestion</strong><br />
+          <label for="brForm" style="font-size:0.8rem;">Breakthrough formulation</label><br />
+          <select id="brForm" class="small-select">
+            <option value="oramorph">Oramorph (oral morphine IR)</option>
+            <option value="sc_morphine">SC morphine</option>
+            <option value="diamorphine">Diamorphine SC</option>
+            <option value="oxynorm">Oxynorm (oxycodone IR)</option>
+          </select>
+          <div class="output-box" id="prnOutput"></div>
+        </div>
+      </div>
+
+      <div style="margin-top:1rem;">
+        <strong>Clinician note (EMIS/SystmOne)</strong>
+        <button type="button" id="copyClinicianBtn" class="small secondary" style="float:right;">Copy</button>
+        <div style="clear:both;"></div>
+        <textarea id="clinicianNoteOutput" readonly></textarea>
+      </div>
+    </section>
+  </main>
+
+  <!-- Dose selection modal -->
+  <div class="modal-backdrop" id="doseModalBackdrop" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="doseModalTitle">
+      <h2 id="doseModalTitle">Choose target opioid dose</h2>
+      <p id="doseModalExplanation" style="font-size:0.9rem;"></p>
+      <div class="modal-options" id="doseModalOptions"></div>
+      <div class="modal-actions">
+        <button type="button" id="doseModalCancel" class="secondary">Cancel</button>
+        <button type="button" id="doseModalConfirm" class="primary" disabled>Confirm choice</button>
+      </div>
+    </div>
   </div>
-</div>
 
-<script>
-function bupeOptions(adj){
-  const table=[
-    {omed:12,str:5,label:"5 mcg/hr (7‑day)"},
-    {omed:24,str:10,label:"10 mcg/hr (7‑day)"},
-    {omed:36,str:15,label:"15 mcg/hr (7‑day)"},
-    {omed:48,str:20,label:"20 mcg/hr (7‑day)"},
-    {omed:84,str:35,label:"35 mcg/hr (4‑day)"},
-    {omed:126,str:52.5,label:"52.5 mcg/hr (4‑day)"},
-    {omed:168,str:70,label:"70 mcg/hr (4‑day)"}
-  ];
-  let best=table.reduce((a,b)=>Math.abs(b.omed-adj)<Math.abs(a.omed-adj)?b:a);
-  let alts=table.filter(x=>x!==best && Math.abs(x.omed-adj)/adj<=0.3);
-  return [best, ...alts];
-}
+  <script>
+    // ===== Conversion tables =====
+    const opioidFactors = {
+      oral_codeine: {
+        toMorphine: dose => dose * 0.1, // 10 mg codeine ≈ 1 mg oral morphine
+        label: "Codeine (oral)"
+      },
+      oral_tramadol: {
+        toMorphine: dose => dose * 0.1, // 10 mg tramadol ≈ 1 mg oral morphine
+        label: "Tramadol (oral)"
+      },
+      oral_morphine: {
+        toMorphine: dose => dose, // 1 mg = 1 mg OMED
+        label: "Morphine (oral)"
+      },
+      oral_oxycodone_ir: {
+        toMorphine: dose => dose * 1.5, // 1 mg oxycodone ≈ 1.5 mg oral morphine (conservative)
+        label: "Oxycodone IR (oral)"
+      },
+      oral_oxycodone_mr: {
+        toMorphine: dose => dose * 1.5,
+        label: "Oxycodone MR (oral)"
+      },
+      fentanyl_patch: {
+        toMorphine: dose => dose * 2.4, // 25 mcg/h ≈ 60 mg OMED → 1 mcg/h ≈ 2.4 mg OMED
+        label: "Fentanyl patch (mcg/hour)"
+      },
+      sc_morphine: {
+        toMorphine: dose => dose * 2, // SC ≈ 2 × oral potency
+        label: "Morphine SC (24h)"
+      },
+      sc_diamorphine: {
+        toMorphine: dose => dose * 3, // diamorphine ≈ 3 × oral morphine
+        label: "Diamorphine SC (24h)"
+      }
+    };
 
-function fentOptions(adj){
-  const table=[
-    {min:30,max:60,str:12},
-    {min:60,max:90,str:25},
-    {min:90,max:120,str:37},
-    {min:120,max:180,str:50},
-    {min:180,max:240,str:62},
-    {min:240,max:300,str:75},
-    {min:300,max:360,str:87},
-    {min:360,max:9999,str:100}
-  ];
-  const row=table.find(r=>adj>=r.min && adj<r.max);
-  if(!row) return [];
-  // possible alternatives: neighbours
-  let opts=[row];
-  let idx=table.indexOf(row);
-  if(idx>0) opts.push(table[idx-1]);
-  if(idx<table.length-1) opts.push(table[idx+1]);
-  return opts;
-}
+    // Buprenorphine patch approximate OMED bands (BNF-aligned palliative care guidance)
+    const buprenorphineTable = [
+      { omed: 12,  strength: 5,    freq: "every 7 days",  label: "5 mcg/hour (BuTrans/Butec 7-day)" },
+      { omed: 24,  strength: 10,   freq: "every 7 days",  label: "10 mcg/hour (7-day)" },
+      { omed: 36,  strength: 15,   freq: "every 7 days",  label: "15 mcg/hour (7-day)" },
+      { omed: 48,  strength: 20,   freq: "every 7 days",  label: "20 mcg/hour (7-day)" },
+      { omed: 84,  strength: 35,   freq: "every 3–4 days", label: "35 mcg/hour (Transtec 4-day)" },
+      { omed: 126, strength: 52.5, freq: "every 3–4 days", label: "52.5 mcg/hour (4-day)" },
+      { omed: 168, strength: 70,   freq: "every 3–4 days", label: "70 mcg/hour (4-day)" }
+    ];
 
-function openModal(options, callback){
-  const modal=document.getElementById("doseModal");
-  const box=document.getElementById("modalOptions");
-  box.innerHTML="";
-  options.forEach((o,i)=>{
-    let id="opt"+i;
-    box.innerHTML+=`<label><input type="radio" name="dosePick" value="${o.str}" id="${id}"> ${o.str} mcg/hr</label><br>`;
-  });
-  modal.style.display="flex";
-  document.getElementById("modalConfirm").onclick=function(){
-    let v=document.querySelector("input[name='dosePick']:checked");
-    if(!v) return;
-    modal.style.display="none";
-    callback(v.value);
-  };
-  document.getElementById("modalCancel").onclick=function(){
-    modal.style.display="none";
-  };
-}
+    // Fentanyl patch bands (approximate, from morphine → fentanyl tables)
+    const fentanylTable = [
+      { min: 30,  max: 60,  strength: 12,  label: "12 mcg/hour (72-hour)" },
+      { min: 60,  max: 90,  strength: 25,  label: "25 mcg/hour (72-hour)" },
+      { min: 90,  max: 120, strength: 37,  label: "37 mcg/hour (72-hour)" },
+      { min: 120, max: 180, strength: 50,  label: "50 mcg/hour (72-hour)" },
+      { min: 180, max: 240, strength: 62,  label: "62 mcg/hour (72-hour)" },
+      { min: 240, max: 300, strength: 75,  label: "75 mcg/hour (72-hour)" },
+      { min: 300, max: 360, strength: 87,  label: "87 mcg/hour (72-hour)" },
+      { min: 360, max: Infinity, strength: 100, label: "100 mcg/hour (72-hour)" }
+    ];
 
-document.getElementById("calcBtn").onclick=function(){
-  let adj=150; // simulate OMED calc placeholder
-  let target=document.getElementById("targetOp").value;
-  let opts=(target==="bupe")?bupeOptions(adj):fentOptions(adj);
-  if(opts.length>1){
-    openModal(opts, function(choice){
-      document.getElementById("targetOutput").innerHTML="Chosen dose: "+choice+" mcg/hr";
-      document.getElementById("clinicianNote").value="Chosen "+choice+" mcg/hr patch. OMED="+adj;
-    });
-  } else if(opts.length===1){
-    let c=opts[0].str;
-    document.getElementById("targetOutput").innerHTML="Suggested dose: "+c+" mcg/hr";
-  } else {
-    document.getElementById("targetOutput").innerHTML="No valid dose.";
-  }
-};
-</script>
+    function roundTo(value, step, min) {
+      const rounded = Math.round(value / step) * step;
+      return Math.max(min, rounded);
+    }
 
+    // ===== DOM helpers =====
+    function clearOutputs() {
+      document.getElementById("omedOutput").textContent = "";
+      document.getElementById("targetOutput").textContent = "";
+      document.getElementById("prnOutput").textContent = "";
+      document.getElementById("clinicianNoteOutput").value = "";
+    }
+
+    function markDirty() {
+      clearOutputs();
+      const btn = document.getElementById("convertBtn");
+      if (btn) btn.disabled = false;
+    }
+
+    function createOpioidRow() {
+      const row = document.createElement("div");
+      row.className = "opioid-row";
+      row.innerHTML = `
+        <div>
+          <label>Opioid</label>
+          <select class="opioid-select">
+            <option value="oral_codeine">Codeine (mg/24h)</option>
+            <option value="oral_tramadol">Tramadol (mg/24h)</option>
+            <option value="oral_morphine">Morphine (oral, mg/24h)</option>
+            <option value="oral_oxycodone_ir">Oxycodone IR (oral, mg/24h)</option>
+            <option value="oral_oxycodone_mr">Oxycodone MR (oral, mg/24h)</option>
+            <option value="fentanyl_patch">Fentanyl patch (mcg/hour)</option>
+            <option value="sc_morphine">Morphine SC (mg/24h)</option>
+            <option value="sc_diamorphine">Diamorphine SC (mg/24h)</option>
+          </select>
+        </div>
+        <div>
+          <label>Total daily dose</label>
+          <input type="number" class="dose-input" min="0" step="1" />
+        </div>
+        <button type="button" class="remove-opioid-btn secondary small">Remove</button>
+      `;
+      row.querySelector(".remove-opioid-btn").addEventListener("click", () => {
+        row.remove();
+        markDirty();
+      });
+      const sel = row.querySelector(".opioid-select");
+      const dose = row.querySelector(".dose-input");
+      sel.addEventListener("change", markDirty);
+      dose.addEventListener("input", markDirty);
+      return row;
+    }
+
+    function addOpioidRow() {
+      const container = document.getElementById("opioidRows");
+      const row = createOpioidRow();
+      container.appendChild(row);
+      markDirty();
+    }
+
+    function clearOpioidRows() {
+      const container = document.getElementById("opioidRows");
+      container.innerHTML = "";
+      addOpioidRow();
+      markDirty();
+    }
+
+    // ===== Modal handling =====
+    let pendingCalcContext = null;
+
+    function openDoseChoiceModal(context, options, explanation) {
+      pendingCalcContext = { ...context, options };
+      const backdrop = document.getElementById("doseModalBackdrop");
+      const optionsContainer = document.getElementById("doseModalOptions");
+      const explanationEl = document.getElementById("doseModalExplanation");
+      const confirmBtn = document.getElementById("doseModalConfirm");
+
+      explanationEl.textContent = explanation;
+      optionsContainer.innerHTML = "";
+      confirmBtn.disabled = true;
+
+      options.forEach((opt, index) => {
+        const id = "doseChoice_" + index;
+        const wrapper = document.createElement("label");
+        wrapper.htmlFor = id;
+        wrapper.innerHTML = `
+          <input type="radio" name="doseChoice" id="${id}" value="${index}">
+          ${opt.label} – covers approximately ${opt.omedText}
+        `;
+        optionsContainer.appendChild(wrapper);
+      });
+
+      optionsContainer.addEventListener("change", function onChange(ev) {
+        if (ev.target && ev.target.name === "doseChoice") {
+          confirmBtn.disabled = false;
+        }
+      }, { once: true });
+
+      backdrop.classList.add("active");
+    }
+
+    function closeDoseChoiceModal() {
+      const backdrop = document.getElementById("doseModalBackdrop");
+      backdrop.classList.remove("active");
+      pendingCalcContext = null;
+    }
+
+    function handleDoseChoiceConfirm() {
+      const selected = document.querySelector("input[name='doseChoice']:checked");
+      if (!selected || !pendingCalcContext) return;
+      const index = parseInt(selected.value, 10);
+      const opt = pendingCalcContext.options[index];
+      finaliseOutputsWithChoice(pendingCalcContext, opt);
+      const convertBtn = document.getElementById("convertBtn");
+      if (convertBtn) convertBtn.disabled = true;
+      closeDoseChoiceModal();
+    }
+
+    function handleDoseChoiceCancel() {
+      closeDoseChoiceModal();
+      clearOutputs();
+      const convertBtn = document.getElementById("convertBtn");
+      if (convertBtn) convertBtn.disabled = false;
+    }
+
+    // ===== Target suggestion helpers =====
+    function getBuprenorphineOptions(adjOMED) {
+      // always include nearest; add neighbours within ±30%
+      let nearest = buprenorphineTable.reduce((best, row) =>
+        Math.abs(row.omed - adjOMED) < Math.abs(best.omed - adjOMED) ? row : best
+      );
+      const options = [nearest];
+      buprenorphineTable.forEach(row => {
+        if (row !== nearest && Math.abs(row.omed - adjOMED) / adjOMED <= 0.3) {
+          options.push(row);
+        }
+      });
+      // Map to include text for clinician
+      return options.map(row => ({
+        ...row,
+        omedText: `${row.omed} mg/24h oral morphine`
+      }));
+    }
+
+    function getFentanylOptions(adjOMED) {
+      const main = fentanylTable.find(row => adjOMED >= row.min && adjOMED < row.max);
+      if (!main) return [];
+      const idx = fentanylTable.indexOf(main);
+      const neighbours = [];
+      if (idx > 0) neighbours.push(fentanylTable[idx - 1]);
+      if (idx < fentanylTable.length - 1) neighbours.push(fentanylTable[idx + 1]);
+
+      const all = [main, ...neighbours];
+      return all.map(row => ({
+        strength: row.strength,
+        omedText: row.max === Infinity
+          ? `≥ ${row.min} mg/24h oral morphine`
+          : `${row.min}–${row.max} mg/24h oral morphine`,
+        label: `${row.strength} mcg/hour (72-hour patch)`
+      }));
+    }
+
+    function renderBuprenorphineChoice(adjOMED, choice) {
+      return `<strong>Buprenorphine patch: ${choice.strength} micrograms/hour, ${choice.freq}.</strong><br>
+              Based on adjusted OMED ≈ ${Math.round(adjOMED)} mg/24 h and standard buprenorphine patch bands
+              (${choice.omedText}). Choose lower strengths in frailty or if uncertain, and titrate with local
+              palliative-care guidance.`;
+    }
+
+    function renderFentanylChoice(adjOMED, choice) {
+      return `<strong>Fentanyl patch: ${choice.strength} micrograms/hour (72-hour patch).</strong><br>
+              Based on adjusted OMED ≈ ${Math.round(adjOMED)} mg/24 h and standard fentanyl patch conversion
+              bands (${choice.omedText}). Fentanyl is substantially more potent than oral morphine; monitor
+              closely for sedation and toxicity.`;
+    }
+
+    // ===== Core calculation =====
+    function calculateConversion() {
+      const rows = document.querySelectorAll(".opioid-row");
+      let totalOmed = 0;
+      const parts = [];
+
+      rows.forEach(row => {
+        const select = row.querySelector(".opioid-select");
+        const doseInput = row.querySelector(".dose-input");
+        if (!select || !doseInput) return;
+
+        const key = select.value;
+        const doseVal = parseFloat(doseInput.value);
+        if (!doseVal || !opioidFactors[key]) return;
+
+        const omed = opioidFactors[key].toMorphine(doseVal);
+        totalOmed += omed;
+        parts.push(`${opioidFactors[key].label}: ${doseVal} → ~${Math.round(omed)} mg OMED`);
+      });
+
+      const omedBox = document.getElementById("omedOutput");
+      const targetBox = document.getElementById("targetOutput");
+      const prnBox = document.getElementById("prnOutput");
+      const noteBox = document.getElementById("clinicianNoteOutput");
+      const brForm = document.getElementById("brForm");
+      const convertBtn = document.getElementById("convertBtn");
+
+      if (totalOmed === 0) {
+        omedBox.textContent = "No valid doses entered.";
+        targetBox.textContent = "";
+        prnBox.textContent = "";
+        noteBox.value = "";
+        return;
+      }
+
+      const omedRounded = Math.round(totalOmed);
+      const frailty = parseFloat(document.getElementById("frailtyFactor").value || "1");
+      const adjOMED = omedRounded * frailty;
+      const targetKey = document.getElementById("targetOpioid").value;
+
+      omedBox.innerHTML =
+        `<strong>Approximate total oral morphine equivalent: ${omedRounded} mg/24 h.</strong><br>` +
+        `(Adjusted for frailty factor ${frailty}: ≈ ${Math.round(adjOMED)} mg/24 h).<br>` +
+        `These are estimates based on UK BNF-aligned opioid conversion tables – always cross-check with local guidance.`;
+
+      // PRN base from adjusted OMED
+      const basePrn = adjOMED / 6; // ~1/6 of total daily dose
+      let prnDrug = "Morphine immediate-release (e.g. Oramorph)";
+      let prnDose = basePrn;
+
+      if (brForm) {
+        const form = brForm.value || "oramorph";
+        if (form === "sc_morphine") {
+          prnDrug = "Morphine SC";
+          prnDose = basePrn / 2;
+        } else if (form === "diamorphine") {
+          prnDrug = "Diamorphine SC";
+          prnDose = basePrn / 3;
+        } else if (form === "oxynorm") {
+          prnDrug = "Oxycodone IR (Oxynorm)";
+          prnDose = basePrn / 2;
+        }
+      }
+      const isSC = /SC/.test(prnDrug);
+      const roundedPrn = isSC ? Math.max(1, Math.round(prnDose)) : roundTo(prnDose, 2.5, 2.5);
+      prnBox.innerHTML =
+        `Suggested breakthrough dose (approx.):<br>` +
+        `<strong>• ${prnDrug}: ${roundedPrn} mg up to 4-hourly PRN.</strong><br>` +
+        `Adjust for renal function, age, frailty and local guidance.`;
+
+      // If buprenorphine or fentanyl and multiple options exist, invoke modal
+      const baseContext = {
+        omedRounded,
+        adjOMED,
+        frailty,
+        targetKey,
+        parts,
+        prnDrug,
+        roundedPrn
+      };
+
+      if (targetKey === "buprenorphine_patch") {
+        const options = getBuprenorphineOptions(adjOMED);
+        if (options.length > 1) {
+          openDoseChoiceModal(
+            baseContext,
+            options,
+            "The adjusted OMED sits between standard buprenorphine patch strengths. Please choose the most appropriate patch, taking frailty and clinical context into account."
+          );
+          if (convertBtn) convertBtn.disabled = true;
+          targetBox.innerHTML =
+            "Multiple buprenorphine patch strengths are clinically possible at this OMED. Please choose one in the dose selection dialog.";
+          noteBox.value = "";
+          return;
+        } else if (options.length === 1) {
+          finaliseOutputsWithChoice(baseContext, options[0]);
+          if (convertBtn) convertBtn.disabled = true;
+          return;
+        } else {
+          targetBox.textContent =
+            "Adjusted OMED is too low or atypical for standard buprenorphine patch conversion – consider an alternative opioid or specialist advice.";
+        }
+      } else if (targetKey === "fentanyl_patch") {
+        const options = getFentanylOptions(adjOMED);
+        if (options.length > 1) {
+          openDoseChoiceModal(
+            baseContext,
+            options,
+            "More than one fentanyl patch strength could be considered at this adjusted OMED. Please choose one, taking frailty and clinical context into account."
+          );
+          if (convertBtn) convertBtn.disabled = true;
+          targetBox.innerHTML =
+            "Multiple fentanyl patch strengths are clinically possible at this OMED. Please choose one in the dose selection dialog.";
+          noteBox.value = "";
+          return;
+        } else if (options.length === 1) {
+          finaliseOutputsWithChoice(baseContext, options[0]);
+          if (convertBtn) convertBtn.disabled = true;
+          return;
+        } else {
+          targetBox.textContent =
+            "Adjusted OMED is outside the usual range for standard fentanyl patch conversion – consider alternative regimen or specialist advice.";
+        }
+      } else {
+        // Other target opioids: handle directly without modal
+        let targetHtml = "";
+        if (targetKey === "oral_morphine") {
+          const bd = roundTo(adjOMED / 2, 5, 5);
+          targetHtml =
+            `<strong>Oral morphine: ≈ ${Math.round(adjOMED)} mg/24 h total.</strong><br>` +
+            `For example: ${bd} mg MR twice daily (plus breakthrough as above), rounding down if concerned.`;
+        } else if (targetKey === "oral_oxycodone") {
+          const oxy = adjOMED / 1.5;
+          const bd = roundTo(oxy / 2, 2.5, 2.5);
+          targetHtml =
+            `<strong>Oral oxycodone: ≈ ${Math.round(oxy)} mg/24 h total.</strong><br>` +
+            `For example: ${bd} mg MR twice daily (plus breakthrough), rounding down and checking BNF-licensed strengths.`;
+        } else if (targetKey === "sc_morphine") {
+          const sc = adjOMED / 2;
+          targetHtml =
+            `<strong>Morphine SC: ≈ ${Math.round(sc)} mg/24 h via syringe driver.</strong><br>` +
+            `Dose assumes SC morphine ≈ 2 × oral morphine potency. Adjust per local palliative care guidance.`;
+        } else if (targetKey === "sc_diamorphine") {
+          const dia = adjOMED / 3;
+          targetHtml =
+            `<strong>Diamorphine SC: ≈ ${Math.round(dia)} mg/24 h via syringe driver.</strong><br>` +
+            `Dose assumes diamorphine ≈ 3 × oral morphine potency. Consider renal function and seek specialist advice if unsure.`;
+        }
+
+        targetBox.innerHTML = targetHtml;
+
+        const noteLines = [];
+        noteLines.push(`Approximate total OMED: ~${omedRounded} mg/24 h (estimate).`);
+        noteLines.push(`Frailty factor applied: ${frailty} → adjusted OMED ≈ ${Math.round(adjOMED)} mg/24 h.`);
+        if (parts.length) {
+          noteLines.push("Current opioids contributing to OMED:");
+          parts.forEach(p => noteLines.push(" - " + p));
+        }
+        noteLines.push(`Target opioid: ${document.getElementById("targetOpioid").selectedOptions[0].text}.`);
+        noteLines.push(`Breakthrough: ${prnDrug} approx ${roundedPrn} mg up to 4-hourly PRN (adjust for renal function, age, frailty and local guidance).`);
+        noteLines.push("Conversion factors (approximate, BNF-aligned):");
+        noteLines.push(" - Codeine/tramadol → oral morphine: ~0.1 (10 mg → ~1 mg oral morphine).");
+        noteLines.push(" - Oxycodone → oral morphine: ~1.5 (10 mg → ~15 mg oral morphine).");
+        noteLines.push(" - SC morphine ≈ 2 × oral morphine potency; diamorphine SC ≈ 3 × oral morphine.");
+        noteLines.push(" - Buprenorphine and fentanyl patches based on standard UK palliative care tables (BNF / SPS / local guidelines).");
+        noteLines.push("These doses are a guide only; monitor closely and seek specialist palliative care input if unstable or high dose.");
+        noteBox.value = noteLines.join("\n");
+
+        if (convertBtn) convertBtn.disabled = true;
+      }
+    }
+
+    function finaliseOutputsWithChoice(ctx, choice) {
+      const targetBox = document.getElementById("targetOutput");
+      const noteBox = document.getElementById("clinicianNoteOutput");
+      const prnBox = document.getElementById("prnOutput");
+      const targetKey = ctx.targetKey;
+
+      let targetHtml = "";
+      let targetLine = "";
+
+      if (targetKey === "buprenorphine_patch") {
+        targetHtml = renderBuprenorphineChoice(ctx.adjOMED, choice);
+        targetLine = `Target opioid: Buprenorphine patch ${choice.strength} mcg/hour (${choice.freq}), covering roughly ${choice.omedText}.`;
+      } else if (targetKey === "fentanyl_patch") {
+        targetHtml = renderFentanylChoice(ctx.adjOMED, choice);
+        targetLine = `Target opioid: Fentanyl patch ${choice.strength} mcg/hour (72-hour), mapped to ${choice.omedText}.`;
+      }
+
+      targetBox.innerHTML = targetHtml;
+
+      // Rebuild clinician note using context + choice
+      const noteLines = [];
+      noteLines.push(`Approximate total OMED: ~${ctx.omedRounded} mg/24 h (estimate).`);
+      noteLines.push(`Frailty factor applied: ${ctx.frailty} → adjusted OMED ≈ ${Math.round(ctx.adjOMED)} mg/24 h.`);
+      if (ctx.parts && ctx.parts.length) {
+        noteLines.push("Current opioids contributing to OMED:");
+        ctx.parts.forEach(p => noteLines.push(" - " + p));
+      }
+      noteLines.push(targetLine);
+      noteLines.push(`Breakthrough: ${ctx.prnDrug} approx ${ctx.roundedPrn} mg up to 4-hourly PRN (adjust for renal function, age, frailty and local guidance).`);
+      noteLines.push("Conversion factors (approximate, BNF-aligned):");
+      noteLines.push(" - Codeine/tramadol → oral morphine: ~0.1 (10 mg → ~1 mg oral morphine).");
+      noteLines.push(" - Oxycodone → oral morphine: ~1.5 (10 mg → ~15 mg oral morphine).");
+      noteLines.push(" - SC morphine ≈ 2 × oral morphine potency; diamorphine SC ≈ 3 × oral morphine.");
+      noteLines.push(" - Buprenorphine and fentanyl patches based on standard UK palliative care tables (BNF / SPS / local guidelines).");
+      noteLines.push("These doses are a guide only; monitor closely and seek specialist palliative care input if unstable or high dose.");
+      noteBox.value = noteLines.join("\n");
+
+      // PRN box already set in calculateConversion; leave as-is.
+      prnBox.innerHTML += "\nUse a lower dose and longer interval if concerned about over-sedation or toxicity.";
+    }
+
+    function initOpioidTool() {
+      const addBtn = document.getElementById("addOpioidBtn");
+      const clearBtn = document.getElementById("clearOpioidsBtn");
+      const convertBtn = document.getElementById("convertBtn");
+      const clearOutputsBtn = document.getElementById("clearOutputsBtn");
+      const copyBtn = document.getElementById("copyClinicianBtn");
+      const targetSel = document.getElementById("targetOpioid");
+      const frailtySel = document.getElementById("frailtyFactor");
+      const brForm = document.getElementById("brForm");
+      const modalConfirm = document.getElementById("doseModalConfirm");
+      const modalCancel = document.getElementById("doseModalCancel");
+
+      addBtn.addEventListener("click", addOpioidRow);
+      clearBtn.addEventListener("click", clearOpioidRows);
+      convertBtn.addEventListener("click", calculateConversion);
+      clearOutputsBtn.addEventListener("click", () => {
+        clearOutputs();
+        convertBtn.disabled = false;
+      });
+      copyBtn.addEventListener("click", () => {
+        const note = document.getElementById("clinicianNoteOutput").value;
+        if (!note) return;
+        navigator.clipboard.writeText(note).then(() => {
+          copyBtn.textContent = "Copied";
+          setTimeout(() => (copyBtn.textContent = "Copy"), 1500);
+        }).catch(() => {});
+      });
+
+      targetSel.addEventListener("change", markDirty);
+      frailtySel.addEventListener("change", markDirty);
+      brForm.addEventListener("change", markDirty);
+
+      modalConfirm.addEventListener("click", handleDoseChoiceConfirm);
+      modalCancel.addEventListener("click", handleDoseChoiceCancel);
+
+      clearOpioidRows();
+      convertBtn.disabled = false;
+    }
+
+    window.addEventListener("DOMContentLoaded", initOpioidTool);
+  </script>
 </body>
 </html>
