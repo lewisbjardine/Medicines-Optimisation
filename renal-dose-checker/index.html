@@ -34,7 +34,6 @@
       box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
 
-    /* Search box controls */
     .form-row {
       display: flex;
       flex-direction: column;
@@ -54,7 +53,6 @@
       font: inherit;
     }
 
-    /* Autocomplete dropdown */
     .search-row {
       position: relative;
     }
@@ -110,17 +108,10 @@
       margin-top: 0.75rem;
     }
 
-    /* Header return button (same style as your other modules) */
-    .header-button-container {
-      display: flex;
-      justify-content: flex-end;
-      margin-bottom: 0.5rem;
-    }
-
     .btn-secondary {
       background: #e2e8f0;
       color: #111827;
-      padding: 0.45rem 0.9rem;
+      padding: 0.5rem 0.9rem;
       border-radius: 999px;
       border: none;
       cursor: pointer;
@@ -130,6 +121,11 @@
 
     .btn-secondary:hover {
       background: #cbd5f0;
+    }
+
+    .directory-link {
+      margin-top: 1rem;
+      display: inline-block;
     }
 
     @media (min-width: 768px) {
@@ -171,7 +167,6 @@
 
       <div class="search-layout">
 
-        <!-- LEFT COLUMN -->
         <div>
           <div class="form-row">
             <label for="egfr-input">eGFR (mL/min/1.73m²)</label>
@@ -183,8 +178,8 @@
               placeholder="Optional, e.g. 32"
             />
             <p class="help-text">
-              Enter the most recent eGFR (or CrCl if using Cockcroft–Gault).  
-              If left blank, dosing bands will be shown without a highlighted recommendation.
+              Enter the most recent eGFR (or CrCl using Cockcroft–Gault).  
+              If left blank, all renal bands will appear with no highlighted recommendation.
             </p>
           </div>
 
@@ -197,18 +192,24 @@
               autocomplete="off"
             />
             <div id="search-suggestions" class="search-suggestions hidden"></div>
-            <p class="help-text">Type at least 2 letters to see suggestions.</p>
+            <p class="help-text">
+              Type at least 2 letters to see matching medicines.
+            </p>
           </div>
+
+          <!-- Directory link added -->
+          <a href="./directory.html" class="btn-secondary directory-link">
+            Browse A–Z Drug Directory
+          </a>
         </div>
 
-        <!-- RIGHT COLUMN -->
         <div>
           <div class="warning-box">
             <strong>Important:</strong><br>
             • This is a simplified decision-support prototype.<br>
-            • Always verify doses in BNF, SPS, SPC, Renal Drug Handbook & local guidelines.<br>
-            • DOACs must be dosed using <strong>creatinine clearance</strong>, not eGFR.<br>
-            • Consider AKI, frailty, drug interactions and acute illness (“sick day rules”).
+            • Always verify doses using BNF, SPC, SPS, Renal Drug Handbook & local policies.<br>
+            • DOAC doses must follow <strong>creatinine clearance</strong> (Cockcroft–Gault).<br>
+            • Consider AKI, frailty, interactions, volume depletion and “sick day rules”.
           </div>
         </div>
 
@@ -216,7 +217,7 @@
     </main>
   </div>
 
-  <!-- Load the search-page logic -->
+  <!-- Load search logic -->
   <script src="./app.js"></script>
 </body>
 </html>
