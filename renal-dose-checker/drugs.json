@@ -2,36 +2,42 @@
   {
     "id": "metformin",
     "name": "Metformin",
-    "searchTerms": ["metformin", "glucophage"],
+    "searchTerms": [
+      "metformin",
+      "glucophage"
+    ],
     "className": "Biguanide, oral hypoglycaemic",
-    "tags": ["Diabetes", "eGFR-based"],
-    "usualDose": "Typically 1–2 g/day in divided doses (max 2–3 g/day depending on prep).",
+    "tags": [
+      "Diabetes",
+      "eGFR-based"
+    ],
+    "usualDose": "Typically 1\u20132 g/day in divided doses (max 2\u20133 g/day depending on prep).",
     "renalBands": [
       {
         "min": 60,
         "max": null,
-        "label": "eGFR ≥ 60 mL/min/1.73 m²",
+        "label": "eGFR \u2265 60 mL/min/1.73 m\u00b2",
         "category": "No dose change",
         "details": "Usual dosing with annual renal monitoring and checks before contrast/surgery."
       },
       {
         "min": 45,
         "max": 60,
-        "label": "eGFR 45–59 mL/min/1.73 m²",
+        "label": "eGFR 45\u201359 mL/min/1.73 m\u00b2",
         "category": "Caution",
         "details": "Standard doses often fine; increase monitoring frequency and avoid starting in very high-risk patients."
       },
       {
         "min": 30,
         "max": 45,
-        "label": "eGFR 30–44 mL/min/1.73 m²",
+        "label": "eGFR 30\u201344 mL/min/1.73 m\u00b2",
         "category": "Dose reduction",
         "details": "Reduce total daily dose (e.g. ~50%) and monitor 3-monthly. Stop during acute illness or dehydration."
       },
       {
         "min": null,
         "max": 30,
-        "label": "eGFR < 30 mL/min/1.73 m²",
+        "label": "eGFR < 30 mL/min/1.73 m\u00b2",
         "category": "Avoid",
         "details": "Avoid metformin due to lactic acidosis risk; use alternative glucose-lowering strategy."
       }
@@ -43,29 +49,34 @@
   {
     "id": "gliclazide",
     "name": "Gliclazide",
-    "searchTerms": ["gliclazide"],
+    "searchTerms": [
+      "gliclazide"
+    ],
     "className": "Sulfonylurea",
-    "tags": ["Diabetes", "Hypoglycaemia risk"],
-    "usualDose": "40–320 mg/day in 1–2 doses (MR usually once daily).",
+    "tags": [
+      "Diabetes",
+      "Hypoglycaemia risk"
+    ],
+    "usualDose": "40\u2013320 mg/day in 1\u20132 doses (MR usually once daily).",
     "renalBands": [
       {
         "min": 60,
         "max": null,
-        "label": "eGFR ≥ 60",
+        "label": "eGFR \u2265 60",
         "category": "Standard dosing",
         "details": "Use usual titration; monitor for hypoglycaemia."
       },
       {
         "min": 30,
         "max": 60,
-        "label": "eGFR 30–59",
+        "label": "eGFR 30\u201359",
         "category": "Caution",
         "details": "Lower starting dose and cautious titration; increased risk of prolonged hypos."
       },
       {
         "min": 15,
         "max": 30,
-        "label": "eGFR 15–29",
+        "label": "eGFR 15\u201329",
         "category": "Use with care",
         "details": "Prefer alternatives; if used, very low doses with close monitoring."
       },
@@ -84,9 +95,16 @@
   {
     "id": "insulin-basal",
     "name": "Basal insulin (e.g. insulin glargine)",
-    "searchTerms": ["insulin", "glargine", "lantus", "abasaglar"],
+    "searchTerms": [
+      "insulin",
+      "glargine",
+      "lantus",
+      "abasaglar"
+    ],
     "className": "Basal insulin analogue",
-    "tags": ["Diabetes"],
+    "tags": [
+      "Diabetes"
+    ],
     "usualDose": "Once or twice daily, fully individualised by glucose profile.",
     "renalBands": [
       {
@@ -104,22 +122,29 @@
   {
     "id": "empagliflozin",
     "name": "Empagliflozin",
-    "searchTerms": ["empagliflozin", "jardiance"],
+    "searchTerms": [
+      "empagliflozin",
+      "jardiance"
+    ],
     "className": "SGLT2 inhibitor",
-    "tags": ["Diabetes", "HF", "CKD"],
-    "usualDose": "10–25 mg once daily depending on indication.",
+    "tags": [
+      "Diabetes",
+      "HF",
+      "CKD"
+    ],
+    "usualDose": "10\u201325 mg once daily depending on indication.",
     "renalBands": [
       {
         "min": 60,
         "max": null,
-        "label": "eGFR ≥ 60",
+        "label": "eGFR \u2265 60",
         "category": "Standard use",
         "details": "Usual doses for T2DM/HF/CKD as per SPC."
       },
       {
         "min": 20,
         "max": 60,
-        "label": "eGFR 20–59",
+        "label": "eGFR 20\u201359",
         "category": "Indication-dependent",
         "details": "For HF/CKD, can often continue or initiate down to eGFR ~20; glucose-lowering effect reduced."
       },
@@ -138,22 +163,29 @@
   {
     "id": "dapagliflozin",
     "name": "Dapagliflozin",
-    "searchTerms": ["dapagliflozin", "forxiga"],
+    "searchTerms": [
+      "dapagliflozin",
+      "forxiga"
+    ],
     "className": "SGLT2 inhibitor",
-    "tags": ["Diabetes", "HF", "CKD"],
+    "tags": [
+      "Diabetes",
+      "HF",
+      "CKD"
+    ],
     "usualDose": "10 mg once daily.",
     "renalBands": [
       {
         "min": 60,
         "max": null,
-        "label": "eGFR ≥ 60",
+        "label": "eGFR \u2265 60",
         "category": "Standard use",
         "details": "Use per SPC for T2DM/HF/CKD."
       },
       {
         "min": 15,
         "max": 60,
-        "label": "eGFR 15–59",
+        "label": "eGFR 15\u201359",
         "category": "Indication-dependent",
         "details": "For HF/CKD indications can often be used down to eGFR ~15; minimal glycaemic effect at lower eGFR."
       },
@@ -169,33 +201,37 @@
       "Monitor for genital infections, volume depletion and DKA risk."
     ]
   },
-
   {
     "id": "ramipril",
     "name": "Ramipril",
-    "searchTerms": ["ramipril"],
+    "searchTerms": [
+      "ramipril"
+    ],
     "className": "ACE inhibitor",
-    "tags": ["HF", "Hypertension"],
-    "usualDose": "2.5–10 mg once daily depending on indication.",
+    "tags": [
+      "HF",
+      "Hypertension"
+    ],
+    "usualDose": "2.5\u201310 mg once daily depending on indication.",
     "renalBands": [
       {
         "min": 60,
         "max": null,
-        "label": "eGFR ≥ 60",
+        "label": "eGFR \u2265 60",
         "category": "Standard titration",
         "details": "Titrate to target with creatinine/potassium checks."
       },
       {
         "min": 30,
         "max": 60,
-        "label": "eGFR 30–59",
+        "label": "eGFR 30\u201359",
         "category": "Start low, go slow",
-        "details": "Start at low dose and titrate cautiously; stop/tweak if creatinine rises >~30% or K⁺ increases."
+        "details": "Start at low dose and titrate cautiously; stop/tweak if creatinine rises >~30% or K\u207a increases."
       },
       {
         "min": 15,
         "max": 30,
-        "label": "eGFR 15–29",
+        "label": "eGFR 15\u201329",
         "category": "Careful use",
         "details": "Very low doses with frequent monitoring; consider nephrology/cardiology advice."
       },
@@ -208,28 +244,33 @@
       }
     ],
     "notes": [
-      "Apply sick-day rules – hold during dehydration/AKI risk."
+      "Apply sick-day rules \u2013 hold during dehydration/AKI risk."
     ]
   },
   {
     "id": "lisinopril",
     "name": "Lisinopril",
-    "searchTerms": ["lisinopril"],
+    "searchTerms": [
+      "lisinopril"
+    ],
     "className": "ACE inhibitor",
-    "tags": ["Hypertension", "HF"],
-    "usualDose": "5–40 mg once daily depending on indication.",
+    "tags": [
+      "Hypertension",
+      "HF"
+    ],
+    "usualDose": "5\u201340 mg once daily depending on indication.",
     "renalBands": [
       {
         "min": 60,
         "max": null,
-        "label": "eGFR ≥ 60",
+        "label": "eGFR \u2265 60",
         "category": "Standard",
         "details": "Use usual titration with monitoring."
       },
       {
         "min": 30,
         "max": 60,
-        "label": "eGFR 30–59",
+        "label": "eGFR 30\u201359",
         "category": "Lower start",
         "details": "Start at low dose and titrate slowly with U&E checks."
       },
@@ -248,24 +289,31 @@
   {
     "id": "losartan",
     "name": "Losartan",
-    "searchTerms": ["losartan", "cozaar"],
+    "searchTerms": [
+      "losartan",
+      "cozaar"
+    ],
     "className": "ARB",
-    "tags": ["Hypertension", "HF", "Diabetic nephropathy"],
-    "usualDose": "25–100 mg once daily.",
+    "tags": [
+      "Hypertension",
+      "HF",
+      "Diabetic nephropathy"
+    ],
+    "usualDose": "25\u2013100 mg once daily.",
     "renalBands": [
       {
         "min": 60,
         "max": null,
-        "label": "eGFR ≥ 60",
+        "label": "eGFR \u2265 60",
         "category": "Standard",
         "details": "Usual doses with U&E monitoring."
       },
       {
         "min": 30,
         "max": 60,
-        "label": "eGFR 30–59",
+        "label": "eGFR 30\u201359",
         "category": "Lower starting dose",
-        "details": "Start at 25–50 mg and titrate slowly."
+        "details": "Start at 25\u201350 mg and titrate slowly."
       },
       {
         "min": null,
@@ -282,22 +330,27 @@
   {
     "id": "candesartan",
     "name": "Candesartan",
-    "searchTerms": ["candesartan"],
+    "searchTerms": [
+      "candesartan"
+    ],
     "className": "ARB",
-    "tags": ["HF", "Hypertension"],
-    "usualDose": "4–32 mg once daily, indication-dependent.",
+    "tags": [
+      "HF",
+      "Hypertension"
+    ],
+    "usualDose": "4\u201332 mg once daily, indication-dependent.",
     "renalBands": [
       {
         "min": 60,
         "max": null,
-        "label": "eGFR ≥ 60",
+        "label": "eGFR \u2265 60",
         "category": "Standard",
         "details": "Use usual titration with renal and potassium checks."
       },
       {
         "min": 30,
         "max": 60,
-        "label": "eGFR 30–59",
+        "label": "eGFR 30\u201359",
         "category": "Cautious titration",
         "details": "Use lower starting doses and titrate carefully."
       },
@@ -316,22 +369,27 @@
   {
     "id": "bisoprolol",
     "name": "Bisoprolol",
-    "searchTerms": ["bisoprolol"],
+    "searchTerms": [
+      "bisoprolol"
+    ],
     "className": "Beta-1 selective beta-blocker",
-    "tags": ["HF", "Hypertension"],
-    "usualDose": "Heart failure: 1.25–10 mg once daily.",
+    "tags": [
+      "HF",
+      "Hypertension"
+    ],
+    "usualDose": "Heart failure: 1.25\u201310 mg once daily.",
     "renalBands": [
       {
         "min": 60,
         "max": null,
-        "label": "eGFR ≥ 60",
+        "label": "eGFR \u2265 60",
         "category": "Standard titration",
         "details": "Titrate per HF/HTN protocol."
       },
       {
         "min": 30,
         "max": 60,
-        "label": "eGFR 30–59",
+        "label": "eGFR 30\u201359",
         "category": "No formal change",
         "details": "Usually no structured dose change, but titrate slowly in frail/CKD."
       },
@@ -350,29 +408,35 @@
   {
     "id": "furosemide",
     "name": "Furosemide",
-    "searchTerms": ["furosemide", "frusemide"],
+    "searchTerms": [
+      "furosemide",
+      "frusemide"
+    ],
     "className": "Loop diuretic",
-    "tags": ["HF", "Oedema"],
-    "usualDose": "20–80 mg once or twice daily; higher doses in CKD.",
+    "tags": [
+      "HF",
+      "Oedema"
+    ],
+    "usualDose": "20\u201380 mg once or twice daily; higher doses in CKD.",
     "renalBands": [
       {
         "min": 60,
         "max": null,
-        "label": "eGFR ≥ 60",
+        "label": "eGFR \u2265 60",
         "category": "Standard",
         "details": "Use lowest effective dose with monitoring of U&E and volume status."
       },
       {
         "min": 30,
         "max": 60,
-        "label": "eGFR 30–59",
+        "label": "eGFR 30\u201359",
         "category": "Higher doses often",
         "details": "May need higher doses; monitor for AKI and electrolyte disturbance."
       },
       {
         "min": 15,
         "max": 30,
-        "label": "eGFR 15–29",
+        "label": "eGFR 15\u201329",
         "category": "Specialist titration",
         "details": "High doses and/or IV often required; usually titrated by HF/renal teams."
       },
@@ -391,29 +455,34 @@
   {
     "id": "spironolactone",
     "name": "Spironolactone",
-    "searchTerms": ["spironolactone"],
+    "searchTerms": [
+      "spironolactone"
+    ],
     "className": "Aldosterone antagonist",
-    "tags": ["HF", "Hyperkalaemia risk"],
-    "usualDose": "HF: typically 25–50 mg once daily.",
+    "tags": [
+      "HF",
+      "Hyperkalaemia risk"
+    ],
+    "usualDose": "HF: typically 25\u201350 mg once daily.",
     "renalBands": [
       {
         "min": 60,
         "max": null,
-        "label": "eGFR ≥ 60",
+        "label": "eGFR \u2265 60",
         "category": "Standard low dose",
         "details": "Use usual HF doses with U&E monitoring."
       },
       {
         "min": 45,
         "max": 60,
-        "label": "eGFR 45–59",
+        "label": "eGFR 45\u201359",
         "category": "Caution",
-        "details": "Consider 25 mg on alternate days and closer K⁺ monitoring."
+        "details": "Consider 25 mg on alternate days and closer K\u207a monitoring."
       },
       {
         "min": 30,
         "max": 45,
-        "label": "eGFR 30–44",
+        "label": "eGFR 30\u201344",
         "category": "High hyperkalaemia risk",
         "details": "Often avoid or use very low doses with frequent U&E."
       },
@@ -426,16 +495,20 @@
       }
     ],
     "notes": [
-      "Stop or reduce if K⁺ rises or creatinine increases significantly."
+      "Stop or reduce if K\u207a rises or creatinine increases significantly."
     ]
   },
   {
     "id": "atorvastatin",
     "name": "Atorvastatin",
-    "searchTerms": ["atorvastatin"],
+    "searchTerms": [
+      "atorvastatin"
+    ],
     "className": "Statin",
-    "tags": ["Lipids"],
-    "usualDose": "10–80 mg once daily.",
+    "tags": [
+      "Lipids"
+    ],
+    "usualDose": "10\u201380 mg once daily.",
     "renalBands": [
       {
         "min": null,
@@ -452,15 +525,19 @@
   {
     "id": "simvastatin",
     "name": "Simvastatin",
-    "searchTerms": ["simvastatin"],
+    "searchTerms": [
+      "simvastatin"
+    ],
     "className": "Statin",
-    "tags": ["Lipids"],
-    "usualDose": "10–40 mg once daily in the evening.",
+    "tags": [
+      "Lipids"
+    ],
+    "usualDose": "10\u201340 mg once daily in the evening.",
     "renalBands": [
       {
         "min": 60,
         "max": null,
-        "label": "eGFR ≥ 60",
+        "label": "eGFR \u2265 60",
         "category": "Standard",
         "details": "Usual doses with routine monitoring."
       },
@@ -476,33 +553,40 @@
       "Be aware of drug interactions and myopathy risk."
     ]
   },
-
   {
     "id": "apixaban",
     "name": "Apixaban",
-    "searchTerms": ["apixaban", "eliquis", "doac"],
+    "searchTerms": [
+      "apixaban",
+      "eliquis",
+      "doac"
+    ],
     "className": "Direct factor Xa inhibitor",
-    "tags": ["DOAC", "AF", "VTE"],
+    "tags": [
+      "DOAC",
+      "AF",
+      "VTE"
+    ],
     "usualDose": "AF: 5 mg twice daily, or 2.5 mg twice daily if dose-reduction criteria.",
     "renalBands": [
       {
         "min": 50,
         "max": null,
-        "label": "CrCl ≥ 50",
+        "label": "CrCl \u2265 50",
         "category": "Standard dosing",
         "details": "Use labelled dose for indication."
       },
       {
         "min": 30,
         "max": 50,
-        "label": "CrCl 30–49",
+        "label": "CrCl 30\u201349",
         "category": "Caution / possible reduction",
         "details": "Often reduced dose in AF if criteria met; check SPC/SPS/local DOAC protocol."
       },
       {
         "min": 15,
         "max": 30,
-        "label": "CrCl 15–29",
+        "label": "CrCl 15\u201329",
         "category": "Reduced dose / specialist",
         "details": "AF: usually 2.5 mg bd with caution; VTE often specialist-only decision."
       },
@@ -515,28 +599,36 @@
       }
     ],
     "notes": [
-      "Always use Cockcroft–Gault CrCl, not eGFR, for DOAC dosing."
+      "Always use Cockcroft\u2013Gault CrCl, not eGFR, for DOAC dosing."
     ]
   },
   {
     "id": "rivaroxaban",
     "name": "Rivaroxaban",
-    "searchTerms": ["rivaroxaban", "xarelto", "doac"],
+    "searchTerms": [
+      "rivaroxaban",
+      "xarelto",
+      "doac"
+    ],
     "className": "Direct factor Xa inhibitor",
-    "tags": ["DOAC", "AF", "VTE"],
-    "usualDose": "AF: 20 mg od with food; 15 mg od if CrCl 15–49.",
+    "tags": [
+      "DOAC",
+      "AF",
+      "VTE"
+    ],
+    "usualDose": "AF: 20 mg od with food; 15 mg od if CrCl 15\u201349.",
     "renalBands": [
       {
         "min": 50,
         "max": null,
-        "label": "CrCl ≥ 50",
+        "label": "CrCl \u2265 50",
         "category": "Standard",
         "details": "Use labelled dose for AF/VTE."
       },
       {
         "min": 15,
         "max": 50,
-        "label": "CrCl 15–49",
+        "label": "CrCl 15\u201349",
         "category": "Reduced dose",
         "details": "AF: 15 mg od; check SPC and SPS for other indications."
       },
@@ -555,22 +647,30 @@
   {
     "id": "edoxaban",
     "name": "Edoxaban",
-    "searchTerms": ["edoxaban", "lixiana", "doac"],
+    "searchTerms": [
+      "edoxaban",
+      "lixiana",
+      "doac"
+    ],
     "className": "Direct factor Xa inhibitor",
-    "tags": ["DOAC", "AF", "VTE"],
-    "usualDose": "AF: 60 mg od; 30 mg od if CrCl 15–50, low weight or certain interactions.",
+    "tags": [
+      "DOAC",
+      "AF",
+      "VTE"
+    ],
+    "usualDose": "AF: 60 mg od; 30 mg od if CrCl 15\u201350, low weight or certain interactions.",
     "renalBands": [
       {
         "min": 50,
         "max": 95,
-        "label": "CrCl 50–95",
+        "label": "CrCl 50\u201395",
         "category": "Standard",
         "details": "Use 60 mg od if other reduction criteria not met."
       },
       {
         "min": 15,
         "max": 50,
-        "label": "CrCl 15–49",
+        "label": "CrCl 15\u201349",
         "category": "Reduced dose",
         "details": "Usually 30 mg od; check SPC."
       },
@@ -589,9 +689,13 @@
   {
     "id": "warfarin",
     "name": "Warfarin",
-    "searchTerms": ["warfarin"],
+    "searchTerms": [
+      "warfarin"
+    ],
     "className": "Vitamin K antagonist",
-    "tags": ["Anticoagulant"],
+    "tags": [
+      "Anticoagulant"
+    ],
     "usualDose": "Highly individualised to INR.",
     "renalBands": [
       {
@@ -606,35 +710,40 @@
       "Bleeding risk higher in CKD; monitor INR and interactions closely."
     ]
   },
-
   {
     "id": "gabapentin",
     "name": "Gabapentin",
-    "searchTerms": ["gabapentin", "neurontin"],
+    "searchTerms": [
+      "gabapentin",
+      "neurontin"
+    ],
     "className": "Antiepileptic / neuropathic pain",
-    "tags": ["Neuropathic pain", "Renally cleared"],
-    "usualDose": "900–3600 mg/day in 3 doses in normal renal function.",
+    "tags": [
+      "Neuropathic pain",
+      "Renally cleared"
+    ],
+    "usualDose": "900\u20133600 mg/day in 3 doses in normal renal function.",
     "renalBands": [
       {
         "min": 60,
         "max": null,
-        "label": "CrCl ≥ 60",
+        "label": "CrCl \u2265 60",
         "category": "Standard",
         "details": "Usual titration up to local max."
       },
       {
         "min": 30,
         "max": 60,
-        "label": "CrCl 30–59",
+        "label": "CrCl 30\u201359",
         "category": "Moderate reduction",
-        "details": "Reduce total daily dose and/or frequency (e.g. ~600–1800 mg/day)."
+        "details": "Reduce total daily dose and/or frequency (e.g. ~600\u20131800 mg/day)."
       },
       {
         "min": 15,
         "max": 30,
-        "label": "CrCl 15–29",
+        "label": "CrCl 15\u201329",
         "category": "Significant reduction",
-        "details": "Low doses (e.g. 300–600 mg/day) with slow titration."
+        "details": "Low doses (e.g. 300\u2013600 mg/day) with slow titration."
       },
       {
         "min": null,
@@ -651,29 +760,35 @@
   {
     "id": "pregabalin",
     "name": "Pregabalin",
-    "searchTerms": ["pregabalin", "lyrica"],
+    "searchTerms": [
+      "pregabalin",
+      "lyrica"
+    ],
     "className": "Antiepileptic / neuropathic pain / GAD",
-    "tags": ["Neuropathic pain", "Renally cleared"],
-    "usualDose": "150–600 mg/day in 2–3 divided doses.",
+    "tags": [
+      "Neuropathic pain",
+      "Renally cleared"
+    ],
+    "usualDose": "150\u2013600 mg/day in 2\u20133 divided doses.",
     "renalBands": [
       {
         "min": 60,
         "max": null,
-        "label": "CrCl ≥ 60",
+        "label": "CrCl \u2265 60",
         "category": "Standard",
         "details": "Use usual titration schedule."
       },
       {
         "min": 30,
         "max": 60,
-        "label": "CrCl 30–59",
+        "label": "CrCl 30\u201359",
         "category": "Dose reduction",
         "details": "Lower maximum daily dose (e.g. up to ~300 mg/day)."
       },
       {
         "min": 15,
         "max": 30,
-        "label": "CrCl 15–29",
+        "label": "CrCl 15\u201329",
         "category": "Marked reduction",
         "details": "Substantially reduced doses (e.g. up to ~150 mg/day)."
       },
@@ -692,10 +807,15 @@
   {
     "id": "sertraline",
     "name": "Sertraline",
-    "searchTerms": ["sertraline"],
+    "searchTerms": [
+      "sertraline"
+    ],
     "className": "SSRI antidepressant",
-    "tags": ["Depression", "Anxiety"],
-    "usualDose": "50–200 mg once daily.",
+    "tags": [
+      "Depression",
+      "Anxiety"
+    ],
+    "usualDose": "50\u2013200 mg once daily.",
     "renalBands": [
       {
         "min": null,
@@ -712,15 +832,19 @@
   {
     "id": "mirtazapine",
     "name": "Mirtazapine",
-    "searchTerms": ["mirtazapine"],
+    "searchTerms": [
+      "mirtazapine"
+    ],
     "className": "NaSSA antidepressant",
-    "tags": ["Depression"],
-    "usualDose": "15–45 mg at night.",
+    "tags": [
+      "Depression"
+    ],
+    "usualDose": "15\u201345 mg at night.",
     "renalBands": [
       {
         "min": 40,
         "max": null,
-        "label": "eGFR ≥ 40",
+        "label": "eGFR \u2265 40",
         "category": "Standard",
         "details": "Usual dose range with clinical monitoring."
       },
@@ -739,24 +863,29 @@
   {
     "id": "venlafaxine",
     "name": "Venlafaxine",
-    "searchTerms": ["venlafaxine"],
+    "searchTerms": [
+      "venlafaxine"
+    ],
     "className": "SNRI antidepressant",
-    "tags": ["Depression", "Anxiety"],
-    "usualDose": "75–225 mg/day (immediate or modified-release).",
+    "tags": [
+      "Depression",
+      "Anxiety"
+    ],
+    "usualDose": "75\u2013225 mg/day (immediate or modified-release).",
     "renalBands": [
       {
         "min": 60,
         "max": null,
-        "label": "eGFR ≥ 60",
+        "label": "eGFR \u2265 60",
         "category": "Standard",
         "details": "Usual dose range as per BNF."
       },
       {
         "min": 30,
         "max": 60,
-        "label": "eGFR 30–59",
+        "label": "eGFR 30\u201359",
         "category": "Dose reduction",
-        "details": "Reduce total daily dose (e.g. by ~25–50%) and titrate slowly."
+        "details": "Reduce total daily dose (e.g. by ~25\u201350%) and titrate slowly."
       },
       {
         "min": null,
@@ -773,10 +902,15 @@
   {
     "id": "amitriptyline",
     "name": "Amitriptyline",
-    "searchTerms": ["amitriptyline"],
+    "searchTerms": [
+      "amitriptyline"
+    ],
     "className": "Tricyclic antidepressant",
-    "tags": ["Depression", "Neuropathic pain"],
-    "usualDose": "10–75 mg at night for pain (higher for depression under specialist care).",
+    "tags": [
+      "Depression",
+      "Neuropathic pain"
+    ],
+    "usualDose": "10\u201375 mg at night for pain (higher for depression under specialist care).",
     "renalBands": [
       {
         "min": null,
@@ -790,26 +924,29 @@
       "Anticholinergic and cardiac side-effects limit use in frailer CKD patients."
     ]
   },
-
   {
     "id": "amoxicillin",
     "name": "Amoxicillin",
-    "searchTerms": ["amoxicillin"],
+    "searchTerms": [
+      "amoxicillin"
+    ],
     "className": "Aminopenicillin antibiotic",
-    "tags": ["Antibiotic"],
+    "tags": [
+      "Antibiotic"
+    ],
     "usualDose": "500 mg tds (higher for severe infection).",
     "renalBands": [
       {
         "min": 30,
         "max": null,
-        "label": "eGFR ≥ 30",
+        "label": "eGFR \u2265 30",
         "category": "Standard",
         "details": "Usual dose and interval."
       },
       {
         "min": 10,
         "max": 30,
-        "label": "eGFR 10–29",
+        "label": "eGFR 10\u201329",
         "category": "Extended interval",
         "details": "Reduce frequency (e.g. bd) according to severity and local guidance."
       },
@@ -828,22 +965,27 @@
   {
     "id": "co-amoxiclav",
     "name": "Co-amoxiclav",
-    "searchTerms": ["co-amoxiclav", "amoxicillin clavulanic"],
+    "searchTerms": [
+      "co-amoxiclav",
+      "amoxicillin clavulanic"
+    ],
     "className": "Amoxicillin + clavulanic acid",
-    "tags": ["Antibiotic"],
+    "tags": [
+      "Antibiotic"
+    ],
     "usualDose": "500/125 mg tds or 875/125 mg bd depending on prep.",
     "renalBands": [
       {
         "min": 30,
         "max": null,
-        "label": "eGFR ≥ 30",
+        "label": "eGFR \u2265 30",
         "category": "Standard",
         "details": "Usual dosing per indication."
       },
       {
         "min": 10,
         "max": 30,
-        "label": "eGFR 10–29",
+        "label": "eGFR 10\u201329",
         "category": "Extended interval",
         "details": "Reduce frequency (e.g. bd) as per BNF/local guidance."
       },
@@ -862,22 +1004,27 @@
   {
     "id": "nitrofurantoin",
     "name": "Nitrofurantoin",
-    "searchTerms": ["nitrofurantoin", "macrobid"],
+    "searchTerms": [
+      "nitrofurantoin",
+      "macrobid"
+    ],
     "className": "Urinary antibacterial",
-    "tags": ["UTI"],
-    "usualDose": "100 mg MR bd or 50 mg qds for 3–7 days.",
+    "tags": [
+      "UTI"
+    ],
+    "usualDose": "100 mg MR bd or 50 mg qds for 3\u20137 days.",
     "renalBands": [
       {
         "min": 45,
         "max": null,
-        "label": "eGFR ≥ 45",
+        "label": "eGFR \u2265 45",
         "category": "Standard short course",
         "details": "Use for lower UTI only if no upper tract features."
       },
       {
         "min": 30,
         "max": 45,
-        "label": "eGFR 30–44",
+        "label": "eGFR 30\u201344",
         "category": "Short course only",
         "details": "Some guidance allows short-course use if benefits outweigh risks; avoid prophylaxis."
       },
@@ -896,22 +1043,27 @@
   {
     "id": "trimethoprim",
     "name": "Trimethoprim",
-    "searchTerms": ["trimethoprim"],
+    "searchTerms": [
+      "trimethoprim"
+    ],
     "className": "Dihydrofolate reductase inhibitor",
-    "tags": ["UTI", "Hyperkalaemia risk"],
-    "usualDose": "200 mg bd for 3–7 days (acute UTI).",
+    "tags": [
+      "UTI",
+      "Hyperkalaemia risk"
+    ],
+    "usualDose": "200 mg bd for 3\u20137 days (acute UTI).",
     "renalBands": [
       {
         "min": 30,
         "max": null,
-        "label": "eGFR ≥ 30",
+        "label": "eGFR \u2265 30",
         "category": "Standard",
         "details": "Usual short course dosing."
       },
       {
         "min": 15,
         "max": 30,
-        "label": "eGFR 15–29",
+        "label": "eGFR 15\u201329",
         "category": "Dose reduction",
         "details": "Reduce total dose or extend interval (e.g. 200 mg od)."
       },
@@ -924,28 +1076,33 @@
       }
     ],
     "notes": [
-      "Check K⁺ and creatinine if using in patients on ACEI/ARB/spironolactone."
+      "Check K\u207a and creatinine if using in patients on ACEI/ARB/spironolactone."
     ]
   },
   {
     "id": "cefalexin",
     "name": "Cefalexin",
-    "searchTerms": ["cefalexin", "cephalexin"],
+    "searchTerms": [
+      "cefalexin",
+      "cephalexin"
+    ],
     "className": "1st-generation cephalosporin",
-    "tags": ["Antibiotic"],
-    "usualDose": "500 mg bd–qds depending on indication.",
+    "tags": [
+      "Antibiotic"
+    ],
+    "usualDose": "500 mg bd\u2013qds depending on indication.",
     "renalBands": [
       {
         "min": 50,
         "max": null,
-        "label": "eGFR ≥ 50",
+        "label": "eGFR \u2265 50",
         "category": "Standard",
         "details": "Usual dose and frequency."
       },
       {
         "min": 10,
         "max": 50,
-        "label": "eGFR 10–49",
+        "label": "eGFR 10\u201349",
         "category": "Extended interval",
         "details": "Reduce frequency (e.g. bd) as per BNF/local guidance."
       },
@@ -961,33 +1118,38 @@
       "Watch for neurotoxicity at very low eGFR and high doses."
     ]
   },
-
   {
     "id": "digoxin",
     "name": "Digoxin",
-    "searchTerms": ["digoxin"],
+    "searchTerms": [
+      "digoxin"
+    ],
     "className": "Cardiac glycoside",
-    "tags": ["HF", "Rate control", "Narrow therapeutic index"],
-    "usualDose": "62.5–250 micrograms od according to age, renal function and indication.",
+    "tags": [
+      "HF",
+      "Rate control",
+      "Narrow therapeutic index"
+    ],
+    "usualDose": "62.5\u2013250 micrograms od according to age, renal function and indication.",
     "renalBands": [
       {
         "min": 60,
         "max": null,
-        "label": "eGFR ≥ 60",
+        "label": "eGFR \u2265 60",
         "category": "Standard low-ish dosing",
         "details": "Use lower doses in older adults; monitor levels if concern."
       },
       {
         "min": 30,
         "max": 60,
-        "label": "eGFR 30–59",
+        "label": "eGFR 30\u201359",
         "category": "Dose reduction",
-        "details": "Often 62.5–125 micrograms od or on alternate days; check levels if possible."
+        "details": "Often 62.5\u2013125 micrograms od or on alternate days; check levels if possible."
       },
       {
         "min": 15,
         "max": 30,
-        "label": "eGFR 15–29",
+        "label": "eGFR 15\u201329",
         "category": "Marked reduction",
         "details": "Very low doses (e.g. 62.5 micrograms od/alt days); monitor for toxicity."
       },
@@ -1003,13 +1165,18 @@
       "Toxicity risk rises in CKD, hypokalaemia and hypomagnesaemia; review interacting drugs."
     ]
   },
-    {
+  {
     "id": "pioglitazone",
     "name": "Pioglitazone",
-    "searchTerms": ["pioglitazone", "actos"],
+    "searchTerms": [
+      "pioglitazone",
+      "actos"
+    ],
     "className": "Thiazolidinedione",
-    "tags": ["Diabetes"],
-    "usualDose": "15–45 mg once daily.",
+    "tags": [
+      "Diabetes"
+    ],
+    "usualDose": "15\u201345 mg once daily.",
     "renalBands": [
       {
         "min": null,
@@ -1027,29 +1194,35 @@
   {
     "id": "sitagliptin",
     "name": "Sitagliptin",
-    "searchTerms": ["sitagliptin", "januvia"],
+    "searchTerms": [
+      "sitagliptin",
+      "januvia"
+    ],
     "className": "DPP-4 inhibitor",
-    "tags": ["Diabetes", "Renally cleared"],
+    "tags": [
+      "Diabetes",
+      "Renally cleared"
+    ],
     "usualDose": "100 mg once daily in normal renal function.",
     "renalBands": [
       {
         "min": 50,
         "max": null,
-        "label": "eGFR ≥ 50",
+        "label": "eGFR \u2265 50",
         "category": "Standard",
         "details": "100 mg once daily."
       },
       {
         "min": 30,
         "max": 50,
-        "label": "eGFR 30–49",
+        "label": "eGFR 30\u201349",
         "category": "Dose reduction",
         "details": "50 mg once daily."
       },
       {
         "min": 15,
         "max": 30,
-        "label": "eGFR 15–29",
+        "label": "eGFR 15\u201329",
         "category": "Further reduction",
         "details": "25 mg once daily."
       },
@@ -1069,9 +1242,14 @@
   {
     "id": "linagliptin",
     "name": "Linagliptin",
-    "searchTerms": ["linagliptin", "trajenta"],
+    "searchTerms": [
+      "linagliptin",
+      "trajenta"
+    ],
     "className": "DPP-4 inhibitor",
-    "tags": ["Diabetes"],
+    "tags": [
+      "Diabetes"
+    ],
     "usualDose": "5 mg once daily.",
     "renalBands": [
       {
@@ -1090,10 +1268,15 @@
   {
     "id": "amlodipine",
     "name": "Amlodipine",
-    "searchTerms": ["amlodipine"],
+    "searchTerms": [
+      "amlodipine"
+    ],
     "className": "Dihydropyridine calcium-channel blocker",
-    "tags": ["Hypertension", "Angina"],
-    "usualDose": "5–10 mg once daily.",
+    "tags": [
+      "Hypertension",
+      "Angina"
+    ],
+    "usualDose": "5\u201310 mg once daily.",
     "renalBands": [
       {
         "min": null,
@@ -1111,10 +1294,15 @@
   {
     "id": "doxazosin",
     "name": "Doxazosin",
-    "searchTerms": ["doxazosin"],
+    "searchTerms": [
+      "doxazosin"
+    ],
     "className": "Alpha-1 blocker",
-    "tags": ["Hypertension", "BPH"],
-    "usualDose": "1–16 mg once daily (or modified-release) depending on indication.",
+    "tags": [
+      "Hypertension",
+      "BPH"
+    ],
+    "usualDose": "1\u201316 mg once daily (or modified-release) depending on indication.",
     "renalBands": [
       {
         "min": null,
@@ -1132,15 +1320,19 @@
   {
     "id": "indapamide",
     "name": "Indapamide",
-    "searchTerms": ["indapamide"],
+    "searchTerms": [
+      "indapamide"
+    ],
     "className": "Thiazide-like diuretic",
-    "tags": ["Hypertension"],
+    "tags": [
+      "Hypertension"
+    ],
     "usualDose": "1.5 mg MR once daily or 2.5 mg once daily.",
     "renalBands": [
       {
         "min": 30,
         "max": null,
-        "label": "eGFR ≥ 30",
+        "label": "eGFR \u2265 30",
         "category": "Standard",
         "details": "Usual doses may be used with U&E monitoring."
       },
@@ -1160,15 +1352,19 @@
   {
     "id": "bendroflumethiazide",
     "name": "Bendroflumethiazide",
-    "searchTerms": ["bendroflumethiazide"],
+    "searchTerms": [
+      "bendroflumethiazide"
+    ],
     "className": "Thiazide diuretic",
-    "tags": ["Hypertension"],
+    "tags": [
+      "Hypertension"
+    ],
     "usualDose": "2.5 mg once daily for hypertension (higher doses for oedema).",
     "renalBands": [
       {
         "min": 30,
         "max": null,
-        "label": "eGFR ≥ 30",
+        "label": "eGFR \u2265 30",
         "category": "Standard",
         "details": "May be used for hypertension with monitoring of electrolytes."
       },
@@ -1188,29 +1384,35 @@
   {
     "id": "sacubitril-valsartan",
     "name": "Sacubitril / valsartan",
-    "searchTerms": ["sacubitril", "entresto", "sacubitril valsartan"],
-    "className": "ARNI (angiotensin receptor–neprilysin inhibitor)",
-    "tags": ["Heart failure"],
+    "searchTerms": [
+      "sacubitril",
+      "entresto",
+      "sacubitril valsartan"
+    ],
+    "className": "ARNI (angiotensin receptor\u2013neprilysin inhibitor)",
+    "tags": [
+      "Heart failure"
+    ],
     "usualDose": "Target 97/103 mg twice daily after titration from lower strengths.",
     "renalBands": [
       {
         "min": 60,
         "max": null,
-        "label": "eGFR ≥ 60",
+        "label": "eGFR \u2265 60",
         "category": "Standard initiation",
         "details": "Start at appropriate strength and titrate to target as tolerated, with close U&E monitoring."
       },
       {
         "min": 30,
         "max": 60,
-        "label": "eGFR 30–59",
+        "label": "eGFR 30\u201359",
         "category": "Lower start",
         "details": "Start at lowest strength and titrate cautiously with frequent checks of creatinine and potassium."
       },
       {
         "min": 15,
         "max": 30,
-        "label": "eGFR 15–29",
+        "label": "eGFR 15\u201329",
         "category": "Specialist use",
         "details": "Use only under specialist HF supervision with close U&E monitoring."
       },
@@ -1230,9 +1432,14 @@
   {
     "id": "aspirin-lowdose",
     "name": "Aspirin (75 mg for CV prevention)",
-    "searchTerms": ["aspirin", "low-dose aspirin"],
+    "searchTerms": [
+      "aspirin",
+      "low-dose aspirin"
+    ],
     "className": "Antiplatelet",
-    "tags": ["Antiplatelet"],
+    "tags": [
+      "Antiplatelet"
+    ],
     "usualDose": "75 mg once daily.",
     "renalBands": [
       {
@@ -1251,9 +1458,13 @@
   {
     "id": "clopidogrel",
     "name": "Clopidogrel",
-    "searchTerms": ["clopidogrel"],
+    "searchTerms": [
+      "clopidogrel"
+    ],
     "className": "P2Y12 inhibitor antiplatelet",
-    "tags": ["Antiplatelet"],
+    "tags": [
+      "Antiplatelet"
+    ],
     "usualDose": "75 mg once daily (after loading dose in ACS/PCI).",
     "renalBands": [
       {
@@ -1272,31 +1483,36 @@
   {
     "id": "rosuvastatin",
     "name": "Rosuvastatin",
-    "searchTerms": ["rosuvastatin", "crestor"],
+    "searchTerms": [
+      "rosuvastatin",
+      "crestor"
+    ],
     "className": "Statin",
-    "tags": ["Lipids"],
-    "usualDose": "5–40 mg once daily depending on indication and risk.",
+    "tags": [
+      "Lipids"
+    ],
+    "usualDose": "5\u201340 mg once daily depending on indication and risk.",
     "renalBands": [
       {
         "min": 60,
         "max": null,
-        "label": "eGFR ≥ 60",
+        "label": "eGFR \u2265 60",
         "category": "Standard",
         "details": "Use labelled dose range with monitoring."
       },
       {
         "min": 30,
         "max": 60,
-        "label": "eGFR 30–59",
+        "label": "eGFR 30\u201359",
         "category": "Lower starting dose",
-        "details": "Start at low dose (e.g. 5–10 mg) and titrate; higher doses may be used with caution."
+        "details": "Start at low dose (e.g. 5\u201310 mg) and titrate; higher doses may be used with caution."
       },
       {
         "min": null,
         "max": 30,
         "label": "eGFR < 30",
         "category": "Reduced maximum",
-        "details": "Maximum dose is reduced; check SPC/BNF for current maxima (e.g. 10–20 mg)."
+        "details": "Maximum dose is reduced; check SPC/BNF for current maxima (e.g. 10\u201320 mg)."
       }
     ],
     "notes": [
@@ -1307,9 +1523,13 @@
   {
     "id": "ezetimibe",
     "name": "Ezetimibe",
-    "searchTerms": ["ezetimibe"],
+    "searchTerms": [
+      "ezetimibe"
+    ],
     "className": "Cholesterol absorption inhibitor",
-    "tags": ["Lipids"],
+    "tags": [
+      "Lipids"
+    ],
     "usualDose": "10 mg once daily.",
     "renalBands": [
       {
@@ -1328,10 +1548,16 @@
   {
     "id": "salbutamol-inhaled",
     "name": "Salbutamol (inhaled)",
-    "searchTerms": ["salbutamol", "ventolin"],
+    "searchTerms": [
+      "salbutamol",
+      "ventolin"
+    ],
     "className": "Short-acting beta-2 agonist",
-    "tags": ["Asthma", "COPD"],
-    "usualDose": "100–200 micrograms prn by inhaler.",
+    "tags": [
+      "Asthma",
+      "COPD"
+    ],
+    "usualDose": "100\u2013200 micrograms prn by inhaler.",
     "renalBands": [
       {
         "min": null,
@@ -1348,15 +1574,21 @@
   {
     "id": "tiotropium",
     "name": "Tiotropium (inhaled)",
-    "searchTerms": ["tiotropium", "spiriva"],
+    "searchTerms": [
+      "tiotropium",
+      "spiriva"
+    ],
     "className": "Long-acting muscarinic antagonist",
-    "tags": ["COPD", "Asthma"],
+    "tags": [
+      "COPD",
+      "Asthma"
+    ],
     "usualDose": "Once daily inhaled dose according to device.",
     "renalBands": [
       {
         "min": 60,
         "max": null,
-        "label": "eGFR ≥ 60",
+        "label": "eGFR \u2265 60",
         "category": "Standard",
         "details": "Usual dose."
       },
@@ -1375,9 +1607,16 @@
   {
     "id": "budesonide-formoterol",
     "name": "Budesonide/formoterol (inhaler)",
-    "searchTerms": ["budesonide", "formoterol", "symbicort"],
+    "searchTerms": [
+      "budesonide",
+      "formoterol",
+      "symbicort"
+    ],
     "className": "ICS/LABA combination",
-    "tags": ["Asthma", "COPD"],
+    "tags": [
+      "Asthma",
+      "COPD"
+    ],
     "usualDose": "Dose depends on strength and MART vs fixed regimen.",
     "renalBands": [
       {
@@ -1396,10 +1635,15 @@
   {
     "id": "omeprazole",
     "name": "Omeprazole",
-    "searchTerms": ["omeprazole"],
+    "searchTerms": [
+      "omeprazole"
+    ],
     "className": "Proton pump inhibitor",
-    "tags": ["PPI", "GI"],
-    "usualDose": "20–40 mg once daily depending on indication.",
+    "tags": [
+      "PPI",
+      "GI"
+    ],
+    "usualDose": "20\u201340 mg once daily depending on indication.",
     "renalBands": [
       {
         "min": null,
@@ -1416,10 +1660,15 @@
   {
     "id": "lansoprazole",
     "name": "Lansoprazole",
-    "searchTerms": ["lansoprazole"],
+    "searchTerms": [
+      "lansoprazole"
+    ],
     "className": "Proton pump inhibitor",
-    "tags": ["PPI", "GI"],
-    "usualDose": "15–30 mg once daily.",
+    "tags": [
+      "PPI",
+      "GI"
+    ],
+    "usualDose": "15\u201330 mg once daily.",
     "renalBands": [
       {
         "min": null,
@@ -1436,9 +1685,14 @@
   {
     "id": "loperamide",
     "name": "Loperamide",
-    "searchTerms": ["loperamide", "imodium"],
+    "searchTerms": [
+      "loperamide",
+      "imodium"
+    ],
     "className": "Antidiarrhoeal",
-    "tags": ["GI"],
+    "tags": [
+      "GI"
+    ],
     "usualDose": "Up to 16 mg/day in divided doses for acute diarrhoea.",
     "renalBands": [
       {
@@ -1457,17 +1711,22 @@
   {
     "id": "ondansetron",
     "name": "Ondansetron",
-    "searchTerms": ["ondansetron", "zofran"],
+    "searchTerms": [
+      "ondansetron",
+      "zofran"
+    ],
     "className": "5-HT3 antagonist antiemetic",
-    "tags": ["Antiemetic"],
-    "usualDose": "4–8 mg 1–3 times daily orally for nausea/vomiting.",
+    "tags": [
+      "Antiemetic"
+    ],
+    "usualDose": "4\u20138 mg 1\u20133 times daily orally for nausea/vomiting.",
     "renalBands": [
       {
         "min": null,
         "max": null,
         "label": "All eGFR ranges",
         "category": "No renal adjustment",
-        "details": "No dose change in mild–moderate renal impairment; in severe CKD usual doses are often used but monitor for QT prolongation."
+        "details": "No dose change in mild\u2013moderate renal impairment; in severe CKD usual doses are often used but monitor for QT prolongation."
       }
     ],
     "notes": [
@@ -1477,10 +1736,15 @@
   {
     "id": "levothyroxine",
     "name": "Levothyroxine",
-    "searchTerms": ["levothyroxine", "thyroxine"],
+    "searchTerms": [
+      "levothyroxine",
+      "thyroxine"
+    ],
     "className": "Thyroid hormone replacement",
-    "tags": ["Endocrine"],
-    "usualDose": "Individualised; typical maintenance 50–200 micrograms once daily.",
+    "tags": [
+      "Endocrine"
+    ],
+    "usualDose": "Individualised; typical maintenance 50\u2013200 micrograms once daily.",
     "renalBands": [
       {
         "min": null,
@@ -1498,10 +1762,14 @@
   {
     "id": "carbimazole",
     "name": "Carbimazole",
-    "searchTerms": ["carbimazole"],
+    "searchTerms": [
+      "carbimazole"
+    ],
     "className": "Antithyroid drug",
-    "tags": ["Endocrine"],
-    "usualDose": "10–40 mg daily in divided doses initially, then titrated.",
+    "tags": [
+      "Endocrine"
+    ],
+    "usualDose": "10\u201340 mg daily in divided doses initially, then titrated.",
     "renalBands": [
       {
         "min": null,
@@ -1519,15 +1787,21 @@
   {
     "id": "alendronic-acid",
     "name": "Alendronic acid",
-    "searchTerms": ["alendronate", "alendronic acid"],
+    "searchTerms": [
+      "alendronate",
+      "alendronic acid"
+    ],
     "className": "Bisphosphonate",
-    "tags": ["Bone health", "Osteoporosis"],
+    "tags": [
+      "Bone health",
+      "Osteoporosis"
+    ],
     "usualDose": "70 mg once weekly (or 10 mg daily) for osteoporosis.",
     "renalBands": [
       {
         "min": 35,
         "max": null,
-        "label": "eGFR ≥ 35",
+        "label": "eGFR \u2265 35",
         "category": "Standard",
         "details": "Usual dose may be used if eGFR is 35 or above."
       },
@@ -1547,10 +1821,15 @@
   {
     "id": "colecalciferol",
     "name": "Colecalciferol (vitamin D3)",
-    "searchTerms": ["colecalciferol", "vitamin d"],
+    "searchTerms": [
+      "colecalciferol",
+      "vitamin d"
+    ],
     "className": "Vitamin D supplement",
-    "tags": ["Bone health"],
-    "usualDose": "Loading or maintenance regimens vary (e.g. 800–2000 IU daily).",
+    "tags": [
+      "Bone health"
+    ],
+    "usualDose": "Loading or maintenance regimens vary (e.g. 800\u20132000 IU daily).",
     "renalBands": [
       {
         "min": null,
@@ -1567,10 +1846,17 @@
   {
     "id": "valproate",
     "name": "Sodium valproate",
-    "searchTerms": ["sodium valproate", "epilim", "valproate"],
+    "searchTerms": [
+      "sodium valproate",
+      "epilim",
+      "valproate"
+    ],
     "className": "Antiepileptic / mood stabiliser",
-    "tags": ["Epilepsy", "Bipolar"],
-    "usualDose": "Individualised; often 600–2000 mg/day in divided doses.",
+    "tags": [
+      "Epilepsy",
+      "Bipolar"
+    ],
+    "usualDose": "Individualised; often 600\u20132000 mg/day in divided doses.",
     "renalBands": [
       {
         "min": null,
@@ -1588,15 +1874,20 @@
   {
     "id": "lamotrigine",
     "name": "Lamotrigine",
-    "searchTerms": ["lamotrigine"],
+    "searchTerms": [
+      "lamotrigine"
+    ],
     "className": "Antiepileptic / mood stabiliser",
-    "tags": ["Epilepsy", "Bipolar"],
-    "usualDose": "Varies by regimen and co-medication; usually 100–400 mg/day.",
+    "tags": [
+      "Epilepsy",
+      "Bipolar"
+    ],
+    "usualDose": "Varies by regimen and co-medication; usually 100\u2013400 mg/day.",
     "renalBands": [
       {
         "min": 30,
         "max": null,
-        "label": "eGFR ≥ 30",
+        "label": "eGFR \u2265 30",
         "category": "Standard titration",
         "details": "Use usual titration schedule guided by seizure control and side effects."
       },
@@ -1609,45 +1900,51 @@
       }
     ],
     "notes": [
-      "Warn about rash and Stevens–Johnson syndrome.",
+      "Warn about rash and Stevens\u2013Johnson syndrome.",
       "Check interactions with valproate and enzyme inducers."
     ]
   },
   {
     "id": "levetiracetam",
     "name": "Levetiracetam",
-    "searchTerms": ["levetiracetam", "keppra"],
+    "searchTerms": [
+      "levetiracetam",
+      "keppra"
+    ],
     "className": "Antiepileptic",
-    "tags": ["Epilepsy", "Renally cleared"],
-    "usualDose": "500–3000 mg/day in 2 divided doses in normal renal function.",
+    "tags": [
+      "Epilepsy",
+      "Renally cleared"
+    ],
+    "usualDose": "500\u20133000 mg/day in 2 divided doses in normal renal function.",
     "renalBands": [
       {
         "min": 80,
         "max": null,
-        "label": "CrCl ≥ 80",
+        "label": "CrCl \u2265 80",
         "category": "Standard",
         "details": "Usual dose range according to indication."
       },
       {
         "min": 50,
         "max": 80,
-        "label": "CrCl 50–79",
+        "label": "CrCl 50\u201379",
         "category": "Mild reduction",
         "details": "Slight dose reduction may be considered; check SPC for exact schedules."
       },
       {
         "min": 30,
         "max": 50,
-        "label": "CrCl 30–49",
+        "label": "CrCl 30\u201349",
         "category": "Moderate reduction",
-        "details": "Further reduce total daily dose; for example 250–750 mg twice daily depending on indication."
+        "details": "Further reduce total daily dose; for example 250\u2013750 mg twice daily depending on indication."
       },
       {
         "min": 15,
         "max": 30,
-        "label": "CrCl 15–29",
+        "label": "CrCl 15\u201329",
         "category": "Marked reduction",
-        "details": "Lower doses such as 250–500 mg twice daily; check SPC/local guidance."
+        "details": "Lower doses such as 250\u2013500 mg twice daily; check SPC/local guidance."
       },
       {
         "min": null,
@@ -1665,10 +1962,16 @@
   {
     "id": "carbamazepine",
     "name": "Carbamazepine",
-    "searchTerms": ["carbamazepine", "tegretol"],
+    "searchTerms": [
+      "carbamazepine",
+      "tegretol"
+    ],
     "className": "Antiepileptic",
-    "tags": ["Epilepsy", "Neuropathic pain"],
-    "usualDose": "Usually 400–1200 mg/day in divided doses.",
+    "tags": [
+      "Epilepsy",
+      "Neuropathic pain"
+    ],
+    "usualDose": "Usually 400\u20131200 mg/day in divided doses.",
     "renalBands": [
       {
         "min": null,
@@ -1686,10 +1989,17 @@
   {
     "id": "quetiapine",
     "name": "Quetiapine",
-    "searchTerms": ["quetiapine", "seroquel"],
+    "searchTerms": [
+      "quetiapine",
+      "seroquel"
+    ],
     "className": "Atypical antipsychotic",
-    "tags": ["Psychosis", "Bipolar", "Depression (augmentation)"],
-    "usualDose": "Wide range depending on indication; e.g. 50–800 mg/day.",
+    "tags": [
+      "Psychosis",
+      "Bipolar",
+      "Depression (augmentation)"
+    ],
+    "usualDose": "Wide range depending on indication; e.g. 50\u2013800 mg/day.",
     "renalBands": [
       {
         "min": null,
@@ -1707,10 +2017,16 @@
   {
     "id": "olanzapine",
     "name": "Olanzapine",
-    "searchTerms": ["olanzapine", "zyprexa"],
+    "searchTerms": [
+      "olanzapine",
+      "zyprexa"
+    ],
     "className": "Atypical antipsychotic",
-    "tags": ["Psychosis", "Bipolar"],
-    "usualDose": "5–20 mg once daily.",
+    "tags": [
+      "Psychosis",
+      "Bipolar"
+    ],
+    "usualDose": "5\u201320 mg once daily.",
     "renalBands": [
       {
         "min": null,
@@ -1728,15 +2044,19 @@
   {
     "id": "risperidone",
     "name": "Risperidone",
-    "searchTerms": ["risperidone"],
+    "searchTerms": [
+      "risperidone"
+    ],
     "className": "Atypical antipsychotic",
-    "tags": ["Psychosis"],
-    "usualDose": "Commonly 2–6 mg/day in divided doses.",
+    "tags": [
+      "Psychosis"
+    ],
+    "usualDose": "Commonly 2\u20136 mg/day in divided doses.",
     "renalBands": [
       {
         "min": 60,
         "max": null,
-        "label": "eGFR ≥ 60",
+        "label": "eGFR \u2265 60",
         "category": "Standard",
         "details": "Usual dosing range may be used."
       },
@@ -1745,7 +2065,7 @@
         "max": 60,
         "label": "eGFR < 60",
         "category": "Lower starting dose",
-        "details": "Use reduced starting doses and slower titration in moderate–severe CKD."
+        "details": "Use reduced starting doses and slower titration in moderate\u2013severe CKD."
       }
     ],
     "notes": [
@@ -1756,15 +2076,20 @@
   {
     "id": "tamsulosin",
     "name": "Tamsulosin",
-    "searchTerms": ["tamsulosin"],
+    "searchTerms": [
+      "tamsulosin"
+    ],
     "className": "Alpha-1 blocker (uroselective)",
-    "tags": ["BPH", "Urology"],
+    "tags": [
+      "BPH",
+      "Urology"
+    ],
     "usualDose": "400 micrograms once daily.",
     "renalBands": [
       {
         "min": 10,
         "max": null,
-        "label": "eGFR ≥ 10",
+        "label": "eGFR \u2265 10",
         "category": "Standard",
         "details": "No usual dose change; monitor postural BP in older adults."
       },
@@ -1784,9 +2109,13 @@
   {
     "id": "finasteride",
     "name": "Finasteride",
-    "searchTerms": ["finasteride"],
+    "searchTerms": [
+      "finasteride"
+    ],
     "className": "5-alpha-reductase inhibitor",
-    "tags": ["BPH"],
+    "tags": [
+      "BPH"
+    ],
     "usualDose": "5 mg once daily.",
     "renalBands": [
       {
@@ -1805,10 +2134,15 @@
   {
     "id": "oxybutynin",
     "name": "Oxybutynin",
-    "searchTerms": ["oxybutynin"],
+    "searchTerms": [
+      "oxybutynin"
+    ],
     "className": "Antimuscarinic for overactive bladder",
-    "tags": ["OAB", "Urology"],
-    "usualDose": "2.5–5 mg two to three times daily (or modified-release once daily).",
+    "tags": [
+      "OAB",
+      "Urology"
+    ],
+    "usualDose": "2.5\u20135 mg two to three times daily (or modified-release once daily).",
     "renalBands": [
       {
         "min": null,
@@ -1826,29 +2160,35 @@
   {
     "id": "mirabegron",
     "name": "Mirabegron",
-    "searchTerms": ["mirabegron", "betmiga"],
+    "searchTerms": [
+      "mirabegron",
+      "betmiga"
+    ],
     "className": "Beta-3 agonist for overactive bladder",
-    "tags": ["OAB", "Urology"],
+    "tags": [
+      "OAB",
+      "Urology"
+    ],
     "usualDose": "Usually 50 mg once daily (25 mg in some groups).",
     "renalBands": [
       {
         "min": 60,
         "max": null,
-        "label": "eGFR ≥ 60",
+        "label": "eGFR \u2265 60",
         "category": "Standard dosing",
         "details": "50 mg once daily."
       },
       {
         "min": 30,
         "max": 60,
-        "label": "eGFR 30–59",
+        "label": "eGFR 30\u201359",
         "category": "Standard or reduced dose",
         "details": "50 mg once daily usually acceptable; some patients may start at 25 mg if frail or on interacting drugs."
       },
       {
         "min": 15,
         "max": 30,
-        "label": "eGFR 15–29",
+        "label": "eGFR 15\u201329",
         "category": "Dose reduction",
         "details": "Maximum 25 mg once daily as per SPC in moderate renal impairment with certain risk factors."
       },
@@ -1865,76 +2205,18 @@
       "Useful alternative when antimuscarinics are poorly tolerated."
     ]
   },
-    {
-    "id": "amoxicillin",
-    "name": "Amoxicillin",
-    "searchTerms": ["amoxicillin"],
-    "className": "Penicillin antibiotic",
-    "tags": ["Antibiotic"],
-    "usualDose": "250–500 mg three times daily (higher in severe infections).",
-    "renalBands": [
-      {
-        "min": 30,
-        "max": null,
-        "label": "eGFR ≥ 30",
-        "category": "Standard",
-        "details": "Use usual dosing."
-      },
-      {
-        "min": null,
-        "max": 30,
-        "label": "eGFR < 30",
-        "category": "Dose reduction",
-        "details": "Reduce dosing frequency (e.g. 500 mg twice daily)."
-      }
-    ],
-    "notes": [
-      "Generally well tolerated; adjust dosing in severe impairment.",
-      "Safe in pregnancy and breastfeeding."
-    ]
-  },
-  {
-    "id": "co-amoxiclav",
-    "name": "Co-amoxiclav",
-    "searchTerms": ["coamoxiclav", "augmentin"],
-    "className": "Penicillin + beta-lactamase inhibitor",
-    "tags": ["Antibiotic"],
-    "usualDose": "500/125 mg three times daily.",
-    "renalBands": [
-      {
-        "min": 30,
-        "max": null,
-        "label": "eGFR ≥ 30",
-        "category": "Standard",
-        "details": "Usual dose can be used."
-      },
-      {
-        "min": 10,
-        "max": 30,
-        "label": "eGFR 10–29",
-        "category": "Dose reduction",
-        "details": "Consider 500/125 mg twice daily (BNF-based)."
-      },
-      {
-        "min": null,
-        "max": 10,
-        "label": "eGFR < 10",
-        "category": "Further reduction",
-        "details": "500/125 mg once daily or specialist advice depending on severity."
-      }
-    ],
-    "notes": [
-      "Avoid the 875 mg strength in CKD due to accumulation risk.",
-      "Monitor LFTs with prolonged use."
-    ]
-  },
   {
     "id": "phenoxymethylpenicillin",
     "name": "Phenoxymethylpenicillin (Pen V)",
-    "searchTerms": ["penicillin v", "phenoxymethylpenicillin"],
+    "searchTerms": [
+      "penicillin v",
+      "phenoxymethylpenicillin"
+    ],
     "className": "Penicillin antibiotic",
-    "tags": ["Antibiotic"],
-    "usualDose": "250–500 mg four times daily depending on indication.",
+    "tags": [
+      "Antibiotic"
+    ],
+    "usualDose": "250\u2013500 mg four times daily depending on indication.",
     "renalBands": [
       {
         "min": null,
@@ -1951,15 +2233,19 @@
   {
     "id": "flucloxacillin",
     "name": "Flucloxacillin",
-    "searchTerms": ["flucloxacillin"],
+    "searchTerms": [
+      "flucloxacillin"
+    ],
     "className": "Penicillin antibiotic",
-    "tags": ["Antibiotic"],
+    "tags": [
+      "Antibiotic"
+    ],
     "usualDose": "500 mg four times daily.",
     "renalBands": [
       {
         "min": 10,
         "max": null,
-        "label": "eGFR ≥ 10",
+        "label": "eGFR \u2265 10",
         "category": "Standard",
         "details": "Usual dose is appropriate."
       },
@@ -1979,15 +2265,19 @@
   {
     "id": "clarithromycin",
     "name": "Clarithromycin",
-    "searchTerms": ["clarithromycin"],
+    "searchTerms": [
+      "clarithromycin"
+    ],
     "className": "Macrolide antibiotic",
-    "tags": ["Antibiotic"],
-    "usualDose": "250–500 mg twice daily.",
+    "tags": [
+      "Antibiotic"
+    ],
+    "usualDose": "250\u2013500 mg twice daily.",
     "renalBands": [
       {
         "min": 30,
         "max": null,
-        "label": "eGFR ≥ 30",
+        "label": "eGFR \u2265 30",
         "category": "Standard",
         "details": "Usual dosing allowed."
       },
@@ -2007,9 +2297,13 @@
   {
     "id": "azithromycin",
     "name": "Azithromycin",
-    "searchTerms": ["azithromycin"],
+    "searchTerms": [
+      "azithromycin"
+    ],
     "className": "Macrolide antibiotic",
-    "tags": ["Antibiotic"],
+    "tags": [
+      "Antibiotic"
+    ],
     "usualDose": "500 mg once daily for 3 days (or other regimens depending on indication).",
     "renalBands": [
       {
@@ -2028,9 +2322,13 @@
   {
     "id": "doxycycline",
     "name": "Doxycycline",
-    "searchTerms": ["doxycycline"],
+    "searchTerms": [
+      "doxycycline"
+    ],
     "className": "Tetracycline antibiotic",
-    "tags": ["Antibiotic"],
+    "tags": [
+      "Antibiotic"
+    ],
     "usualDose": "200 mg day 1 then 100 mg daily.",
     "renalBands": [
       {
@@ -2049,22 +2347,27 @@
   {
     "id": "ciprofloxacin",
     "name": "Ciprofloxacin",
-    "searchTerms": ["cipro", "ciprofloxacin"],
+    "searchTerms": [
+      "cipro",
+      "ciprofloxacin"
+    ],
     "className": "Fluoroquinolone antibiotic",
-    "tags": ["Antibiotic"],
-    "usualDose": "250–500 mg twice daily depending on indication.",
+    "tags": [
+      "Antibiotic"
+    ],
+    "usualDose": "250\u2013500 mg twice daily depending on indication.",
     "renalBands": [
       {
         "min": 60,
         "max": null,
-        "label": "eGFR ≥ 60",
+        "label": "eGFR \u2265 60",
         "category": "Standard",
         "details": "Use usual dose."
       },
       {
         "min": 30,
         "max": 60,
-        "label": "eGFR 30–59",
+        "label": "eGFR 30\u201359",
         "category": "Mild reduction",
         "details": "Reduce dose (e.g. 250 mg twice daily or extend interval)."
       },
@@ -2073,7 +2376,7 @@
         "max": 30,
         "label": "eGFR < 30",
         "category": "Moderate reduction",
-        "details": "Reduce further – check BNF/SPC."
+        "details": "Reduce further \u2013 check BNF/SPC."
       }
     ],
     "notes": [
@@ -2082,74 +2385,16 @@
     ]
   },
   {
-    "id": "nitrofurantoin",
-    "name": "Nitrofurantoin",
-    "searchTerms": ["nitrofurantoin"],
-    "className": "Urinary antibiotic",
-    "tags": ["UTI"],
-    "usualDose": "100 mg twice daily (or 50 mg four times daily).",
-    "renalBands": [
-      {
-        "min": 45,
-        "max": null,
-        "label": "eGFR ≥ 45",
-        "category": "Standard",
-        "details": "Usual dosing can be used."
-      },
-      {
-        "min": 30,
-        "max": 45,
-        "label": "eGFR 30–44",
-        "category": "Conditional use",
-        "details": "Short-course (3–7 days) may be used for lower UTI only if benefits outweigh risks (MHRA)."
-      },
-      {
-        "min": null,
-        "max": 30,
-        "label": "eGFR < 30",
-        "category": "Avoid",
-        "details": "Ineffective and risk of toxicity; avoid."
-      }
-    ],
-    "notes": [
-      "Not for upper UTI or pyelonephritis.",
-      "Check local UTI guidelines."
-    ]
-  },
-  {
-    "id": "trimethoprim",
-    "name": "Trimethoprim",
-    "searchTerms": ["trimethoprim"],
-    "className": "Folate antagonist antibiotic",
-    "tags": ["UTI"],
-    "usualDose": "200 mg twice daily for 3 days.",
-    "renalBands": [
-      {
-        "min": 30,
-        "max": null,
-        "label": "eGFR ≥ 30",
-        "category": "Standard",
-        "details": "Use usual dose."
-      },
-      {
-        "min": null,
-        "max": 30,
-        "label": "eGFR < 30",
-        "category": "Dose reduction",
-        "details": "Reduce dose/frequency; avoid if possible due to hyperkalaemia risk."
-      }
-    ],
-    "notes": [
-      "Hyperkalaemia risk increased in CKD and with ACEi/ARB/spironolactone.",
-      "Avoid in pregnancy."
-    ]
-  },
-  {
     "id": "metronidazole",
     "name": "Metronidazole",
-    "searchTerms": ["metronidazole", "flagyl"],
+    "searchTerms": [
+      "metronidazole",
+      "flagyl"
+    ],
     "className": "Nitroimidazole antibiotic",
-    "tags": ["Antibiotic"],
+    "tags": [
+      "Antibiotic"
+    ],
     "usualDose": "400 mg twice or three times daily.",
     "renalBands": [
       {
@@ -2166,66 +2411,37 @@
     ]
   },
   {
-    "id": "cefalexin",
-    "name": "Cefalexin",
-    "searchTerms": ["cefalexin", "cephalexin"],
-    "className": "Cephalosporin antibiotic",
-    "tags": ["Antibiotic"],
-    "usualDose": "250–500 mg every 6–8 hours.",
-    "renalBands": [
-      {
-        "min": 50,
-        "max": null,
-        "label": "eGFR ≥ 50",
-        "category": "Standard",
-        "details": "Usual dosing."
-      },
-      {
-        "min": 10,
-        "max": 50,
-        "label": "eGFR 10–49",
-        "category": "Reduction",
-        "details": "Reduce frequency (e.g. 500 mg twice daily)."
-      },
-      {
-        "min": null,
-        "max": 10,
-        "label": "eGFR < 10",
-        "category": "Further reduction",
-        "details": "Lower dose or interval; check BNF/SPC."
-      }
-    ],
-    "notes": [
-      "Good for pregnancy-safe UTI and SSTI.",
-      "May cause GI upset."
-    ]
-  },
-  {
     "id": "acyclovir",
     "name": "Aciclovir",
-    "searchTerms": ["aciclovir", "acyclovir"],
+    "searchTerms": [
+      "aciclovir",
+      "acyclovir"
+    ],
     "className": "Antiviral",
-    "tags": ["HSV", "VZV"],
-    "usualDose": "200–800 mg depending on indication.",
+    "tags": [
+      "HSV",
+      "VZV"
+    ],
+    "usualDose": "200\u2013800 mg depending on indication.",
     "renalBands": [
       {
         "min": 50,
         "max": null,
-        "label": "eGFR ≥ 50",
+        "label": "eGFR \u2265 50",
         "category": "Standard",
         "details": "Usual dose."
       },
       {
         "min": 25,
         "max": 50,
-        "label": "eGFR 25–49",
+        "label": "eGFR 25\u201349",
         "category": "Reduction",
         "details": "Reduce frequency (e.g. every 12 hours)."
       },
       {
         "min": 10,
         "max": 25,
-        "label": "eGFR 10–24",
+        "label": "eGFR 10\u201324",
         "category": "Further reduction",
         "details": "Increase interval (e.g. every 24 hours)."
       },
@@ -2245,29 +2461,35 @@
   {
     "id": "valaciclovir",
     "name": "Valaciclovir",
-    "searchTerms": ["valaciclovir", "valacyclovir"],
+    "searchTerms": [
+      "valaciclovir",
+      "valacyclovir"
+    ],
     "className": "Antiviral",
-    "tags": ["HSV", "VZV"],
+    "tags": [
+      "HSV",
+      "VZV"
+    ],
     "usualDose": "500 mg twice daily for HSV; higher for VZV.",
     "renalBands": [
       {
         "min": 50,
         "max": null,
-        "label": "eGFR ≥ 50",
+        "label": "eGFR \u2265 50",
         "category": "Standard",
         "details": "Usual dose."
       },
       {
         "min": 30,
         "max": 50,
-        "label": "eGFR 30–49",
+        "label": "eGFR 30\u201349",
         "category": "Mild reduction",
         "details": "Reduce frequency."
       },
       {
         "min": 10,
         "max": 30,
-        "label": "eGFR 10–29",
+        "label": "eGFR 10\u201329",
         "category": "Moderate reduction",
         "details": "Lower dose/frequency based on indication."
       },
@@ -2287,9 +2509,13 @@
   {
     "id": "prednisolone",
     "name": "Prednisolone",
-    "searchTerms": ["prednisolone"],
+    "searchTerms": [
+      "prednisolone"
+    ],
     "className": "Corticosteroid",
-    "tags": ["Steroid"],
+    "tags": [
+      "Steroid"
+    ],
     "usualDose": "Varies by indication.",
     "renalBands": [
       {
@@ -2308,24 +2534,28 @@
   {
     "id": "methotrexate",
     "name": "Methotrexate",
-    "searchTerms": ["methotrexate"],
+    "searchTerms": [
+      "methotrexate"
+    ],
     "className": "DMARD",
-    "tags": ["Rheumatology"],
-    "usualDose": "7.5–25 mg once weekly.",
+    "tags": [
+      "Rheumatology"
+    ],
+    "usualDose": "7.5\u201325 mg once weekly.",
     "renalBands": [
       {
         "min": 60,
         "max": null,
-        "label": "eGFR ≥ 60",
+        "label": "eGFR \u2265 60",
         "category": "Standard",
         "details": "Usual weekly dose may be used with monitoring."
       },
       {
         "min": 30,
         "max": 60,
-        "label": "eGFR 30–59",
+        "label": "eGFR 30\u201359",
         "category": "Dose reduction",
-        "details": "Consider 50–70% of usual dose; monitor FBC, LFTs and eGFR closely."
+        "details": "Consider 50\u201370% of usual dose; monitor FBC, LFTs and eGFR closely."
       },
       {
         "min": null,
@@ -2337,30 +2567,34 @@
     ],
     "notes": [
       "Ensure folic acid supplementation.",
-      "Never take daily — weekly only."
+      "Never take daily \u2014 weekly only."
     ]
   },
   {
     "id": "allopurinol-extra",
     "name": "Allopurinol (alternative entry)",
-    "searchTerms": ["allopurinol"],
+    "searchTerms": [
+      "allopurinol"
+    ],
     "className": "Xanthine oxidase inhibitor",
-    "tags": ["Gout"],
-    "usualDose": "100–300 mg daily, titrated.",
+    "tags": [
+      "Gout"
+    ],
+    "usualDose": "100\u2013300 mg daily, titrated.",
     "renalBands": [
       {
         "min": 60,
         "max": null,
-        "label": "eGFR ≥ 60",
+        "label": "eGFR \u2265 60",
         "category": "Standard",
         "details": "May use standard titration."
       },
       {
         "min": 30,
         "max": 60,
-        "label": "eGFR 30–59",
+        "label": "eGFR 30\u201359",
         "category": "Lower start",
-        "details": "Start with 50–100 mg daily; titrate to urate."
+        "details": "Start with 50\u2013100 mg daily; titrate to urate."
       },
       {
         "min": null,
@@ -2371,85 +2605,26 @@
       }
     ],
     "notes": [
-      "Separate duplicate entry optional – delete if unwanted.",
+      "Separate duplicate entry optional \u2013 delete if unwanted.",
       "Check HLA-B*5801 in high-risk ethnic groups if available."
-    ]
-  },
-    {
-    "id": "warfarin",
-    "name": "Warfarin",
-    "searchTerms": ["warfarin"],
-    "className": "Vitamin K antagonist anticoagulant",
-    "tags": ["Anticoagulant"],
-    "usualDose": "Individualised to target INR (commonly maintenance 1–10 mg daily).",
-    "renalBands": [
-      {
-        "min": null,
-        "max": null,
-        "label": "All eGFR ranges",
-        "category": "INR-guided",
-        "details": "Dose based on INR; renal impairment does not directly alter warfarin dose but risk of bleeding may increase in CKD."
-      }
-    ],
-    "notes": [
-      "Frequent INR monitoring required, especially after changes in renal function, diet or interacting drugs.",
-      "Consider bleeding risks in advanced CKD; adjust target INR or anticoagulation strategy if needed."
-    ]
-  },
-  {
-    "id": "digoxin",
-    "name": "Digoxin",
-    "searchTerms": ["digoxin"],
-    "className": "Cardiac glycoside",
-    "tags": ["Heart failure", "Rate control"],
-    "usualDose": "62.5–250 μg once daily (depending on age, weight, renal function).",
-    "renalBands": [
-      {
-        "min": 60,
-        "max": null,
-        "label": "eGFR ≥ 60",
-        "category": "Standard low-ish dosing",
-        "details": "Usual once-daily maintenance dosing; monitor for toxicity especially in older/frail patients."
-      },
-      {
-        "min": 30,
-        "max": 60,
-        "label": "eGFR 30–59",
-        "category": "Dose reduction",
-        "details": "Consider 62.5–125 μg once daily or alternate-day dosing; monitor levels if possible."
-      },
-      {
-        "min": 15,
-        "max": 30,
-        "label": "eGFR 15–29",
-        "category": "Marked reduction",
-        "details": "Use lower doses (e.g. 62.5 μg once daily or alternate days); toxicity risk increased."
-      },
-      {
-        "min": null,
-        "max": 15,
-        "label": "eGFR < 15 / dialysis",
-        "category": "Specialist dosing",
-        "details": "Use only under specialist/specialist advice with level monitoring if available."
-      }
-    ],
-    "notes": [
-      "Monitor potassium, magnesium and renal function; hypokalaemia increases toxicity risk.",
-      "Beware interactions (e.g. with verapamil, amiodarone, macrolides)."
     ]
   },
   {
     "id": "metoclopramide",
     "name": "Metoclopramide",
-    "searchTerms": ["metoclopramide"],
+    "searchTerms": [
+      "metoclopramide"
+    ],
     "className": "Antiemetic / prokinetic",
-    "tags": ["GI"],
+    "tags": [
+      "GI"
+    ],
     "usualDose": "10 mg up to three times daily before meals (max 30 mg/day).",
     "renalBands": [
       {
         "min": 10,
         "max": null,
-        "label": "eGFR ≥ 10",
+        "label": "eGFR \u2265 10",
         "category": "Standard dosing",
         "details": "Use usual dosing with caution; reduce frequency in lower eGFR per local guidance."
       },
@@ -2467,32 +2642,16 @@
     ]
   },
   {
-    "id": "ondansetron",
-    "name": "Ondansetron",
-    "searchTerms": ["ondansetron", "zofran"],
-    "className": "5-HT3 antagonist antiemetic",
-    "tags": ["Antiemetic"],
-    "usualDose": "4–8 mg 1–3 times daily (PO) depending on cause of nausea/vomiting.",
-    "renalBands": [
-      {
-        "min": null,
-        "max": null,
-        "label": "All eGFR ranges",
-        "category": "No renal adjustment",
-        "details": "Usual doses acceptable; monitor for QT prolongation especially if other risk factors present."
-      }
-    ],
-    "notes": [
-      "Use with caution in combination with other QT-prolonging agents or in electrolyte disturbance (e.g. CKD, diuretics)."
-    ]
-  },
-  {
     "id": "esomeprazole",
     "name": "Esomeprazole",
-    "searchTerms": ["esomeprazole"],
+    "searchTerms": [
+      "esomeprazole"
+    ],
     "className": "Proton pump inhibitor",
-    "tags": ["GI"],
-    "usualDose": "20–40 mg once daily (depending on indication).",
+    "tags": [
+      "GI"
+    ],
+    "usualDose": "20\u201340 mg once daily (depending on indication).",
     "renalBands": [
       {
         "min": null,
@@ -2503,35 +2662,39 @@
       }
     ],
     "notes": [
-      "Long-term PPI risks (hypomagnesaemia, fractures, C. difficile) may be higher in CKD — review need regularly."
+      "Long-term PPI risks (hypomagnesaemia, fractures, C. difficile) may be higher in CKD \u2014 review need regularly."
     ]
   },
   {
     "id": "allopurinol",
     "name": "Allopurinol",
-    "searchTerms": ["allopurinol"],
+    "searchTerms": [
+      "allopurinol"
+    ],
     "className": "Xanthine oxidase inhibitor (urate-lowering)",
-    "tags": ["Gout"],
-    "usualDose": "100–300 mg daily (titrated gradually).",
+    "tags": [
+      "Gout"
+    ],
+    "usualDose": "100\u2013300 mg daily (titrated gradually).",
     "renalBands": [
       {
         "min": 60,
         "max": null,
-        "label": "eGFR ≥ 60",
+        "label": "eGFR \u2265 60",
         "category": "Standard titration",
         "details": "Use standard initiation and titration."
       },
       {
         "min": 30,
         "max": 60,
-        "label": "eGFR 30–59",
+        "label": "eGFR 30\u201359",
         "category": "Lower start",
-        "details": "Start at 50–100 mg daily; titrate carefully."
+        "details": "Start at 50\u2013100 mg daily; titrate carefully."
       },
       {
         "min": 15,
         "max": 30,
-        "label": "eGFR 15–29",
+        "label": "eGFR 15\u201329",
         "category": "Cautious use",
         "details": "Consider 50 mg on alternate days; titrate slowly under monitoring."
       },
@@ -2551,24 +2714,28 @@
   {
     "id": "allopurinol-highdose",
     "name": "Allopurinol (higher-dose titration)",
-    "searchTerms": ["allopurinol high dose"],
+    "searchTerms": [
+      "allopurinol high dose"
+    ],
     "className": "Xanthine oxidase inhibitor",
-    "tags": ["Gout"],
+    "tags": [
+      "Gout"
+    ],
     "usualDose": "Up to 300 mg daily depending on urate target.",
     "renalBands": [
       {
         "min": 60,
         "max": null,
-        "label": "eGFR ≥ 60",
+        "label": "eGFR \u2265 60",
         "category": "Standard titration",
         "details": "Use as per urate target and local protocol."
       },
       {
         "min": 30,
         "max": 60,
-        "label": "eGFR 30–59",
+        "label": "eGFR 30\u201359",
         "category": "Lower max dose",
-        "details": "Aim for lower maintenance dose (e.g. ≤ 200 mg/day); monitor closely."
+        "details": "Aim for lower maintenance dose (e.g. \u2264 200 mg/day); monitor closely."
       },
       {
         "min": null,
@@ -2579,16 +2746,21 @@
       }
     ],
     "notes": [
-      "Alternative entry to existing allopurinol – helpful if local protocol distinguishes low- vs high-dose initiation."
+      "Alternative entry to existing allopurinol \u2013 helpful if local protocol distinguishes low- vs high-dose initiation."
     ]
   },
   {
     "id": "ursodeoxycholic-acid",
     "name": "Ursodeoxycholic acid",
-    "searchTerms": ["ursodeoxycholic acid", "udca"],
+    "searchTerms": [
+      "ursodeoxycholic acid",
+      "udca"
+    ],
     "className": "Bile acid / hepatoprotective",
-    "tags": ["Liver"],
-    "usualDose": "250–500 mg 1–2 times daily depending on indication.",
+    "tags": [
+      "Liver"
+    ],
+    "usualDose": "250\u2013500 mg 1\u20132 times daily depending on indication.",
     "renalBands": [
       {
         "min": null,
@@ -2604,60 +2776,15 @@
     ]
   },
   {
-    "id": "levetiracetam",
-    "name": "Levetiracetam",
-    "searchTerms": ["levetiracetam", "keppra"],
-    "className": "Antiepileptic",
-    "tags": ["Epilepsy", "Renally cleared"],
-    "usualDose": "500–3000 mg/day in 2 divided doses (normal renal function).",
-    "renalBands": [
-      {
-        "min": 80,
-        "max": null,
-        "label": "CrCl ≥ 80",
-        "category": "Standard dosing",
-        "details": "Usual maintenance doses may be used."
-      },
-      {
-        "min": 50,
-        "max": 80,
-        "label": "CrCl 50–79",
-        "category": "Mild reduction",
-        "details": "Consider moderate dose reduction; monitor tolerance."
-      },
-      {
-        "min": 30,
-        "max": 50,
-        "label": "CrCl 30–49",
-        "category": "Moderate reduction",
-        "details": "Reduce daily dose or increase dosing interval."
-      },
-      {
-        "min": 15,
-        "max": 30,
-        "label": "CrCl 15–29",
-        "category": "Significant reduction",
-        "details": "Use lower doses as per SPC; monitor for adverse effects."
-      },
-      {
-        "min": null,
-        "max": 15,
-        "label": "CrCl < 15 / dialysis",
-        "category": "Specialist dosing",
-        "details": "Use only under specialist supervision; adjust around dialysis if applicable."
-      }
-    ],
-    "notes": [
-      "Minimal drug interactions; renally excreted — dosing must be adjusted for impaired renal function.",
-      "Common adverse effects: somnolence, weakness; reduce dose in CKD to reduce toxicity."
-    ]
-  },
-  {
     "id": "prednisone",
     "name": "Prednisone",
-    "searchTerms": ["prednisone"],
+    "searchTerms": [
+      "prednisone"
+    ],
     "className": "Corticosteroid",
-    "tags": ["Steroid"],
+    "tags": [
+      "Steroid"
+    ],
     "usualDose": "Varies widely depending on indication.",
     "renalBands": [
       {
@@ -2676,22 +2803,30 @@
   {
     "id": "ibuprofen",
     "name": "Ibuprofen",
-    "searchTerms": ["ibuprofen", "advil", "nurofen"],
+    "searchTerms": [
+      "ibuprofen",
+      "advil",
+      "nurofen"
+    ],
     "className": "NSAID",
-    "tags": ["Pain", "Anti-inflammatory", "Analgesic"],
-    "usualDose": "200–400 mg every 4–6 hours (max 2400 mg/day depending on age/indication).",
+    "tags": [
+      "Pain",
+      "Anti-inflammatory",
+      "Analgesic"
+    ],
+    "usualDose": "200\u2013400 mg every 4\u20136 hours (max 2400 mg/day depending on age/indication).",
     "renalBands": [
       {
         "min": 60,
         "max": null,
-        "label": "eGFR ≥ 60",
+        "label": "eGFR \u2265 60",
         "category": "Standard",
         "details": "Use lowest effective dose for shortest duration; monitor renal function."
       },
       {
         "min": 30,
         "max": 60,
-        "label": "eGFR 30–59",
+        "label": "eGFR 30\u201359",
         "category": "Caution",
         "details": "Avoid repeated courses; consider alternative analgesia."
       },
@@ -2711,10 +2846,15 @@
   {
     "id": "paracetamol",
     "name": "Paracetamol",
-    "searchTerms": ["paracetamol", "acetaminophen"],
+    "searchTerms": [
+      "paracetamol",
+      "acetaminophen"
+    ],
     "className": "Analgesic / antipyretic",
-    "tags": ["Pain"],
-    "usualDose": "500–1000 mg every 4–6 hours (max 4 g/day in normal renal/hepatic function).",
+    "tags": [
+      "Pain"
+    ],
+    "usualDose": "500\u20131000 mg every 4\u20136 hours (max 4 g/day in normal renal/hepatic function).",
     "renalBands": [
       {
         "min": null,
@@ -2731,22 +2871,27 @@
   {
     "id": "oxycodone",
     "name": "Oxycodone (immediate release)",
-    "searchTerms": ["oxycodone"],
+    "searchTerms": [
+      "oxycodone"
+    ],
     "className": "Opioid analgesic",
-    "tags": ["Pain", "Opioid"],
-    "usualDose": "5–10 mg every 4–6 hours (dose varies by tolerance and indication).",
+    "tags": [
+      "Pain",
+      "Opioid"
+    ],
+    "usualDose": "5\u201310 mg every 4\u20136 hours (dose varies by tolerance and indication).",
     "renalBands": [
       {
         "min": 60,
         "max": null,
-        "label": "eGFR ≥ 60",
+        "label": "eGFR \u2265 60",
         "category": "Standard",
         "details": "Usual doses may be used."
       },
       {
         "min": 30,
         "max": 60,
-        "label": "eGFR 30–59",
+        "label": "eGFR 30\u201359",
         "category": "Caution",
         "details": "Reduce dose and extend intervals; monitor for accumulation."
       },
@@ -2759,28 +2904,33 @@
       }
     ],
     "notes": [
-      "Opioid toxicity risk increased in CKD — use lowest effective dose and monitor sedation, respiratory status, renal & fluid status."
+      "Opioid toxicity risk increased in CKD \u2014 use lowest effective dose and monitor sedation, respiratory status, renal & fluid status."
     ]
   },
   {
     "id": "morphine",
     "name": "Morphine (immediate release)",
-    "searchTerms": ["morphine"],
+    "searchTerms": [
+      "morphine"
+    ],
     "className": "Opioid analgesic",
-    "tags": ["Pain", "Opioid"],
-    "usualDose": "5–10 mg every 4 hours (subject to indication and tolerance).",
+    "tags": [
+      "Pain",
+      "Opioid"
+    ],
+    "usualDose": "5\u201310 mg every 4 hours (subject to indication and tolerance).",
     "renalBands": [
       {
         "min": 60,
         "max": null,
-        "label": "eGFR ≥ 60",
+        "label": "eGFR \u2265 60",
         "category": "Standard",
         "details": "Usual dosing acceptable."
       },
       {
         "min": 30,
         "max": 60,
-        "label": "eGFR 30–59",
+        "label": "eGFR 30\u201359",
         "category": "Moderate reduction",
         "details": "Use lower doses and longer intervals; monitor for accumulation of active metabolites."
       },
@@ -2797,79 +2947,28 @@
     ]
   },
   {
-    "id": "lansoprazole",
-    "name": "Lansoprazole",
-    "searchTerms": ["lansoprazole"],
-    "className": "Proton pump inhibitor",
-    "tags": ["GI"],
-    "usualDose": "15–30 mg once daily depending on indication.",
-    "renalBands": [
-      {
-        "min": null,
-        "max": null,
-        "label": "All eGFR ranges",
-        "category": "No adjustment",
-        "details": "PPI dose generally not adjusted for renal function."
-      }
-    ],
-    "notes": [
-      "Review long-term need; risk-benefit in CKD similar to general population but monitor electrolytes."
-    ]
-  },
-    {
-    "id": "bisoprolol",
-    "name": "Bisoprolol",
-    "searchTerms": ["bisoprolol"],
-    "className": "Beta-blocker",
-    "tags": ["Heart failure", "Hypertension"],
-    "usualDose": "2.5–10 mg once daily.",
-    "renalBands": [
-      {
-        "min": 40,
-        "max": null,
-        "label": "eGFR ≥ 40",
-        "category": "Standard",
-        "details": "Use usual dosing and titration."
-      },
-      {
-        "min": 20,
-        "max": 40,
-        "label": "eGFR 20–39",
-        "category": "Caution",
-        "details": "Titrate slowly; monitor heart rate and renal function."
-      },
-      {
-        "min": null,
-        "max": 20,
-        "label": "eGFR < 20",
-        "category": "Lower starting dose",
-        "details": "Begin at lower doses; titrate cautiously."
-      }
-    ],
-    "notes": [
-      "Common first-line beta blocker in HF and HTN.",
-      "Watch for bradycardia and hypotension in CKD."
-    ]
-  },
-  {
     "id": "atenolol",
     "name": "Atenolol",
-    "searchTerms": ["atenolol"],
+    "searchTerms": [
+      "atenolol"
+    ],
     "className": "Beta-blocker",
-    "tags": ["Hypertension"],
-    "usualDose": "25–100 mg daily.",
+    "tags": [
+      "Hypertension"
+    ],
+    "usualDose": "25\u2013100 mg daily.",
     "renalBands": [
       {
         "min": 35,
         "max": null,
-        "label": "eGFR ≥ 35",
+        "label": "eGFR \u2265 35",
         "category": "Standard",
         "details": "Renal elimination significant; usual dosing acceptable."
       },
       {
         "min": 15,
         "max": 35,
-        "label": "eGFR 15–34",
+        "label": "eGFR 15\u201334",
         "category": "Reduction",
         "details": "Reduce dose (e.g. half dose) or extend interval."
       },
@@ -2882,17 +2981,21 @@
       }
     ],
     "notes": [
-      "Renally cleared → more bradycardia in CKD.",
+      "Renally cleared \u2192 more bradycardia in CKD.",
       "Prefer bisoprolol or carvedilol in HF."
     ]
   },
   {
     "id": "carvedilol",
     "name": "Carvedilol",
-    "searchTerms": ["carvedilol"],
+    "searchTerms": [
+      "carvedilol"
+    ],
     "className": "Beta-blocker",
-    "tags": ["Heart failure"],
-    "usualDose": "3.125 mg twice daily, titrated to 25–50 mg/day.",
+    "tags": [
+      "Heart failure"
+    ],
+    "usualDose": "3.125 mg twice daily, titrated to 25\u201350 mg/day.",
     "renalBands": [
       {
         "min": null,
@@ -2910,10 +3013,15 @@
   {
     "id": "isosorbide-mononitrate",
     "name": "Isosorbide mononitrate",
-    "searchTerms": ["isosorbide mononitrate", "imdur"],
+    "searchTerms": [
+      "isosorbide mononitrate",
+      "imdur"
+    ],
     "className": "Nitrate vasodilator",
-    "tags": ["Angina"],
-    "usualDose": "20–60 mg once or twice daily depending on preparation.",
+    "tags": [
+      "Angina"
+    ],
+    "usualDose": "20\u201360 mg once or twice daily depending on preparation.",
     "renalBands": [
       {
         "min": null,
@@ -2931,15 +3039,19 @@
   {
     "id": "ranolazine",
     "name": "Ranolazine",
-    "searchTerms": ["ranolazine"],
+    "searchTerms": [
+      "ranolazine"
+    ],
     "className": "Anti-anginal",
-    "tags": ["Angina"],
-    "usualDose": "375–750 mg twice daily.",
+    "tags": [
+      "Angina"
+    ],
+    "usualDose": "375\u2013750 mg twice daily.",
     "renalBands": [
       {
         "min": 30,
         "max": null,
-        "label": "eGFR ≥ 30",
+        "label": "eGFR \u2265 30",
         "category": "Cautious use",
         "details": "Start at low dose and titrate carefully."
       },
@@ -2959,10 +3071,15 @@
   {
     "id": "fexofenadine",
     "name": "Fexofenadine",
-    "searchTerms": ["fexofenadine", "telfast"],
+    "searchTerms": [
+      "fexofenadine",
+      "telfast"
+    ],
     "className": "Non-sedating antihistamine",
-    "tags": ["Allergy"],
-    "usualDose": "120–180 mg once daily.",
+    "tags": [
+      "Allergy"
+    ],
+    "usualDose": "120\u2013180 mg once daily.",
     "renalBands": [
       {
         "min": null,
@@ -2974,28 +3091,33 @@
     ],
     "notes": [
       "Less sedating than cetirizine or loratadine.",
-      "Avoid grapefruit juice (↓ absorption)."
+      "Avoid grapefruit juice (\u2193 absorption)."
     ]
   },
   {
     "id": "cetirizine",
     "name": "Cetirizine",
-    "searchTerms": ["cetirizine", "zyrtec"],
+    "searchTerms": [
+      "cetirizine",
+      "zyrtec"
+    ],
     "className": "Antihistamine",
-    "tags": ["Allergy"],
+    "tags": [
+      "Allergy"
+    ],
     "usualDose": "10 mg once daily.",
     "renalBands": [
       {
         "min": 50,
         "max": null,
-        "label": "eGFR ≥ 50",
+        "label": "eGFR \u2265 50",
         "category": "Standard",
         "details": "Use usual dosing."
       },
       {
         "min": 10,
         "max": 50,
-        "label": "eGFR 10–49",
+        "label": "eGFR 10\u201349",
         "category": "Reduction",
         "details": "Give 5 mg once daily."
       },
@@ -3014,9 +3136,13 @@
   {
     "id": "loratadine",
     "name": "Loratadine",
-    "searchTerms": ["loratadine"],
+    "searchTerms": [
+      "loratadine"
+    ],
     "className": "Non-sedating antihistamine",
-    "tags": ["Allergy"],
+    "tags": [
+      "Allergy"
+    ],
     "usualDose": "10 mg once daily.",
     "renalBands": [
       {
@@ -3029,7 +3155,7 @@
       {
         "min": 30,
         "max": null,
-        "label": "eGFR ≥ 30",
+        "label": "eGFR \u2265 30",
         "category": "Standard",
         "details": "Use usual dosing."
       }
@@ -3041,9 +3167,14 @@
   {
     "id": "montelukast",
     "name": "Montelukast",
-    "searchTerms": ["montelukast", "singulair"],
+    "searchTerms": [
+      "montelukast",
+      "singulair"
+    ],
     "className": "Leukotriene receptor antagonist",
-    "tags": ["Asthma"],
+    "tags": [
+      "Asthma"
+    ],
     "usualDose": "10 mg once daily (adult).",
     "renalBands": [
       {
@@ -3062,10 +3193,15 @@
   {
     "id": "fluticasone-inhaled",
     "name": "Fluticasone (inhaled)",
-    "searchTerms": ["fluticasone", "flixotide"],
+    "searchTerms": [
+      "fluticasone",
+      "flixotide"
+    ],
     "className": "Inhaled corticosteroid",
-    "tags": ["Asthma"],
-    "usualDose": "100–1000 micrograms daily depending on severity.",
+    "tags": [
+      "Asthma"
+    ],
+    "usualDose": "100\u20131000 micrograms daily depending on severity.",
     "renalBands": [
       {
         "min": null,
@@ -3083,10 +3219,15 @@
   {
     "id": "beclometasone-inhaled",
     "name": "Beclometasone (inhaled)",
-    "searchTerms": ["beclometasone", "clenil"],
+    "searchTerms": [
+      "beclometasone",
+      "clenil"
+    ],
     "className": "Inhaled corticosteroid",
-    "tags": ["Asthma"],
-    "usualDose": "100–400 micrograms/day (up to 800 in severe cases).",
+    "tags": [
+      "Asthma"
+    ],
+    "usualDose": "100\u2013400 micrograms/day (up to 800 in severe cases).",
     "renalBands": [
       {
         "min": null,
@@ -3103,9 +3244,15 @@
   {
     "id": "salmeterol",
     "name": "Salmeterol",
-    "searchTerms": ["salmeterol", "serevent"],
+    "searchTerms": [
+      "salmeterol",
+      "serevent"
+    ],
     "className": "Long-acting beta agonist",
-    "tags": ["Asthma", "COPD"],
+    "tags": [
+      "Asthma",
+      "COPD"
+    ],
     "usualDose": "50 micrograms twice daily.",
     "renalBands": [
       {
@@ -3124,17 +3271,21 @@
   {
     "id": "clotrimazole-topical",
     "name": "Clotrimazole (topical)",
-    "searchTerms": ["clotrimazole"],
+    "searchTerms": [
+      "clotrimazole"
+    ],
     "className": "Antifungal (topical)",
-    "tags": ["Dermatology"],
-    "usualDose": "Apply 2–3 times daily.",
+    "tags": [
+      "Dermatology"
+    ],
+    "usualDose": "Apply 2\u20133 times daily.",
     "renalBands": [
       {
         "min": null,
         "max": null,
         "label": "All renal ranges",
         "category": "No systemic adjustment",
-        "details": "Negligible systemic absorption → no renal adjustment."
+        "details": "Negligible systemic absorption \u2192 no renal adjustment."
       }
     ],
     "notes": [
@@ -3145,9 +3296,13 @@
   {
     "id": "acyclovir-topical",
     "name": "Aciclovir (topical)",
-    "searchTerms": ["aciclovir topical"],
+    "searchTerms": [
+      "aciclovir topical"
+    ],
     "className": "Antiviral (topical)",
-    "tags": ["Dermatology"],
+    "tags": [
+      "Dermatology"
+    ],
     "usualDose": "Apply 5 times daily for HSV lesions.",
     "renalBands": [
       {
@@ -3165,10 +3320,14 @@
   {
     "id": "betamethasone-topical",
     "name": "Betamethasone (topical)",
-    "searchTerms": ["betamethasone"],
+    "searchTerms": [
+      "betamethasone"
+    ],
     "className": "Topical corticosteroid",
-    "tags": ["Dermatology"],
-    "usualDose": "Apply thin layer 1–2 times daily.",
+    "tags": [
+      "Dermatology"
+    ],
+    "usualDose": "Apply thin layer 1\u20132 times daily.",
     "renalBands": [
       {
         "min": null,
@@ -3186,9 +3345,14 @@
   {
     "id": "tacrolimus-topical",
     "name": "Tacrolimus ointment",
-    "searchTerms": ["tacrolimus topical", "protopic"],
+    "searchTerms": [
+      "tacrolimus topical",
+      "protopic"
+    ],
     "className": "Topical calcineurin inhibitor",
-    "tags": ["Dermatology"],
+    "tags": [
+      "Dermatology"
+    ],
     "usualDose": "Apply once or twice daily.",
     "renalBands": [
       {
@@ -3207,22 +3371,28 @@
   {
     "id": "mesalazine",
     "name": "Mesalazine",
-    "searchTerms": ["mesalazine", "5-asa"],
+    "searchTerms": [
+      "mesalazine",
+      "5-asa"
+    ],
     "className": "Aminosalicylate for IBD",
-    "tags": ["GI", "IBD"],
-    "usualDose": "2–4 g/day depending on formulation.",
+    "tags": [
+      "GI",
+      "IBD"
+    ],
+    "usualDose": "2\u20134 g/day depending on formulation.",
     "renalBands": [
       {
         "min": 60,
         "max": null,
-        "label": "eGFR ≥ 60",
+        "label": "eGFR \u2265 60",
         "category": "Standard",
         "details": "Usual dosing acceptable."
       },
       {
         "min": 30,
         "max": 60,
-        "label": "eGFR 30–59",
+        "label": "eGFR 30\u201359",
         "category": "Caution",
         "details": "Use with renal monitoring; consider lower maintenance doses."
       },
@@ -3242,15 +3412,20 @@
   {
     "id": "sulfasalazine",
     "name": "Sulfasalazine",
-    "searchTerms": ["sulfasalazine"],
+    "searchTerms": [
+      "sulfasalazine"
+    ],
     "className": "Aminosalicylate / DMARD",
-    "tags": ["IBD", "Rheumatology"],
-    "usualDose": "500 mg–1 g twice daily (escalating).",
+    "tags": [
+      "IBD",
+      "Rheumatology"
+    ],
+    "usualDose": "500 mg\u20131 g twice daily (escalating).",
     "renalBands": [
       {
         "min": 30,
         "max": null,
-        "label": "eGFR ≥ 30",
+        "label": "eGFR \u2265 30",
         "category": "Cautious standard",
         "details": "Monitor U&E, FBC; maintain hydration."
       },
@@ -3270,10 +3445,15 @@
   {
     "id": "ferrous-fumarate",
     "name": "Ferrous fumarate",
-    "searchTerms": ["ferrous fumarate", "iron"],
+    "searchTerms": [
+      "ferrous fumarate",
+      "iron"
+    ],
     "className": "Iron supplement",
-    "tags": ["Anaemia"],
-    "usualDose": "200–210 mg once or twice daily depending on regimen.",
+    "tags": [
+      "Anaemia"
+    ],
+    "usualDose": "200\u2013210 mg once or twice daily depending on regimen.",
     "renalBands": [
       {
         "min": null,
@@ -3285,15 +3465,19 @@
     ],
     "notes": [
       "CKD-related anaemia often requires IV iron or ESAs rather than oral supplementation.",
-      "GI upset common — consider alternate-day dosing."
+      "GI upset common \u2014 consider alternate-day dosing."
     ]
   },
   {
     "id": "folic-acid",
     "name": "Folic acid",
-    "searchTerms": ["folic acid"],
+    "searchTerms": [
+      "folic acid"
+    ],
     "className": "Vitamin supplement",
-    "tags": ["Anaemia"],
+    "tags": [
+      "Anaemia"
+    ],
     "usualDose": "5 mg daily (or as per indication).",
     "renalBands": [
       {
@@ -3312,9 +3496,14 @@
   {
     "id": "calcium-carbonate",
     "name": "Calcium carbonate",
-    "searchTerms": ["calcium carbonate"],
+    "searchTerms": [
+      "calcium carbonate"
+    ],
     "className": "Calcium supplement / phosphate binder",
-    "tags": ["Bone health", "CKD-MBD"],
+    "tags": [
+      "Bone health",
+      "CKD-MBD"
+    ],
     "usualDose": "Varies by preparation; e.g. 1.25 g twice daily.",
     "renalBands": [
       {
@@ -3327,82 +3516,6 @@
     ],
     "notes": [
       "Monitor calcium; risk of hypercalcaemia particularly in CKD with vitamin D therapy."
-    ]
-  },
-  {
-    "id": "amitriptyline",
-    "name": "Amitriptyline",
-    "searchTerms": ["amitriptyline"],
-    "className": "Tricyclic antidepressant",
-    "tags": ["Depression", "Neuropathic pain"],
-    "usualDose": "10–75 mg daily for pain (much higher for depression).",
-    "renalBands": [
-      {
-        "min": null,
-        "max": null,
-        "label": "All renal function",
-        "category": "No adjustment",
-        "details": "Titrate cautiously due to anticholinergic load in CKD."
-      }
-    ],
-    "notes": [
-      "Sedation and anticholinergic effects more pronounced in CKD.",
-      "Avoid in significant urinary retention."
-    ]
-  },
-  {
-    "id": "sertraline",
-    "name": "Sertraline",
-    "searchTerms": ["sertraline"],
-    "className": "SSRI",
-    "tags": ["Depression", "Anxiety"],
-    "usualDose": "25–200 mg once daily.",
-    "renalBands": [
-      {
-        "min": null,
-        "max": null,
-        "label": "All eGFR",
-        "category": "No adjustment",
-        "details": "Preferred SSRI in CKD due to safer renal profile."
-      }
-    ],
-    "notes": [
-      "Monitor sodium — SSRIs can cause hyponatraemia, especially in older CKD patients."
-    ]
-  },
-  {
-    "id": "mirtazapine",
-    "name": "Mirtazapine",
-    "searchTerms": ["mirtazapine"],
-    "className": "NaSSA antidepressant",
-    "tags": ["Depression", "Insomnia"],
-    "usualDose": "15–45 mg at night.",
-    "renalBands": [
-      {
-        "min": 40,
-        "max": null,
-        "label": "eGFR ≥ 40",
-        "category": "Standard",
-        "details": "Usual doses may be used."
-      },
-      {
-        "min": 15,
-        "max": 40,
-        "label": "eGFR 15–39",
-        "category": "Caution",
-        "details": "Start at 15 mg and titrate slowly."
-      },
-      {
-        "min": null,
-        "max": 15,
-        "label": "eGFR < 15",
-        "category": "Lower dosing",
-        "details": "Use with caution; reduced clearance may increase sedation."
-      }
-    ],
-    "notes": [
-      "Good option for poor appetite and insomnia.",
-      "Monitor sodium in older patients."
     ]
   }
 ]
