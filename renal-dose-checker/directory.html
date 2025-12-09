@@ -5,6 +5,7 @@
   <title>Renal Dose Calculator – Drug Directory</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
+  <!-- Shared main stylesheet -->
   <link rel="stylesheet" href="../shared/styles.css">
 
   <style>
@@ -12,12 +13,35 @@
       max-width: 900px;
       margin: 0 auto;
       padding: 1rem;
+      padding-bottom: 5rem; /* space for the persistent bottom bar */
     }
 
     h1 {
       margin-bottom: 0.5rem;
     }
 
+    /* A–Z jump navigation bar */
+    .letter-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin: 0.75rem 0 1.25rem;
+    }
+
+    .letter-nav a {
+      padding: 0.35rem 0.55rem;
+      border-radius: 6px;
+      background: #e2e8f0;
+      text-decoration: none;
+      color: #111827;
+      font-size: 0.85rem;
+    }
+
+    .letter-nav a:hover {
+      background: #cbd5f0;
+    }
+
+    /* Drug list container */
     .drug-list {
       background: #fff;
       border-radius: 0.75rem;
@@ -27,18 +51,33 @@
     }
 
     .letter-section {
-      margin-top: 1.5rem;
+      margin-top: 2rem;
     }
 
     .letter-section h2 {
       border-bottom: 2px solid #e5e7eb;
       padding-bottom: 0.25rem;
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.75rem;
+      scroll-margin-top: 90px; /* offset for sticky header */
     }
 
+    /* Two-column layout */
+    .letter-columns {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.4rem 1rem;
+    }
+
+    @media (max-width: 650px) {
+      .letter-columns {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Drug links */
     .drug-link {
       display: block;
-      padding: 0.4rem 0.2rem;
+      padding: 0.35rem 0;
       color: #0f766e;
       text-decoration: none;
       font-size: 1rem;
@@ -48,23 +87,38 @@
       text-decoration: underline;
     }
 
-    .back-button {
-      margin-top: 1rem;
-      display: inline-block;
-      background: #e2e8f0;
-      padding: 0.5rem 0.9rem;
-      border-radius: 999px;
-      color: #111827;
-      text-decoration: none;
+    /* Fixed bottom back bar */
+    .fixed-back-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #ffffff;
+      border-top: 1px solid #d1d5db;
+      padding: 0.75rem;
+      display: flex;
+      justify-content: center;
+      z-index: 9999;
     }
 
-    .back-button:hover {
+    .fixed-back-bar a {
+      background: #e2e8f0;
+      color: #111827;
+      padding: 0.55rem 1.3rem;
+      border-radius: 999px;
+      text-decoration: none;
+      font-size: 1rem;
+    }
+
+    .fixed-back-bar a:hover {
       background: #cbd5f0;
     }
   </style>
 </head>
+
 <body>
 
+<!-- Site header (blue bar) -->
 <header class="site-header">
   <div class="header-content">
     <h1 class="header-title">Medicines Optimisation Tools</h1>
@@ -78,25 +132,33 @@
   <h1>Medicines A–Z Directory</h1>
   <p>Browse all medicines included in the renal dose calculator.</p>
 
+  <!-- A–Z jump menu -->
+  <div class="letter-nav" id="letter-nav"></div>
+
+  <!-- Drug list -->
   <div id="drug-directory" class="drug-list">
     Loading drug list…
   </div>
+</div>
 
-  <a href="./index.html" class="back-button">← Back to Renal Calculator</a>
+<!-- Fixed bottom bar -->
+<div class="fixed-back-bar">
+  <a href="./index.html">← Back to Renal Calculator</a>
 </div>
 
 <script>
   async function loadDirectory() {
-    const container = document.getElementById('drug-directory');
+    const container = document.getElementById("drug-directory");
+    const letterNav = document.getElementById("letter-nav");
 
     try {
-      const res = await fetch('./drugs.json', { cache: 'no-store' });
+      const res = await fetch("./drugs.json", { cache: "no-store" });
       const drugs = await res.json();
 
       // Sort alphabetically
       drugs.sort((a, b) => a.name.localeCompare(b.name));
 
-      // Group A-Z
+      // Group by first letter
       const grouped = {};
       drugs.forEach(drug => {
         const letter = drug.name[0].toUpperCase();
@@ -104,31 +166,47 @@
         grouped[letter].push(drug);
       });
 
-      // Render
-      container.innerHTML = '';
+      // Build A–Z navigation
+      const letters = Object.keys(grouped).sort();
+      letters.forEach(letter => {
+        const link = document.createElement("a");
+        link.href = "#" + letter;
+        link.textContent = letter;
+        letterNav.appendChild(link);
+      });
 
-      Object.keys(grouped).sort().forEach(letter => {
-        const section = document.createElement('div');
-        section.className = 'letter-section';
+      // Clear content
+      container.innerHTML = "";
 
-        const header = document.createElement('h2');
+      // Render each letter section
+      letters.forEach(letter => {
+        const section = document.createElement("section");
+        section.className = "letter-section";
+        section.id = letter;
+
+        const header = document.createElement("h2");
         header.textContent = letter;
         section.appendChild(header);
 
+        // Two-column grid container
+        const cols = document.createElement("div");
+        cols.className = "letter-columns";
+
         grouped[letter].forEach(drug => {
-          const link = document.createElement('a');
-          link.className = 'drug-link';
-          link.href = 'drug.html?id=' + encodeURIComponent(drug.id);
+          const link = document.createElement("a");
+          link.className = "drug-link";
+          link.href = "drug.html?id=" + encodeURIComponent(drug.id);
           link.textContent = drug.name;
-          section.appendChild(link);
+          cols.appendChild(link);
         });
 
+        section.appendChild(cols);
         container.appendChild(section);
       });
 
     } catch (err) {
-      console.error(err);
-      container.innerHTML = "Failed to load drug list.";
+      console.error("Directory load error:", err);
+      container.innerHTML = "Failed to load drug directory.";
     }
   }
 
