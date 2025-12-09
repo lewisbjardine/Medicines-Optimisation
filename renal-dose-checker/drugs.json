@@ -1002,5 +1002,867 @@
     "notes": [
       "Toxicity risk rises in CKD, hypokalaemia and hypomagnesaemia; review interacting drugs."
     ]
+  },
+    {
+    "id": "pioglitazone",
+    "name": "Pioglitazone",
+    "searchTerms": ["pioglitazone", "actos"],
+    "className": "Thiazolidinedione",
+    "tags": ["Diabetes"],
+    "usualDose": "15–45 mg once daily.",
+    "renalBands": [
+      {
+        "min": null,
+        "max": null,
+        "label": "All eGFR ranges",
+        "category": "No formal renal adjustment",
+        "details": "Dose is not primarily renally determined; use usual doses but avoid fluid overload in HF or advanced CKD."
+      }
+    ],
+    "notes": [
+      "Monitor weight and oedema; avoid in heart failure or high fracture risk.",
+      "Review for bladder cancer risk factors as per SPC/local guidance."
+    ]
+  },
+  {
+    "id": "sitagliptin",
+    "name": "Sitagliptin",
+    "searchTerms": ["sitagliptin", "januvia"],
+    "className": "DPP-4 inhibitor",
+    "tags": ["Diabetes", "Renally cleared"],
+    "usualDose": "100 mg once daily in normal renal function.",
+    "renalBands": [
+      {
+        "min": 50,
+        "max": null,
+        "label": "eGFR ≥ 50",
+        "category": "Standard",
+        "details": "100 mg once daily."
+      },
+      {
+        "min": 30,
+        "max": 50,
+        "label": "eGFR 30–49",
+        "category": "Dose reduction",
+        "details": "50 mg once daily."
+      },
+      {
+        "min": 15,
+        "max": 30,
+        "label": "eGFR 15–29",
+        "category": "Further reduction",
+        "details": "25 mg once daily."
+      },
+      {
+        "min": null,
+        "max": 15,
+        "label": "eGFR < 15 / dialysis",
+        "category": "25 mg once daily (label-based)",
+        "details": "Use 25 mg once daily with monitoring; check SPC/local guidance."
+      }
+    ],
+    "notes": [
+      "Low hypoglycaemia risk when used without sulfonylurea/insulin.",
+      "Adjust doses of combination products accordingly."
+    ]
+  },
+  {
+    "id": "linagliptin",
+    "name": "Linagliptin",
+    "searchTerms": ["linagliptin", "trajenta"],
+    "className": "DPP-4 inhibitor",
+    "tags": ["Diabetes"],
+    "usualDose": "5 mg once daily.",
+    "renalBands": [
+      {
+        "min": null,
+        "max": null,
+        "label": "All eGFR ranges",
+        "category": "No renal adjustment",
+        "details": "Predominantly non-renal clearance; same dose across eGFR ranges as per SPC."
+      }
+    ],
+    "notes": [
+      "Low hypoglycaemia risk unless combined with sulfonylurea/insulin.",
+      "Useful option in advanced CKD when DPP-4 inhibition is required."
+    ]
+  },
+  {
+    "id": "amlodipine",
+    "name": "Amlodipine",
+    "searchTerms": ["amlodipine"],
+    "className": "Dihydropyridine calcium-channel blocker",
+    "tags": ["Hypertension", "Angina"],
+    "usualDose": "5–10 mg once daily.",
+    "renalBands": [
+      {
+        "min": null,
+        "max": null,
+        "label": "All eGFR ranges",
+        "category": "No formal adjustment",
+        "details": "Not significantly renally cleared; use usual doses with BP and oedema monitoring."
+      }
+    ],
+    "notes": [
+      "Peripheral oedema is common; may worsen with advanced CKD.",
+      "Avoid abrupt withdrawal in angina."
+    ]
+  },
+  {
+    "id": "doxazosin",
+    "name": "Doxazosin",
+    "searchTerms": ["doxazosin"],
+    "className": "Alpha-1 blocker",
+    "tags": ["Hypertension", "BPH"],
+    "usualDose": "1–16 mg once daily (or modified-release) depending on indication.",
+    "renalBands": [
+      {
+        "min": null,
+        "max": null,
+        "label": "All eGFR ranges",
+        "category": "No formal adjustment",
+        "details": "Metabolised hepatically; use usual doses but start low and titrate carefully in older people and CKD."
+      }
+    ],
+    "notes": [
+      "Monitor for postural hypotension and falls.",
+      "Useful as add-on therapy in resistant hypertension."
+    ]
+  },
+  {
+    "id": "indapamide",
+    "name": "Indapamide",
+    "searchTerms": ["indapamide"],
+    "className": "Thiazide-like diuretic",
+    "tags": ["Hypertension"],
+    "usualDose": "1.5 mg MR once daily or 2.5 mg once daily.",
+    "renalBands": [
+      {
+        "min": 30,
+        "max": null,
+        "label": "eGFR ≥ 30",
+        "category": "Standard",
+        "details": "Usual doses may be used with U&E monitoring."
+      },
+      {
+        "min": null,
+        "max": 30,
+        "label": "eGFR < 30",
+        "category": "Reduced efficacy",
+        "details": "Less effective as a diuretic in eGFR < 30; consider loop diuretic instead for fluid control."
+      }
+    ],
+    "notes": [
+      "Monitor sodium, potassium and urate.",
+      "Use cautiously with other drugs causing hyponatraemia."
+    ]
+  },
+  {
+    "id": "bendroflumethiazide",
+    "name": "Bendroflumethiazide",
+    "searchTerms": ["bendroflumethiazide"],
+    "className": "Thiazide diuretic",
+    "tags": ["Hypertension"],
+    "usualDose": "2.5 mg once daily for hypertension (higher doses for oedema).",
+    "renalBands": [
+      {
+        "min": 30,
+        "max": null,
+        "label": "eGFR ≥ 30",
+        "category": "Standard",
+        "details": "May be used for hypertension with monitoring of electrolytes."
+      },
+      {
+        "min": null,
+        "max": 30,
+        "label": "eGFR < 30",
+        "category": "Generally avoid",
+        "details": "Ineffective as diuretic and increased risk of toxicity; loop diuretic preferred for oedema."
+      }
+    ],
+    "notes": [
+      "Monitor sodium and potassium, particularly in older adults.",
+      "Can increase urate and glucose."
+    ]
+  },
+  {
+    "id": "sacubitril-valsartan",
+    "name": "Sacubitril / valsartan",
+    "searchTerms": ["sacubitril", "entresto", "sacubitril valsartan"],
+    "className": "ARNI (angiotensin receptor–neprilysin inhibitor)",
+    "tags": ["Heart failure"],
+    "usualDose": "Target 97/103 mg twice daily after titration from lower strengths.",
+    "renalBands": [
+      {
+        "min": 60,
+        "max": null,
+        "label": "eGFR ≥ 60",
+        "category": "Standard initiation",
+        "details": "Start at appropriate strength and titrate to target as tolerated, with close U&E monitoring."
+      },
+      {
+        "min": 30,
+        "max": 60,
+        "label": "eGFR 30–59",
+        "category": "Lower start",
+        "details": "Start at lowest strength and titrate cautiously with frequent checks of creatinine and potassium."
+      },
+      {
+        "min": 15,
+        "max": 30,
+        "label": "eGFR 15–29",
+        "category": "Specialist use",
+        "details": "Use only under specialist HF supervision with close U&E monitoring."
+      },
+      {
+        "min": null,
+        "max": 15,
+        "label": "eGFR < 15 / dialysis",
+        "category": "Avoid",
+        "details": "Generally avoided in severe renal impairment; seek specialist advice."
+      }
+    ],
+    "notes": [
+      "Must not be co-administered with ACE inhibitors (36-hour washout required).",
+      "Monitor for hypotension, hyperkalaemia and renal dysfunction."
+    ]
+  },
+  {
+    "id": "aspirin-lowdose",
+    "name": "Aspirin (75 mg for CV prevention)",
+    "searchTerms": ["aspirin", "low-dose aspirin"],
+    "className": "Antiplatelet",
+    "tags": ["Antiplatelet"],
+    "usualDose": "75 mg once daily.",
+    "renalBands": [
+      {
+        "min": null,
+        "max": null,
+        "label": "All eGFR ranges",
+        "category": "No formal dose adjustment",
+        "details": "Low-dose aspirin is not usually renally adjusted, but bleeding risk is higher in CKD."
+      }
+    ],
+    "notes": [
+      "Consider gastroprotection in high-risk patients.",
+      "Use with caution in advanced CKD with bleeding tendency."
+    ]
+  },
+  {
+    "id": "clopidogrel",
+    "name": "Clopidogrel",
+    "searchTerms": ["clopidogrel"],
+    "className": "P2Y12 inhibitor antiplatelet",
+    "tags": ["Antiplatelet"],
+    "usualDose": "75 mg once daily (after loading dose in ACS/PCI).",
+    "renalBands": [
+      {
+        "min": null,
+        "max": null,
+        "label": "All eGFR ranges",
+        "category": "No formal adjustment",
+        "details": "No usual dose change with renal impairment, but bleeding risk is increased in CKD."
+      }
+    ],
+    "notes": [
+      "Assess bleeding vs thrombotic risk carefully in advanced CKD.",
+      "Avoid use with proton pump inhibitors that strongly inhibit CYP2C19 unless necessary."
+    ]
+  },
+  {
+    "id": "rosuvastatin",
+    "name": "Rosuvastatin",
+    "searchTerms": ["rosuvastatin", "crestor"],
+    "className": "Statin",
+    "tags": ["Lipids"],
+    "usualDose": "5–40 mg once daily depending on indication and risk.",
+    "renalBands": [
+      {
+        "min": 60,
+        "max": null,
+        "label": "eGFR ≥ 60",
+        "category": "Standard",
+        "details": "Use labelled dose range with monitoring."
+      },
+      {
+        "min": 30,
+        "max": 60,
+        "label": "eGFR 30–59",
+        "category": "Lower starting dose",
+        "details": "Start at low dose (e.g. 5–10 mg) and titrate; higher doses may be used with caution."
+      },
+      {
+        "min": null,
+        "max": 30,
+        "label": "eGFR < 30",
+        "category": "Reduced maximum",
+        "details": "Maximum dose is reduced; check SPC/BNF for current maxima (e.g. 10–20 mg)."
+      }
+    ],
+    "notes": [
+      "Monitor for muscle symptoms and CK if indicated.",
+      "Consider alternative statin if intolerance."
+    ]
+  },
+  {
+    "id": "ezetimibe",
+    "name": "Ezetimibe",
+    "searchTerms": ["ezetimibe"],
+    "className": "Cholesterol absorption inhibitor",
+    "tags": ["Lipids"],
+    "usualDose": "10 mg once daily.",
+    "renalBands": [
+      {
+        "min": null,
+        "max": null,
+        "label": "All eGFR ranges",
+        "category": "No renal adjustment",
+        "details": "No dose change usually required in CKD."
+      }
+    ],
+    "notes": [
+      "Often used as add-on to statin therapy.",
+      "Monitor LFTs when combined with statin."
+    ]
+  },
+  {
+    "id": "salbutamol-inhaled",
+    "name": "Salbutamol (inhaled)",
+    "searchTerms": ["salbutamol", "ventolin"],
+    "className": "Short-acting beta-2 agonist",
+    "tags": ["Asthma", "COPD"],
+    "usualDose": "100–200 micrograms prn by inhaler.",
+    "renalBands": [
+      {
+        "min": null,
+        "max": null,
+        "label": "All eGFR ranges",
+        "category": "No renal adjustment",
+        "details": "Inhaled doses are not renally adjusted; monitor potassium if frequent high-dose use in CKD."
+      }
+    ],
+    "notes": [
+      "High-dose nebulised therapy can cause hypokalaemia; monitor in severe CKD/AKI."
+    ]
+  },
+  {
+    "id": "tiotropium",
+    "name": "Tiotropium (inhaled)",
+    "searchTerms": ["tiotropium", "spiriva"],
+    "className": "Long-acting muscarinic antagonist",
+    "tags": ["COPD", "Asthma"],
+    "usualDose": "Once daily inhaled dose according to device.",
+    "renalBands": [
+      {
+        "min": 60,
+        "max": null,
+        "label": "eGFR ≥ 60",
+        "category": "Standard",
+        "details": "Usual dose."
+      },
+      {
+        "min": null,
+        "max": 60,
+        "label": "eGFR < 60",
+        "category": "Caution",
+        "details": "Small increase in systemic exposure; monitor for anticholinergic side effects but usually no dose change."
+      }
+    ],
+    "notes": [
+      "Use with caution in urinary retention or narrow-angle glaucoma."
+    ]
+  },
+  {
+    "id": "budesonide-formoterol",
+    "name": "Budesonide/formoterol (inhaler)",
+    "searchTerms": ["budesonide", "formoterol", "symbicort"],
+    "className": "ICS/LABA combination",
+    "tags": ["Asthma", "COPD"],
+    "usualDose": "Dose depends on strength and MART vs fixed regimen.",
+    "renalBands": [
+      {
+        "min": null,
+        "max": null,
+        "label": "All eGFR ranges",
+        "category": "No renal adjustment",
+        "details": "Inhaled combination not renally adjusted."
+      }
+    ],
+    "notes": [
+      "Follow national asthma/COPD guidance for dose selection.",
+      "Rinse mouth after use to reduce thrush risk."
+    ]
+  },
+  {
+    "id": "omeprazole",
+    "name": "Omeprazole",
+    "searchTerms": ["omeprazole"],
+    "className": "Proton pump inhibitor",
+    "tags": ["PPI", "GI"],
+    "usualDose": "20–40 mg once daily depending on indication.",
+    "renalBands": [
+      {
+        "min": null,
+        "max": null,
+        "label": "All eGFR ranges",
+        "category": "No renal adjustment",
+        "details": "No formal dose change required in CKD."
+      }
+    ],
+    "notes": [
+      "Long-term use associated with hypomagnesaemia, fractures and C. difficile; review need regularly."
+    ]
+  },
+  {
+    "id": "lansoprazole",
+    "name": "Lansoprazole",
+    "searchTerms": ["lansoprazole"],
+    "className": "Proton pump inhibitor",
+    "tags": ["PPI", "GI"],
+    "usualDose": "15–30 mg once daily.",
+    "renalBands": [
+      {
+        "min": null,
+        "max": null,
+        "label": "All eGFR ranges",
+        "category": "No renal adjustment",
+        "details": "No dose change usually required."
+      }
+    ],
+    "notes": [
+      "As with other PPIs, periodically review long-term therapy."
+    ]
+  },
+  {
+    "id": "loperamide",
+    "name": "Loperamide",
+    "searchTerms": ["loperamide", "imodium"],
+    "className": "Antidiarrhoeal",
+    "tags": ["GI"],
+    "usualDose": "Up to 16 mg/day in divided doses for acute diarrhoea.",
+    "renalBands": [
+      {
+        "min": null,
+        "max": null,
+        "label": "All eGFR ranges",
+        "category": "No renal adjustment",
+        "details": "Not renally dose-adjusted; avoid in acute colitis and use cautiously in hepatic impairment."
+      }
+    ],
+    "notes": [
+      "Avoid overuse; investigate underlying cause if symptoms persist.",
+      "Risk of serious cardiac events at high doses."
+    ]
+  },
+  {
+    "id": "ondansetron",
+    "name": "Ondansetron",
+    "searchTerms": ["ondansetron", "zofran"],
+    "className": "5-HT3 antagonist antiemetic",
+    "tags": ["Antiemetic"],
+    "usualDose": "4–8 mg 1–3 times daily orally for nausea/vomiting.",
+    "renalBands": [
+      {
+        "min": null,
+        "max": null,
+        "label": "All eGFR ranges",
+        "category": "No renal adjustment",
+        "details": "No dose change in mild–moderate renal impairment; in severe CKD usual doses are often used but monitor for QT prolongation."
+      }
+    ],
+    "notes": [
+      "Use cautiously with other QT-prolonging drugs or electrolyte disturbances."
+    ]
+  },
+  {
+    "id": "levothyroxine",
+    "name": "Levothyroxine",
+    "searchTerms": ["levothyroxine", "thyroxine"],
+    "className": "Thyroid hormone replacement",
+    "tags": ["Endocrine"],
+    "usualDose": "Individualised; typical maintenance 50–200 micrograms once daily.",
+    "renalBands": [
+      {
+        "min": null,
+        "max": null,
+        "label": "All eGFR ranges",
+        "category": "TSH-guided dosing",
+        "details": "No formal renal adjustment; dose to TSH and clinical response."
+      }
+    ],
+    "notes": [
+      "TSH targets may differ in elderly or cardiac disease.",
+      "Take on empty stomach, separate from calcium/iron supplements."
+    ]
+  },
+  {
+    "id": "carbimazole",
+    "name": "Carbimazole",
+    "searchTerms": ["carbimazole"],
+    "className": "Antithyroid drug",
+    "tags": ["Endocrine"],
+    "usualDose": "10–40 mg daily in divided doses initially, then titrated.",
+    "renalBands": [
+      {
+        "min": null,
+        "max": null,
+        "label": "All eGFR ranges",
+        "category": "No renal adjustment",
+        "details": "No formal renal dose change; titrate to thyroid function tests."
+      }
+    ],
+    "notes": [
+      "Warn about agranulocytosis symptoms (sore throat, fever, mouth ulcers).",
+      "Monitor FBC and LFTs if clinically indicated."
+    ]
+  },
+  {
+    "id": "alendronic-acid",
+    "name": "Alendronic acid",
+    "searchTerms": ["alendronate", "alendronic acid"],
+    "className": "Bisphosphonate",
+    "tags": ["Bone health", "Osteoporosis"],
+    "usualDose": "70 mg once weekly (or 10 mg daily) for osteoporosis.",
+    "renalBands": [
+      {
+        "min": 35,
+        "max": null,
+        "label": "eGFR ≥ 35",
+        "category": "Standard",
+        "details": "Usual dose may be used if eGFR is 35 or above."
+      },
+      {
+        "min": null,
+        "max": 35,
+        "label": "eGFR < 35",
+        "category": "Avoid",
+        "details": "Generally avoided when eGFR is below 35 mL/min; consider alternative osteoporosis treatments."
+      }
+    ],
+    "notes": [
+      "Ensure adequate calcium/vitamin D and correct hypocalcaemia before treatment.",
+      "Follow administration instructions to reduce oesophageal irritation."
+    ]
+  },
+  {
+    "id": "colecalciferol",
+    "name": "Colecalciferol (vitamin D3)",
+    "searchTerms": ["colecalciferol", "vitamin d"],
+    "className": "Vitamin D supplement",
+    "tags": ["Bone health"],
+    "usualDose": "Loading or maintenance regimens vary (e.g. 800–2000 IU daily).",
+    "renalBands": [
+      {
+        "min": null,
+        "max": null,
+        "label": "All eGFR ranges",
+        "category": "No standard renal adjustment",
+        "details": "Dose is guided by vitamin D level and local CKD bone-mineral guidance rather than eGFR alone."
+      }
+    ],
+    "notes": [
+      "In advanced CKD, activated vitamin D analogues may be required; follow renal team guidance."
+    ]
+  },
+  {
+    "id": "valproate",
+    "name": "Sodium valproate",
+    "searchTerms": ["sodium valproate", "epilim", "valproate"],
+    "className": "Antiepileptic / mood stabiliser",
+    "tags": ["Epilepsy", "Bipolar"],
+    "usualDose": "Individualised; often 600–2000 mg/day in divided doses.",
+    "renalBands": [
+      {
+        "min": null,
+        "max": null,
+        "label": "All eGFR ranges",
+        "category": "No formal renal adjustment",
+        "details": "Not significantly renally cleared; use usual doses but consider lower starting dose in frail CKD."
+      }
+    ],
+    "notes": [
+      "Serious hepatic, haematological and teratogenic risks; follow MHRA guidance.",
+      "Avoid in women of childbearing potential unless absolutely necessary and within Pregnancy Prevention Programme."
+    ]
+  },
+  {
+    "id": "lamotrigine",
+    "name": "Lamotrigine",
+    "searchTerms": ["lamotrigine"],
+    "className": "Antiepileptic / mood stabiliser",
+    "tags": ["Epilepsy", "Bipolar"],
+    "usualDose": "Varies by regimen and co-medication; usually 100–400 mg/day.",
+    "renalBands": [
+      {
+        "min": 30,
+        "max": null,
+        "label": "eGFR ≥ 30",
+        "category": "Standard titration",
+        "details": "Use usual titration schedule guided by seizure control and side effects."
+      },
+      {
+        "min": null,
+        "max": 30,
+        "label": "eGFR < 30",
+        "category": "Caution",
+        "details": "Consider slower titration and lower maintenance doses; monitor for toxicity."
+      }
+    ],
+    "notes": [
+      "Warn about rash and Stevens–Johnson syndrome.",
+      "Check interactions with valproate and enzyme inducers."
+    ]
+  },
+  {
+    "id": "levetiracetam",
+    "name": "Levetiracetam",
+    "searchTerms": ["levetiracetam", "keppra"],
+    "className": "Antiepileptic",
+    "tags": ["Epilepsy", "Renally cleared"],
+    "usualDose": "500–3000 mg/day in 2 divided doses in normal renal function.",
+    "renalBands": [
+      {
+        "min": 80,
+        "max": null,
+        "label": "CrCl ≥ 80",
+        "category": "Standard",
+        "details": "Usual dose range according to indication."
+      },
+      {
+        "min": 50,
+        "max": 80,
+        "label": "CrCl 50–79",
+        "category": "Mild reduction",
+        "details": "Slight dose reduction may be considered; check SPC for exact schedules."
+      },
+      {
+        "min": 30,
+        "max": 50,
+        "label": "CrCl 30–49",
+        "category": "Moderate reduction",
+        "details": "Further reduce total daily dose; for example 250–750 mg twice daily depending on indication."
+      },
+      {
+        "min": 15,
+        "max": 30,
+        "label": "CrCl 15–29",
+        "category": "Marked reduction",
+        "details": "Lower doses such as 250–500 mg twice daily; check SPC/local guidance."
+      },
+      {
+        "min": null,
+        "max": 15,
+        "label": "CrCl < 15 / dialysis",
+        "category": "Specialist dosing",
+        "details": "Low daily doses with post-dialysis supplementation as per specialist guidance."
+      }
+    ],
+    "notes": [
+      "Monitor mood and behavioural changes.",
+      "Adjust dose promptly if renal function changes."
+    ]
+  },
+  {
+    "id": "carbamazepine",
+    "name": "Carbamazepine",
+    "searchTerms": ["carbamazepine", "tegretol"],
+    "className": "Antiepileptic",
+    "tags": ["Epilepsy", "Neuropathic pain"],
+    "usualDose": "Usually 400–1200 mg/day in divided doses.",
+    "renalBands": [
+      {
+        "min": null,
+        "max": null,
+        "label": "All eGFR ranges",
+        "category": "Clinical titration",
+        "details": "No simple renal table; titrate to clinical response and serum levels if needed, using lower doses in frail CKD."
+      }
+    ],
+    "notes": [
+      "Enzyme inducer with many interactions; monitor sodium and FBC.",
+      "Hyponatraemia is more common in older people and CKD."
+    ]
+  },
+  {
+    "id": "quetiapine",
+    "name": "Quetiapine",
+    "searchTerms": ["quetiapine", "seroquel"],
+    "className": "Atypical antipsychotic",
+    "tags": ["Psychosis", "Bipolar", "Depression (augmentation)"],
+    "usualDose": "Wide range depending on indication; e.g. 50–800 mg/day.",
+    "renalBands": [
+      {
+        "min": null,
+        "max": null,
+        "label": "All eGFR ranges",
+        "category": "No formal adjustment",
+        "details": "No routine renal dose change; start low and titrate carefully in CKD."
+      }
+    ],
+    "notes": [
+      "Monitor for metabolic syndrome, QT prolongation and sedation.",
+      "Use lowest effective dose, particularly in elderly CKD patients."
+    ]
+  },
+  {
+    "id": "olanzapine",
+    "name": "Olanzapine",
+    "searchTerms": ["olanzapine", "zyprexa"],
+    "className": "Atypical antipsychotic",
+    "tags": ["Psychosis", "Bipolar"],
+    "usualDose": "5–20 mg once daily.",
+    "renalBands": [
+      {
+        "min": null,
+        "max": null,
+        "label": "All eGFR ranges",
+        "category": "No renal adjustment",
+        "details": "Dose is not routinely adjusted for CKD, but use lower doses and careful titration in frail patients."
+      }
+    ],
+    "notes": [
+      "High risk of weight gain, metabolic syndrome and sedation.",
+      "Monitor glucose and lipids regularly."
+    ]
+  },
+  {
+    "id": "risperidone",
+    "name": "Risperidone",
+    "searchTerms": ["risperidone"],
+    "className": "Atypical antipsychotic",
+    "tags": ["Psychosis"],
+    "usualDose": "Commonly 2–6 mg/day in divided doses.",
+    "renalBands": [
+      {
+        "min": 60,
+        "max": null,
+        "label": "eGFR ≥ 60",
+        "category": "Standard",
+        "details": "Usual dosing range may be used."
+      },
+      {
+        "min": null,
+        "max": 60,
+        "label": "eGFR < 60",
+        "category": "Lower starting dose",
+        "details": "Use reduced starting doses and slower titration in moderate–severe CKD."
+      }
+    ],
+    "notes": [
+      "Monitor for extrapyramidal symptoms and metabolic effects.",
+      "Use carefully in patients with cerebrovascular disease."
+    ]
+  },
+  {
+    "id": "tamsulosin",
+    "name": "Tamsulosin",
+    "searchTerms": ["tamsulosin"],
+    "className": "Alpha-1 blocker (uroselective)",
+    "tags": ["BPH", "Urology"],
+    "usualDose": "400 micrograms once daily.",
+    "renalBands": [
+      {
+        "min": 10,
+        "max": null,
+        "label": "eGFR ≥ 10",
+        "category": "Standard",
+        "details": "No usual dose change; monitor postural BP in older adults."
+      },
+      {
+        "min": null,
+        "max": 10,
+        "label": "eGFR < 10",
+        "category": "Caution",
+        "details": "Limited data in very severe CKD; use with caution and monitor."
+      }
+    ],
+    "notes": [
+      "May cause postural hypotension; advise patients about dizziness/falls.",
+      "Can contribute to intraoperative floppy iris syndrome in cataract surgery."
+    ]
+  },
+  {
+    "id": "finasteride",
+    "name": "Finasteride",
+    "searchTerms": ["finasteride"],
+    "className": "5-alpha-reductase inhibitor",
+    "tags": ["BPH"],
+    "usualDose": "5 mg once daily.",
+    "renalBands": [
+      {
+        "min": null,
+        "max": null,
+        "label": "All eGFR ranges",
+        "category": "No renal adjustment",
+        "details": "No dose change typically required in CKD."
+      }
+    ],
+    "notes": [
+      "PSA falls by about 50% on treatment; interpret results accordingly.",
+      "Teratogenic to male fetus; women of childbearing potential should avoid handling crushed tablets."
+    ]
+  },
+  {
+    "id": "oxybutynin",
+    "name": "Oxybutynin",
+    "searchTerms": ["oxybutynin"],
+    "className": "Antimuscarinic for overactive bladder",
+    "tags": ["OAB", "Urology"],
+    "usualDose": "2.5–5 mg two to three times daily (or modified-release once daily).",
+    "renalBands": [
+      {
+        "min": null,
+        "max": null,
+        "label": "All eGFR ranges",
+        "category": "No formal renal adjustment",
+        "details": "No standard dose adjustment but start low and titrate with caution in frail CKD patients."
+      }
+    ],
+    "notes": [
+      "Anticholinergic burden is significant; consider alternatives in older people with CKD.",
+      "Monitor for cognitive impairment and constipation."
+    ]
+  },
+  {
+    "id": "mirabegron",
+    "name": "Mirabegron",
+    "searchTerms": ["mirabegron", "betmiga"],
+    "className": "Beta-3 agonist for overactive bladder",
+    "tags": ["OAB", "Urology"],
+    "usualDose": "Usually 50 mg once daily (25 mg in some groups).",
+    "renalBands": [
+      {
+        "min": 60,
+        "max": null,
+        "label": "eGFR ≥ 60",
+        "category": "Standard dosing",
+        "details": "50 mg once daily."
+      },
+      {
+        "min": 30,
+        "max": 60,
+        "label": "eGFR 30–59",
+        "category": "Standard or reduced dose",
+        "details": "50 mg once daily usually acceptable; some patients may start at 25 mg if frail or on interacting drugs."
+      },
+      {
+        "min": 15,
+        "max": 30,
+        "label": "eGFR 15–29",
+        "category": "Dose reduction",
+        "details": "Maximum 25 mg once daily as per SPC in moderate renal impairment with certain risk factors."
+      },
+      {
+        "min": null,
+        "max": 15,
+        "label": "eGFR < 15 / dialysis",
+        "category": "Avoid or specialist",
+        "details": "Generally avoid in severe renal impairment; check SPC for exact restrictions."
+      }
+    ],
+    "notes": [
+      "Can raise blood pressure; avoid uncontrolled hypertension.",
+      "Useful alternative when antimuscarinics are poorly tolerated."
+    ]
   }
 ]
