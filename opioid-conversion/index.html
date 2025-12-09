@@ -43,7 +43,7 @@
       margin-top: 0.5rem;
     }
 
-    /* OUTPUT GRID – now equal-height “cards” */
+    /* OUTPUT GRID – equal-height cards */
     .output-grid {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -207,6 +207,17 @@
         </div>
       </div>
 
+      <!-- PRN selector moved here (Section 2, Option 3) -->
+      <div style="margin-top: 0.75rem;">
+        <label for="brForm" style="font-size:0.9rem;">Breakthrough formulation (PRN)</label><br>
+        <select id="brForm" class="small-select">
+          <option value="oramorph">Oramorph (oral morphine IR)</option>
+          <option value="sc_morphine">SC morphine</option>
+          <option value="diamorphine">Diamorphine SC</option>
+          <option value="oxynorm">Oxynorm (oxycodone IR)</option>
+        </select>
+      </div>
+
     </section>
 
     <section class="section">
@@ -221,14 +232,7 @@
           <div class="output-box" id="targetOutput"></div>
         </div>
         <div>
-          <strong>Breakthrough / PRN opioid suggestion</strong><br />
-          <label for="brForm" style="font-size:0.8rem;">Breakthrough formulation</label><br />
-          <select id="brForm" class="small-select">
-            <option value="oramorph">Oramorph (oral morphine IR)</option>
-            <option value="sc_morphine">SC morphine</option>
-            <option value="diamorphine">Diamorphine SC</option>
-            <option value="oxynorm">Oxynorm (oxycodone IR)</option>
-          </select>
+          <strong>Breakthrough / PRN opioid suggestion</strong>
           <div class="output-box" id="prnOutput"></div>
         </div>
       </div>
@@ -645,7 +649,13 @@
 
         const omed = opioidFactors[key].toMorphine(doseVal);
         totalOmed += omed;
-        parts.push(opioidFactors[key].label + ": " + doseVal + " → ~" + Math.round(omed) + " mg OMED");
+        const factor = doseVal ? +(omed / doseVal).toFixed(2) : null;
+        parts.push({
+          label: opioidFactors[key].label,
+          dose: doseVal,
+          omed: omed,
+          factor: factor
+        });
       });
 
       const omedBox = document.getElementById("omedOutput");
@@ -808,21 +818,38 @@
         const noteLines = [];
         noteLines.push("Approximate total OMED: ~" + omedRounded + " mg/24 h (estimate).");
         noteLines.push("Frailty factor applied: " + frailty + " → adjusted OMED ≈ " + Math.round(adjOMED) + " mg/24 h.");
+
         if (parts.length) {
-          noteLines.push("Current opioids contributing to OMED:");
-          parts.forEach(p => noteLines.push(" - " + p));
+          noteLines.push("");
+          noteLines.push("OMED calculations:");
+          parts.forEach(p => {
+            if (!p) return;
+            noteLines.push(
+              " - " + p.label + ": " + p.dose + " × " +
+              (p.factor !== null ? p.factor : "?") +
+              " ≈ " + Math.round(p.omed) + " mg"
+            );
+          });
+
+          noteLines.push("");
+          noteLines.push("Conversion factors used:");
+          const seen = new Set();
+          parts.forEach(p => {
+            if (!p || p.factor === null) return;
+            if (seen.has(p.label)) return;
+            seen.add(p.label);
+            noteLines.push(" - " + p.label + ": factor " + p.factor);
+          });
         }
+
+        noteLines.push("");
         noteLines.push("Target opioid: " + document.getElementById("targetOpioid").selectedOptions[0].text + ".");
         noteLines.push(
           "Breakthrough: " + prnDrug + " approx " + roundedPrn +
           " mg up to 4-hourly PRN (adjust for renal function, age, frailty and local guidance)."
         );
-        noteLines.push("Conversion factors (approximate, BNF-aligned):");
-        noteLines.push(" - Codeine/tramadol → oral morphine: ~0.1 (10 mg → ~1 mg oral morphine).");
-        noteLines.push(" - Oxycodone → oral morphine: ~1.5 (10 mg → ~15 mg oral morphine).");
-        noteLines.push(" - SC morphine ≈ 2 × oral morphine potency; diamorphine SC ≈ 3 × oral morphine.");
-        noteLines.push(" - Buprenorphine and fentanyl patches based on standard UK palliative care tables (BNF / SPS / local guidelines).");
-        noteLines.push("These doses are a guide only; monitor closely and seek specialist palliative care input if unstable or high dose.");
+        noteLines.push("");
+        noteLines.push("These calculations are approximate; monitor response and adjust as needed.");
         noteBox.value = noteLines.join("\n");
 
         if (convertBtn) convertBtn.disabled = true;
@@ -864,21 +891,38 @@
       noteLines.push("Approximate total OMED: ~" + ctx.omedRounded + " mg/24 h (estimate).");
       noteLines.push("Frailty factor applied: " + ctx.frailty +
                      " → adjusted OMED ≈ " + Math.round(ctx.adjOMED) + " mg/24 h.");
+
       if (ctx.parts && ctx.parts.length) {
-        noteLines.push("Current opioids contributing to OMED:");
-        ctx.parts.forEach(p => noteLines.push(" - " + p));
+        noteLines.push("");
+        noteLines.push("OMED calculations:");
+        ctx.parts.forEach(p => {
+          if (!p) return;
+          noteLines.push(
+            " - " + p.label + ": " + p.dose + " × " +
+            (p.factor !== null ? p.factor : "?") +
+            " ≈ " + Math.round(p.omed) + " mg"
+          );
+        });
+
+        noteLines.push("");
+        noteLines.push("Conversion factors used:");
+        const seen = new Set();
+        ctx.parts.forEach(p => {
+          if (!p || p.factor === null) return;
+          if (seen.has(p.label)) return;
+          seen.add(p.label);
+          noteLines.push(" - " + p.label + ": factor " + p.factor);
+        });
       }
+
+      noteLines.push("");
       noteLines.push(targetLine);
       noteLines.push(
         "Breakthrough: " + ctx.prnDrug + " approx " + ctx.roundedPrn +
         " mg up to 4-hourly PRN (adjust for renal function, age, frailty and local guidance)."
       );
-      noteLines.push("Conversion factors (approximate, BNF-aligned):");
-      noteLines.push(" - Codeine/tramadol → oral morphine: ~0.1 (10 mg → ~1 mg oral morphine).");
-      noteLines.push(" - Oxycodone → oral morphine: ~1.5 (10 mg → ~15 mg oral morphine).");
-      noteLines.push(" - SC morphine ≈ 2 × oral morphine potency; diamorphine SC ≈ 3 × oral morphine.");
-      noteLines.push(" - Buprenorphine and fentanyl patches based on standard UK palliative care tables (BNF / SPS / local guidelines).");
-      noteLines.push("These doses are a guide only; monitor closely and seek specialist palliative care input if unstable or high dose.");
+      noteLines.push("");
+      noteLines.push("These calculations are approximate; monitor response and adjust as needed.");
       noteBox.value = noteLines.join("\n");
 
       prnBox.innerHTML +=
