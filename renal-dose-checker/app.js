@@ -1,5 +1,6 @@
-// app.js — logic for Renal Dose Calculator (modular)
-import { DRUG_DATA } from "./drugs.js";
+// app.js — logic for Renal Dose Calculator (non-module, uses global DRUG_DATA)
+
+const DRUG_DATA = window.DRUG_DATA || [];
 
 /************************************************************
  * DOM references
@@ -23,7 +24,7 @@ const drugNotesEl = document.getElementById("drug-notes");
 
 let currentEgfr = null;
 
-// Ensure initial view state
+// Initial view state
 searchView.style.display = "block";
 drugView.style.display = "none";
 
@@ -122,7 +123,6 @@ drugSearchInput.addEventListener("keydown", (e) => {
     const results = searchDrugs(drugSearchInput.value);
     if (!results.length) return;
     clearSuggestions();
-    // If multiple matches, just open the first for now
     openDrug(results[0].id);
   }
 });
@@ -216,7 +216,7 @@ function openDrug(drugId) {
     drugNotesEl.appendChild(li);
   });
 
-  // “New page” effect: hide search card, show drug card
+  // “New page” effect
   searchView.style.display = "none";
   drugView.style.display = "block";
   window.scrollTo({ top: 0, behavior: "smooth" });
@@ -227,3 +227,6 @@ backButton.addEventListener("click", () => {
   searchView.style.display = "block";
   drugSearchInput.focus();
 });
+
+// Initialise
+updateEgfr();
