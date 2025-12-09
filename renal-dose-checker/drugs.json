@@ -5,41 +5,39 @@
     "searchTerms": ["metformin", "glucophage"],
     "className": "Biguanide, oral hypoglycaemic",
     "tags": ["Diabetes", "eGFR-based"],
-    "usualDose": "Typical maintenance 1–2 g per day in divided doses, given with or after food.",
+    "usualDose": "Typically 1–2 g/day in divided doses (max 2–3 g/day depending on prep).",
     "renalBands": [
       {
         "min": 60,
         "max": null,
         "label": "eGFR ≥ 60 mL/min/1.73 m²",
         "category": "No dose change",
-        "details": "Use usual dose. Monitor renal function at least yearly and before iodinated contrast or major surgery."
+        "details": "Usual dosing with annual renal monitoring and checks before contrast/surgery."
       },
       {
         "min": 45,
         "max": 60,
         "label": "eGFR 45–59 mL/min/1.73 m²",
-        "category": "Caution / monitor",
-        "details": "Standard doses are often acceptable but consider more frequent monitoring, for example every 3–6 months, and avoid starting in very high risk patients."
+        "category": "Caution",
+        "details": "Standard doses often fine; increase monitoring frequency and avoid starting in very high-risk patients."
       },
       {
         "min": 30,
         "max": 45,
         "label": "eGFR 30–44 mL/min/1.73 m²",
         "category": "Dose reduction",
-        "details": "Reduce total daily dose and do not escalate. Monitor renal function at least every 3 months and stop during acute illness or dehydration."
+        "details": "Reduce total daily dose (e.g. ~50%) and monitor 3-monthly. Stop during acute illness or dehydration."
       },
       {
         "min": null,
         "max": 30,
         "label": "eGFR < 30 mL/min/1.73 m²",
-        "category": "Avoid / stop",
-        "details": "Avoid metformin because of risk of accumulation and lactic acidosis. Use an alternative glucose lowering regimen."
+        "category": "Avoid",
+        "details": "Avoid metformin due to lactic acidosis risk; use alternative glucose-lowering strategy."
       }
     ],
     "notes": [
-      "Check renal function before starting and at least yearly, more often if eGFR < 60 or if risk of deterioration.",
-      "Stop metformin temporarily during acute illness, dehydration, sepsis or around iodinated contrast and major surgery.",
-      "Use lower doses in frail or low body weight patients."
+      "Stop temporarily for sepsis, dehydration, hypoxia, contrast and major surgery."
     ]
   },
   {
@@ -48,233 +46,127 @@
     "searchTerms": ["gliclazide"],
     "className": "Sulfonylurea",
     "tags": ["Diabetes", "Hypoglycaemia risk"],
-    "usualDose": "40–320 mg per day in 1–2 divided doses, titrated according to blood glucose. Modified release preparations are usually once daily.",
+    "usualDose": "40–320 mg/day in 1–2 doses (MR usually once daily).",
     "renalBands": [
       {
         "min": 60,
         "max": null,
-        "label": "eGFR ≥ 60 mL/min/1.73 m²",
+        "label": "eGFR ≥ 60",
         "category": "Standard dosing",
-        "details": "Usual titration schedule may be used with monitoring for hypoglycaemia."
+        "details": "Use usual titration; monitor for hypoglycaemia."
       },
       {
         "min": 30,
         "max": 60,
-        "label": "eGFR 30–59 mL/min/1.73 m²",
-        "category": "Caution / lower starting dose",
-        "details": "Use a lower starting dose and titrate carefully. Risk of prolonged hypoglycaemia is higher."
+        "label": "eGFR 30–59",
+        "category": "Caution",
+        "details": "Lower starting dose and cautious titration; increased risk of prolonged hypos."
       },
       {
         "min": 15,
         "max": 30,
-        "label": "eGFR 15–29 mL/min/1.73 m²",
-        "category": "Use with great caution",
-        "details": "Prefer alternative agents. If used, start at very low dose and monitor closely for hypoglycaemia."
+        "label": "eGFR 15–29",
+        "category": "Use with care",
+        "details": "Prefer alternatives; if used, very low doses with close monitoring."
       },
       {
         "min": null,
         "max": 15,
-        "label": "eGFR < 15 mL/min/1.73 m² or dialysis",
+        "label": "eGFR < 15",
         "category": "Generally avoid",
-        "details": "Avoid sulfonylureas where possible and seek specialist diabetes advice."
+        "details": "Avoid because of significant hypoglycaemia risk."
       }
     ],
     "notes": [
-      "Risk of hypoglycaemia increases as renal function declines.",
-      "Review driving advice and sick day rules in people at higher risk."
+      "Warn about driving and hypos, especially as renal function declines."
     ]
   },
   {
     "id": "insulin-basal",
-    "name": "Basal insulin (for example insulin glargine)",
-    "searchTerms": ["insulin", "glargine", "lantus", "abasaglar", "basal insulin"],
+    "name": "Basal insulin (e.g. insulin glargine)",
+    "searchTerms": ["insulin", "glargine", "lantus", "abasaglar"],
     "className": "Basal insulin analogue",
-    "tags": ["Diabetes", "No fixed renal schedule"],
-    "usualDose": "Dose is fully individualised; once or twice daily regimens titrated to capillary or continuous glucose readings.",
+    "tags": ["Diabetes"],
+    "usualDose": "Once or twice daily, fully individualised by glucose profile.",
     "renalBands": [
       {
         "min": null,
         "max": null,
         "label": "All eGFR ranges",
-        "category": "Individual titration",
-        "details": "No fixed renal dose table. Insulin requirements often fall as eGFR declines because clearance is reduced; titrate to glucose readings."
+        "category": "Adjust to glucose",
+        "details": "No fixed renal table; insulin requirements usually fall as eGFR declines. Use glucose readings to titrate."
       }
     ],
     "notes": [
-      "Hypoglycaemia risk increases as renal function worsens.",
-      "Review total daily dose regularly in people with progressive CKD or starting dialysis.",
-      "Seek specialist diabetes input in advanced CKD."
+      "Hypoglycaemia risk rises in CKD; review total insulin dose regularly."
     ]
   },
   {
-    "id": "gabapentin",
-    "name": "Gabapentin",
-    "searchTerms": ["gabapentin", "neurontin"],
-    "className": "Antiepileptic and neuropathic pain agent",
-    "tags": ["Neuropathic pain", "Renally cleared"],
-    "usualDose": "In normal renal function, typical maintenance is 900–3600 mg per day in three divided doses, titrated to response.",
+    "id": "empagliflozin",
+    "name": "Empagliflozin",
+    "searchTerms": ["empagliflozin", "jardiance"],
+    "className": "SGLT2 inhibitor",
+    "tags": ["Diabetes", "HF", "CKD"],
+    "usualDose": "10–25 mg once daily depending on indication.",
     "renalBands": [
       {
         "min": 60,
         "max": null,
-        "label": "eGFR ≥ 60 mL/min/1.73 m² or CrCl ≥ 60 mL/min",
-        "category": "No dose change",
-        "details": "Standard titration and dose range may be used, up to local maximum."
+        "label": "eGFR ≥ 60",
+        "category": "Standard use",
+        "details": "Usual doses for T2DM/HF/CKD as per SPC."
       },
       {
-        "min": 30,
+        "min": 20,
         "max": 60,
-        "label": "eGFR 30–59 mL/min/1.73 m²",
-        "category": "Moderate reduction",
-        "details": "Reduce total daily dose and or frequency, for example 600–1800 mg per day in 2–3 divided doses depending on creatinine clearance."
-      },
-      {
-        "min": 15,
-        "max": 30,
-        "label": "eGFR 15–29 mL/min/1.73 m²",
-        "category": "Significant reduction",
-        "details": "Use lower daily doses, for example 300–600 mg per day in 1–2 doses, with slow titration. Monitor for sedation and dizziness."
+        "label": "eGFR 20–59",
+        "category": "Indication-dependent",
+        "details": "For HF/CKD, can often continue or initiate down to eGFR ~20; glucose-lowering effect reduced."
       },
       {
         "min": null,
-        "max": 15,
-        "label": "eGFR < 15 mL/min/1.73 m² or dialysis",
-        "category": "Specialist dosing",
-        "details": "Very low daily doses or post dialysis dosing only according to local renal or pain guidance."
+        "max": 20,
+        "label": "eGFR < 20",
+        "category": "Check SPC",
+        "details": "Often avoid initiating; continuing therapy requires specialist/label-based decision."
       }
     ],
     "notes": [
-      "Gabapentin is almost entirely renally excreted and can accumulate, causing ataxia and confusion.",
-      "Dose by creatinine clearance where possible and monitor for central nervous system adverse effects.",
-      "Use particular caution in older people, people with falls risk and those on other sedatives or opioids."
+      "Follow SPC and local HF/CKD guidance for exact eGFR cut-offs."
     ]
   },
   {
-    "id": "pregabalin",
-    "name": "Pregabalin",
-    "searchTerms": ["pregabalin", "lyrica"],
-    "className": "Antiepileptic and neuropathic pain or anxiety agent",
-    "tags": ["Neuropathic pain", "Renally cleared"],
-    "usualDose": "In normal renal function, usual adult dose range is 150–600 mg per day in 2–3 divided doses.",
+    "id": "dapagliflozin",
+    "name": "Dapagliflozin",
+    "searchTerms": ["dapagliflozin", "forxiga"],
+    "className": "SGLT2 inhibitor",
+    "tags": ["Diabetes", "HF", "CKD"],
+    "usualDose": "10 mg once daily.",
     "renalBands": [
       {
         "min": 60,
         "max": null,
-        "label": "eGFR ≥ 60 mL/min/1.73 m² or CrCl ≥ 60 mL/min",
-        "category": "No dose change",
-        "details": "Standard dose range may be used, titrated to response and tolerability."
-      },
-      {
-        "min": 30,
-        "max": 60,
-        "label": "eGFR 30–59 mL/min/1.73 m²",
-        "category": "Dose reduction",
-        "details": "Use lower maximum daily dose, for example up to around 300 mg per day in divided doses, in line with SPC or BNF."
+        "label": "eGFR ≥ 60",
+        "category": "Standard use",
+        "details": "Use per SPC for T2DM/HF/CKD."
       },
       {
         "min": 15,
-        "max": 30,
-        "label": "eGFR 15–29 mL/min/1.73 m²",
-        "category": "Marked reduction",
-        "details": "Use substantially reduced doses, for example up to about 150 mg per day, with cautious titration."
+        "max": 60,
+        "label": "eGFR 15–59",
+        "category": "Indication-dependent",
+        "details": "For HF/CKD indications can often be used down to eGFR ~15; minimal glycaemic effect at lower eGFR."
       },
       {
         "min": null,
         "max": 15,
-        "label": "eGFR < 15 mL/min/1.73 m² or dialysis",
-        "category": "Specialist dosing",
-        "details": "Very low doses only, often once daily or post dialysis, under specialist guidance."
+        "label": "eGFR < 15",
+        "category": "Avoid / specialist",
+        "details": "Usually avoid; refer to SPC and renal/cardiology advice."
       }
     ],
     "notes": [
-      "Pregabalin is renally cleared; accumulation increases risk of dizziness, somnolence and peripheral oedema.",
-      "Consider falls risk and concomitant central nervous system depressants.",
-      "Taper slowly when stopping to reduce withdrawal symptoms."
-    ]
-  },
-  {
-    "id": "allopurinol",
-    "name": "Allopurinol",
-    "searchTerms": ["allopurinol"],
-    "className": "Xanthine oxidase inhibitor",
-    "tags": ["Gout", "Urate lowering"],
-    "usualDose": "Start at a low dose, for example 100 mg once daily, and titrate according to serum urate, often to 300–600 mg daily.",
-    "renalBands": [
-      {
-        "min": 60,
-        "max": null,
-        "label": "eGFR ≥ 60 mL/min/1.73 m²",
-        "category": "Standard initiation",
-        "details": "Start at 100 mg once daily and titrate gradually, monitoring urate and for rash or hypersensitivity."
-      },
-      {
-        "min": 30,
-        "max": 60,
-        "label": "eGFR 30–59 mL/min/1.73 m²",
-        "category": "Lower starting dose",
-        "details": "Use a lower starting dose, for example 50–100 mg once daily, and increase cautiously. Maximal doses may need to be lower."
-      },
-      {
-        "min": 15,
-        "max": 30,
-        "label": "eGFR 15–29 mL/min/1.73 m²",
-        "category": "Cautious use",
-        "details": "Start at very low dose, such as 50 mg daily or 100 mg on alternate days, and titrate slowly with close monitoring."
-      },
-      {
-        "min": null,
-        "max": 15,
-        "label": "eGFR < 15 mL/min/1.73 m²",
-        "category": "Specialist decision",
-        "details": "Use only on specialist advice; consider alternative urate lowering options where appropriate."
-      }
-    ],
-    "notes": [
-      "Allopurinol hypersensitivity risk is higher with renal impairment and high starting doses; start low and increase slowly.",
-      "Continue flare prophylaxis such as colchicine or NSAID where appropriate, adjusted for renal function.",
-      "Aim for guideline serum urate targets and avoid stopping allopurinol during flares."
-    ]
-  },
-  {
-    "id": "colchicine",
-    "name": "Colchicine",
-    "searchTerms": ["colchicine"],
-    "className": "Anti inflammatory for gout and pericarditis",
-    "tags": ["Gout", "Narrow therapeutic index"],
-    "usualDose": "For acute gout, typical dose is 500 micrograms two to four times daily with maximum total dose per course.",
-    "renalBands": [
-      {
-        "min": 60,
-        "max": null,
-        "label": "eGFR ≥ 60 mL/min/1.73 m²",
-        "category": "Standard short course",
-        "details": "Use short courses only and avoid repeating within two weeks."
-      },
-      {
-        "min": 30,
-        "max": 60,
-        "label": "eGFR 30–59 mL/min/1.73 m²",
-        "category": "Dose reduction",
-        "details": "Reduce total dose per course and avoid frequent repeats because of toxicity risk."
-      },
-      {
-        "min": 15,
-        "max": 30,
-        "label": "eGFR 15–29 mL/min/1.73 m²",
-        "category": "Very cautious use",
-        "details": "Prefer alternative therapy. If used, give very low doses with close monitoring for gastrointestinal symptoms and myopathy."
-      },
-      {
-        "min": null,
-        "max": 15,
-        "label": "eGFR < 15 mL/min/1.73 m²",
-        "category": "Generally avoid",
-        "details": "High risk of toxicity; avoid unless under specialist advice."
-      }
-    ],
-    "notes": [
-      "Colchicine has a narrow therapeutic index and toxicity risk is increased in CKD and with interacting drugs.",
-      "Warn patients to stop and seek help if they develop severe diarrhoea, vomiting, muscle pain or weakness."
+      "Monitor for genital infections, volume depletion and DKA risk."
     ]
   },
 
@@ -283,125 +175,176 @@
     "name": "Ramipril",
     "searchTerms": ["ramipril"],
     "className": "ACE inhibitor",
-    "tags": ["Heart failure", "Hypertension"],
-    "usualDose": "Hypertension: 2.5–10 mg once daily. Heart failure: often start at 1.25–2.5 mg once daily and titrate to 5–10 mg daily as tolerated.",
+    "tags": ["HF", "Hypertension"],
+    "usualDose": "2.5–10 mg once daily depending on indication.",
     "renalBands": [
       {
         "min": 60,
         "max": null,
-        "label": "eGFR ≥ 60 mL/min/1.73 m²",
+        "label": "eGFR ≥ 60",
         "category": "Standard titration",
-        "details": "Start per indication and titrate to target while monitoring renal function and potassium."
+        "details": "Titrate to target with creatinine/potassium checks."
       },
       {
         "min": 30,
         "max": 60,
-        "label": "eGFR 30–59 mL/min/1.73 m²",
+        "label": "eGFR 30–59",
         "category": "Start low, go slow",
-        "details": "Use lower starting dose and titrate cautiously. Review if creatinine rises more than about 30 percent or potassium is high."
+        "details": "Start at low dose and titrate cautiously; stop/tweak if creatinine rises >~30% or K⁺ increases."
       },
       {
         "min": 15,
         "max": 30,
-        "label": "eGFR 15–29 mL/min/1.73 m²",
-        "category": "Cautious use",
-        "details": "Start at very low dose with close monitoring. May not be suitable in unstable CKD or bilateral renal artery stenosis."
+        "label": "eGFR 15–29",
+        "category": "Careful use",
+        "details": "Very low doses with frequent monitoring; consider nephrology/cardiology advice."
       },
       {
         "min": null,
         "max": 15,
-        "label": "eGFR < 15 mL/min/1.73 m² or dialysis",
+        "label": "eGFR < 15",
         "category": "Specialist decision",
-        "details": "Use only on specialist nephrology or cardiology advice."
+        "details": "Use only on specialist advice."
       }
     ],
     "notes": [
-      "Check creatinine and potassium before starting and 1–2 weeks after dose changes.",
-      "Stop temporarily during acute illness or dehydration according to sick day rules."
+      "Apply sick-day rules – hold during dehydration/AKI risk."
+    ]
+  },
+  {
+    "id": "lisinopril",
+    "name": "Lisinopril",
+    "searchTerms": ["lisinopril"],
+    "className": "ACE inhibitor",
+    "tags": ["Hypertension", "HF"],
+    "usualDose": "5–40 mg once daily depending on indication.",
+    "renalBands": [
+      {
+        "min": 60,
+        "max": null,
+        "label": "eGFR ≥ 60",
+        "category": "Standard",
+        "details": "Use usual titration with monitoring."
+      },
+      {
+        "min": 30,
+        "max": 60,
+        "label": "eGFR 30–59",
+        "category": "Lower start",
+        "details": "Start at low dose and titrate slowly with U&E checks."
+      },
+      {
+        "min": null,
+        "max": 30,
+        "label": "eGFR < 30",
+        "category": "Specialist / cautious",
+        "details": "Low-dose use only with close monitoring and often specialist input."
+      }
+    ],
+    "notes": [
+      "Monitoring strategy similar to ramipril."
     ]
   },
   {
     "id": "losartan",
     "name": "Losartan",
     "searchTerms": ["losartan", "cozaar"],
-    "className": "Angiotensin II receptor blocker",
-    "tags": ["Hypertension", "Heart failure", "Diabetic nephropathy"],
-    "usualDose": "Typical adult dose is 50–100 mg once daily. Use lower starting doses in heart failure, older adults or CKD.",
+    "className": "ARB",
+    "tags": ["Hypertension", "HF", "Diabetic nephropathy"],
+    "usualDose": "25–100 mg once daily.",
     "renalBands": [
       {
         "min": 60,
         "max": null,
-        "label": "eGFR ≥ 60 mL/min/1.73 m²",
-        "category": "Standard dosing",
-        "details": "Start per indication and titrate while monitoring renal function and potassium."
+        "label": "eGFR ≥ 60",
+        "category": "Standard",
+        "details": "Usual doses with U&E monitoring."
       },
       {
         "min": 30,
         "max": 60,
-        "label": "eGFR 30–59 mL/min/1.73 m²",
+        "label": "eGFR 30–59",
         "category": "Lower starting dose",
-        "details": "Consider starting at 25–50 mg once daily and titrate slowly with frequent monitoring."
-      },
-      {
-        "min": 15,
-        "max": 30,
-        "label": "eGFR 15–29 mL/min/1.73 m²",
-        "category": "Cautious use",
-        "details": "Consider specialist input; use low doses and monitor renal function and potassium closely."
+        "details": "Start at 25–50 mg and titrate slowly."
       },
       {
         "min": null,
-        "max": 15,
-        "label": "eGFR < 15 mL/min/1.73 m²",
-        "category": "Specialist decision",
-        "details": "Use only under specialist supervision."
+        "max": 30,
+        "label": "eGFR < 30",
+        "category": "Specialist / cautious",
+        "details": "Low doses only with frequent monitoring or specialist advice."
       }
     ],
     "notes": [
-      "ARB monitoring and precautions are similar to ACE inhibitors.",
-      "Useful in diabetic nephropathy but requires careful monitoring of renal function and potassium."
+      "ARB monitoring and cautions similar to ACE inhibitors."
+    ]
+  },
+  {
+    "id": "candesartan",
+    "name": "Candesartan",
+    "searchTerms": ["candesartan"],
+    "className": "ARB",
+    "tags": ["HF", "Hypertension"],
+    "usualDose": "4–32 mg once daily, indication-dependent.",
+    "renalBands": [
+      {
+        "min": 60,
+        "max": null,
+        "label": "eGFR ≥ 60",
+        "category": "Standard",
+        "details": "Use usual titration with renal and potassium checks."
+      },
+      {
+        "min": 30,
+        "max": 60,
+        "label": "eGFR 30–59",
+        "category": "Cautious titration",
+        "details": "Use lower starting doses and titrate carefully."
+      },
+      {
+        "min": null,
+        "max": 30,
+        "label": "eGFR < 30",
+        "category": "Specialist",
+        "details": "Low-dose use only with frequent U&E monitoring / specialist advice."
+      }
+    ],
+    "notes": [
+      "Commonly used in HF; follow local HF titration protocol if available."
     ]
   },
   {
     "id": "bisoprolol",
     "name": "Bisoprolol",
     "searchTerms": ["bisoprolol"],
-    "className": "Beta 1 selective beta blocker",
-    "tags": ["Heart failure", "Hypertension"],
-    "usualDose": "Heart failure: start at 1.25 mg once daily and titrate to 10 mg once daily if tolerated. Hypertension: 5–10 mg once daily.",
+    "className": "Beta-1 selective beta-blocker",
+    "tags": ["HF", "Hypertension"],
+    "usualDose": "Heart failure: 1.25–10 mg once daily.",
     "renalBands": [
       {
         "min": 60,
         "max": null,
-        "label": "eGFR ≥ 60 mL/min/1.73 m²",
+        "label": "eGFR ≥ 60",
         "category": "Standard titration",
-        "details": "Use usual titration schedule with monitoring of heart rate and blood pressure."
+        "details": "Titrate per HF/HTN protocol."
       },
       {
         "min": 30,
         "max": 60,
-        "label": "eGFR 30–59 mL/min/1.73 m²",
-        "category": "No major adjustment",
-        "details": "Formal dose adjustment is usually not required but titrate cautiously in frail patients or severe heart failure."
-      },
-      {
-        "min": 15,
-        "max": 30,
-        "label": "eGFR 15–29 mL/min/1.73 m²",
-        "category": "Caution",
-        "details": "Titrate slowly and monitor for bradycardia, hypotension and worsening heart failure."
+        "label": "eGFR 30–59",
+        "category": "No formal change",
+        "details": "Usually no structured dose change, but titrate slowly in frail/CKD."
       },
       {
         "min": null,
-        "max": 15,
-        "label": "eGFR < 15 mL/min/1.73 m²",
-        "category": "Specialist advice",
-        "details": "Can often be continued at low doses; seek specialist advice in advanced CKD or dialysis."
+        "max": 30,
+        "label": "eGFR < 30",
+        "category": "Caution",
+        "details": "Monitor closely for bradycardia/hypotension; specialist advice in advanced CKD."
       }
     ],
     "notes": [
-      "Bisoprolol is partly renally cleared; accumulation can contribute to bradycardia and hypotension.",
-      "Follow local heart failure titration protocols where available."
+      "Partly renally cleared; accumulation may contribute to bradycardia in CKD."
     ]
   },
   {
@@ -409,41 +352,40 @@
     "name": "Furosemide",
     "searchTerms": ["furosemide", "frusemide"],
     "className": "Loop diuretic",
-    "tags": ["Heart failure", "Oedema"],
-    "usualDose": "Typical oral dose is 20–80 mg once or twice daily; higher doses are often needed in CKD or resistant oedema.",
+    "tags": ["HF", "Oedema"],
+    "usualDose": "20–80 mg once or twice daily; higher doses in CKD.",
     "renalBands": [
       {
         "min": 60,
         "max": null,
-        "label": "eGFR ≥ 60 mL/min/1.73 m²",
-        "category": "Standard dosing",
-        "details": "Use the lowest effective dose for symptom control with monitoring of renal function and electrolytes."
+        "label": "eGFR ≥ 60",
+        "category": "Standard",
+        "details": "Use lowest effective dose with monitoring of U&E and volume status."
       },
       {
         "min": 30,
         "max": 60,
-        "label": "eGFR 30–59 mL/min/1.73 m²",
-        "category": "May need higher doses",
-        "details": "Loop diuretics remain effective but higher doses may be required. Monitor for volume depletion and electrolyte disturbance."
+        "label": "eGFR 30–59",
+        "category": "Higher doses often",
+        "details": "May need higher doses; monitor for AKI and electrolyte disturbance."
       },
       {
         "min": 15,
         "max": 30,
-        "label": "eGFR 15–29 mL/min/1.73 m²",
-        "category": "High doses often needed",
-        "details": "Substantially higher doses or intravenous therapy may be needed under specialist supervision."
+        "label": "eGFR 15–29",
+        "category": "Specialist titration",
+        "details": "High doses and/or IV often required; usually titrated by HF/renal teams."
       },
       {
         "min": null,
         "max": 15,
-        "label": "eGFR < 15 mL/min/1.73 m² or dialysis",
-        "category": "Specialist dosing",
-        "details": "Doses are highly individualised; coordinate with renal or cardiology teams."
+        "label": "eGFR < 15 / dialysis",
+        "category": "Individualised",
+        "details": "Use only with specialist guidance."
       }
     ],
     "notes": [
-      "Volume depletion in CKD can precipitate acute kidney injury; adjust doses according to weight, fluid status and blood results.",
-      "Monitor sodium, potassium and magnesium regularly."
+      "Avoid over-diuresis; assess weight, JVP, BP and renal function."
     ]
   },
   {
@@ -451,41 +393,87 @@
     "name": "Spironolactone",
     "searchTerms": ["spironolactone"],
     "className": "Aldosterone antagonist",
-    "tags": ["Heart failure", "Hyperkalaemia risk"],
-    "usualDose": "Heart failure: usually 25–50 mg once daily.",
+    "tags": ["HF", "Hyperkalaemia risk"],
+    "usualDose": "HF: typically 25–50 mg once daily.",
     "renalBands": [
       {
         "min": 60,
         "max": null,
-        "label": "eGFR ≥ 60 mL/min/1.73 m²",
-        "category": "Standard low dose use",
-        "details": "Use typical doses with monitoring of creatinine and potassium."
+        "label": "eGFR ≥ 60",
+        "category": "Standard low dose",
+        "details": "Use usual HF doses with U&E monitoring."
       },
       {
         "min": 45,
         "max": 60,
-        "label": "eGFR 45–59 mL/min/1.73 m²",
+        "label": "eGFR 45–59",
         "category": "Caution",
-        "details": "Consider lower doses, such as 25 mg on alternate days, and very close potassium monitoring."
+        "details": "Consider 25 mg on alternate days and closer K⁺ monitoring."
       },
       {
         "min": 30,
         "max": 45,
-        "label": "eGFR 30–44 mL/min/1.73 m²",
+        "label": "eGFR 30–44",
         "category": "High hyperkalaemia risk",
-        "details": "Often avoid or use only very low doses with specialist advice and frequent blood tests."
+        "details": "Often avoid or use very low doses with frequent U&E."
       },
       {
         "min": null,
         "max": 30,
-        "label": "eGFR < 30 mL/min/1.73 m²",
+        "label": "eGFR < 30",
         "category": "Generally avoid",
-        "details": "Markedly increased hyperkalaemia risk; usually avoided outside specialist settings."
+        "details": "Usually avoided outside specialist settings."
       }
     ],
     "notes": [
-      "Check creatinine and potassium at baseline, after 1 week and after dose changes, then regularly.",
-      "Reduce dose or stop if potassium is persistently high or creatinine rises substantially."
+      "Stop or reduce if K⁺ rises or creatinine increases significantly."
+    ]
+  },
+  {
+    "id": "atorvastatin",
+    "name": "Atorvastatin",
+    "searchTerms": ["atorvastatin"],
+    "className": "Statin",
+    "tags": ["Lipids"],
+    "usualDose": "10–80 mg once daily.",
+    "renalBands": [
+      {
+        "min": null,
+        "max": null,
+        "label": "All eGFR ranges",
+        "category": "No formal renal adjustment",
+        "details": "Generally no structured dose change; use usual CKD dose recommendations (often 20 mg+ for secondary prevention)."
+      }
+    ],
+    "notes": [
+      "Monitor for myopathy; adjust if CK or symptoms problematic."
+    ]
+  },
+  {
+    "id": "simvastatin",
+    "name": "Simvastatin",
+    "searchTerms": ["simvastatin"],
+    "className": "Statin",
+    "tags": ["Lipids"],
+    "usualDose": "10–40 mg once daily in the evening.",
+    "renalBands": [
+      {
+        "min": 60,
+        "max": null,
+        "label": "eGFR ≥ 60",
+        "category": "Standard",
+        "details": "Usual doses with routine monitoring."
+      },
+      {
+        "min": null,
+        "max": 60,
+        "label": "eGFR < 60",
+        "category": "No major change",
+        "details": "Often no formal adjustment, but some guidance suggests lower starting doses in advanced CKD."
+      }
+    ],
+    "notes": [
+      "Be aware of drug interactions and myopathy risk."
     ]
   },
 
@@ -494,42 +482,40 @@
     "name": "Apixaban",
     "searchTerms": ["apixaban", "eliquis", "doac"],
     "className": "Direct factor Xa inhibitor",
-    "tags": ["DOAC", "Stroke prevention in AF"],
-    "usualDose": "For non valvular atrial fibrillation, typical dose is 5 mg twice daily, reduced to 2.5 mg twice daily if dose reduction criteria are met.",
+    "tags": ["DOAC", "AF", "VTE"],
+    "usualDose": "AF: 5 mg twice daily, or 2.5 mg twice daily if dose-reduction criteria.",
     "renalBands": [
       {
         "min": 50,
         "max": null,
-        "label": "CrCl ≥ 50 mL/min (approx eGFR ≥ 50)",
-        "category": "Standard DOAC dosing",
-        "details": "Use standard licensed dose per indication, checking current SPC and SPS guidance."
+        "label": "CrCl ≥ 50",
+        "category": "Standard dosing",
+        "details": "Use labelled dose for indication."
       },
       {
         "min": 30,
         "max": 50,
-        "label": "CrCl 30–49 mL/min",
-        "category": "Caution / consider reduction",
-        "details": "Apixaban is often preferred DOAC in moderate CKD. For atrial fibrillation, reduced dose may be appropriate if other criteria are met."
+        "label": "CrCl 30–49",
+        "category": "Caution / possible reduction",
+        "details": "Often reduced dose in AF if criteria met; check SPC/SPS/local DOAC protocol."
       },
       {
         "min": 15,
         "max": 30,
-        "label": "CrCl 15–29 mL/min",
-        "category": "Reduced dose / specialist advice",
-        "details": "For atrial fibrillation, reduced dose is often recommended with caution. VTE treatment at this clearance usually needs specialist decision."
+        "label": "CrCl 15–29",
+        "category": "Reduced dose / specialist",
+        "details": "AF: usually 2.5 mg bd with caution; VTE often specialist-only decision."
       },
       {
         "min": null,
         "max": 15,
-        "label": "CrCl < 15 mL/min or dialysis",
-        "category": "Generally avoid",
-        "details": "Most UK guidance advises avoiding DOACs if creatinine clearance is below 15 mL/min."
+        "label": "CrCl < 15 / dialysis",
+        "category": "Avoid",
+        "details": "Most UK guidance: avoid DOACs and consider warfarin or no anticoagulation."
       }
     ],
     "notes": [
-      "Dose DOACs using Cockcroft Gault creatinine clearance rather than eGFR.",
-      "Check renal function at baseline and at least yearly, more often in older or frail patients.",
-      "Always check current SPC, SPS DOAC guidance and local protocols."
+      "Always use Cockcroft–Gault CrCl, not eGFR, for DOAC dosing."
     ]
   },
   {
@@ -537,34 +523,271 @@
     "name": "Rivaroxaban",
     "searchTerms": ["rivaroxaban", "xarelto", "doac"],
     "className": "Direct factor Xa inhibitor",
-    "tags": ["DOAC", "Stroke prevention in AF"],
-    "usualDose": "For non valvular atrial fibrillation, typical dose is 20 mg once daily with food, reduced to 15 mg once daily if creatinine clearance is 15–49 mL/min.",
+    "tags": ["DOAC", "AF", "VTE"],
+    "usualDose": "AF: 20 mg od with food; 15 mg od if CrCl 15–49.",
     "renalBands": [
       {
         "min": 50,
         "max": null,
-        "label": "CrCl ≥ 50 mL/min",
-        "category": "Standard dosing",
-        "details": "Use standard licensed dose according to indication."
+        "label": "CrCl ≥ 50",
+        "category": "Standard",
+        "details": "Use labelled dose for AF/VTE."
       },
       {
         "min": 15,
         "max": 50,
-        "label": "CrCl 15–49 mL/min",
-        "category": "Reduced dose / caution",
-        "details": "Reduced dose is recommended for atrial fibrillation. Avoid if creatinine clearance is below 15 mL/min."
+        "label": "CrCl 15–49",
+        "category": "Reduced dose",
+        "details": "AF: 15 mg od; check SPC and SPS for other indications."
       },
       {
         "min": null,
         "max": 15,
-        "label": "CrCl < 15 mL/min",
+        "label": "CrCl < 15",
         "category": "Avoid",
-        "details": "Avoid rivaroxaban and consider warfarin or specialist guided options."
+        "details": "Avoid rivaroxaban; consider alternatives."
       }
     ],
     "notes": [
-      "Dose using creatinine clearance and check SPC or SPS guidance.",
-      "Monitor renal function regularly in people on rivaroxaban."
+      "Assess bleeding risk and renal function regularly."
+    ]
+  },
+  {
+    "id": "edoxaban",
+    "name": "Edoxaban",
+    "searchTerms": ["edoxaban", "lixiana", "doac"],
+    "className": "Direct factor Xa inhibitor",
+    "tags": ["DOAC", "AF", "VTE"],
+    "usualDose": "AF: 60 mg od; 30 mg od if CrCl 15–50, low weight or certain interactions.",
+    "renalBands": [
+      {
+        "min": 50,
+        "max": 95,
+        "label": "CrCl 50–95",
+        "category": "Standard",
+        "details": "Use 60 mg od if other reduction criteria not met."
+      },
+      {
+        "min": 15,
+        "max": 50,
+        "label": "CrCl 15–49",
+        "category": "Reduced dose",
+        "details": "Usually 30 mg od; check SPC."
+      },
+      {
+        "min": null,
+        "max": 15,
+        "label": "CrCl < 15",
+        "category": "Avoid",
+        "details": "Avoid edoxaban; use alternative."
+      }
+    ],
+    "notes": [
+      "Avoid if CrCl > 95 mL/min in AF due to reduced efficacy."
+    ]
+  },
+  {
+    "id": "warfarin",
+    "name": "Warfarin",
+    "searchTerms": ["warfarin"],
+    "className": "Vitamin K antagonist",
+    "tags": ["Anticoagulant"],
+    "usualDose": "Highly individualised to INR.",
+    "renalBands": [
+      {
+        "min": null,
+        "max": null,
+        "label": "All eGFR ranges",
+        "category": "INR-guided",
+        "details": "No fixed renal adjustment; dose to INR within target range."
+      }
+    ],
+    "notes": [
+      "Bleeding risk higher in CKD; monitor INR and interactions closely."
+    ]
+  },
+
+  {
+    "id": "gabapentin",
+    "name": "Gabapentin",
+    "searchTerms": ["gabapentin", "neurontin"],
+    "className": "Antiepileptic / neuropathic pain",
+    "tags": ["Neuropathic pain", "Renally cleared"],
+    "usualDose": "900–3600 mg/day in 3 doses in normal renal function.",
+    "renalBands": [
+      {
+        "min": 60,
+        "max": null,
+        "label": "CrCl ≥ 60",
+        "category": "Standard",
+        "details": "Usual titration up to local max."
+      },
+      {
+        "min": 30,
+        "max": 60,
+        "label": "CrCl 30–59",
+        "category": "Moderate reduction",
+        "details": "Reduce total daily dose and/or frequency (e.g. ~600–1800 mg/day)."
+      },
+      {
+        "min": 15,
+        "max": 30,
+        "label": "CrCl 15–29",
+        "category": "Significant reduction",
+        "details": "Low doses (e.g. 300–600 mg/day) with slow titration."
+      },
+      {
+        "min": null,
+        "max": 15,
+        "label": "CrCl < 15 / dialysis",
+        "category": "Specialist dosing",
+        "details": "Very low or post-dialysis dosing only."
+      }
+    ],
+    "notes": [
+      "Accumulation causes sedation/ataxia; use CrCl rather than eGFR if possible."
+    ]
+  },
+  {
+    "id": "pregabalin",
+    "name": "Pregabalin",
+    "searchTerms": ["pregabalin", "lyrica"],
+    "className": "Antiepileptic / neuropathic pain / GAD",
+    "tags": ["Neuropathic pain", "Renally cleared"],
+    "usualDose": "150–600 mg/day in 2–3 divided doses.",
+    "renalBands": [
+      {
+        "min": 60,
+        "max": null,
+        "label": "CrCl ≥ 60",
+        "category": "Standard",
+        "details": "Use usual titration schedule."
+      },
+      {
+        "min": 30,
+        "max": 60,
+        "label": "CrCl 30–59",
+        "category": "Dose reduction",
+        "details": "Lower maximum daily dose (e.g. up to ~300 mg/day)."
+      },
+      {
+        "min": 15,
+        "max": 30,
+        "label": "CrCl 15–29",
+        "category": "Marked reduction",
+        "details": "Substantially reduced doses (e.g. up to ~150 mg/day)."
+      },
+      {
+        "min": null,
+        "max": 15,
+        "label": "CrCl < 15 / dialysis",
+        "category": "Specialist",
+        "details": "Very low/post-dialysis dosing only."
+      }
+    ],
+    "notes": [
+      "Accumulation increases sedation, dizziness and oedema; taper slowly when stopping."
+    ]
+  },
+  {
+    "id": "sertraline",
+    "name": "Sertraline",
+    "searchTerms": ["sertraline"],
+    "className": "SSRI antidepressant",
+    "tags": ["Depression", "Anxiety"],
+    "usualDose": "50–200 mg once daily.",
+    "renalBands": [
+      {
+        "min": null,
+        "max": null,
+        "label": "All eGFR ranges",
+        "category": "No formal adjustment",
+        "details": "Usually no structured dose change; start low and titrate by response."
+      }
+    ],
+    "notes": [
+      "Monitor for hyponatraemia, especially in older patients and CKD."
+    ]
+  },
+  {
+    "id": "mirtazapine",
+    "name": "Mirtazapine",
+    "searchTerms": ["mirtazapine"],
+    "className": "NaSSA antidepressant",
+    "tags": ["Depression"],
+    "usualDose": "15–45 mg at night.",
+    "renalBands": [
+      {
+        "min": 40,
+        "max": null,
+        "label": "eGFR ≥ 40",
+        "category": "Standard",
+        "details": "Usual dose range with clinical monitoring."
+      },
+      {
+        "min": null,
+        "max": 40,
+        "label": "eGFR < 40",
+        "category": "Caution",
+        "details": "Consider lower doses and slower titration; monitor for sedation."
+      }
+    ],
+    "notes": [
+      "Can cause weight gain and sedation; useful for insomnia/poor appetite."
+    ]
+  },
+  {
+    "id": "venlafaxine",
+    "name": "Venlafaxine",
+    "searchTerms": ["venlafaxine"],
+    "className": "SNRI antidepressant",
+    "tags": ["Depression", "Anxiety"],
+    "usualDose": "75–225 mg/day (immediate or modified-release).",
+    "renalBands": [
+      {
+        "min": 60,
+        "max": null,
+        "label": "eGFR ≥ 60",
+        "category": "Standard",
+        "details": "Usual dose range as per BNF."
+      },
+      {
+        "min": 30,
+        "max": 60,
+        "label": "eGFR 30–59",
+        "category": "Dose reduction",
+        "details": "Reduce total daily dose (e.g. by ~25–50%) and titrate slowly."
+      },
+      {
+        "min": null,
+        "max": 30,
+        "label": "eGFR < 30",
+        "category": "Further reduction",
+        "details": "Use low doses only and monitor closely; consider alternatives in severe CKD."
+      }
+    ],
+    "notes": [
+      "Monitor BP and withdrawal symptoms on discontinuation."
+    ]
+  },
+  {
+    "id": "amitriptyline",
+    "name": "Amitriptyline",
+    "searchTerms": ["amitriptyline"],
+    "className": "Tricyclic antidepressant",
+    "tags": ["Depression", "Neuropathic pain"],
+    "usualDose": "10–75 mg at night for pain (higher for depression under specialist care).",
+    "renalBands": [
+      {
+        "min": null,
+        "max": null,
+        "label": "All eGFR ranges",
+        "category": "Clinical titration",
+        "details": "No formal renal table; start low and titrate by tolerability, particularly in older adults/CKD."
+      }
+    ],
+    "notes": [
+      "Anticholinergic and cardiac side-effects limit use in frailer CKD patients."
     ]
   },
 
@@ -574,68 +797,66 @@
     "searchTerms": ["amoxicillin"],
     "className": "Aminopenicillin antibiotic",
     "tags": ["Antibiotic"],
-    "usualDose": "Typical adult dose is 500 mg three times daily, with higher doses for severe infection.",
+    "usualDose": "500 mg tds (higher for severe infection).",
     "renalBands": [
       {
         "min": 30,
         "max": null,
-        "label": "eGFR ≥ 30 mL/min/1.73 m²",
-        "category": "Standard dosing",
-        "details": "Use usual dosing interval according to indication."
+        "label": "eGFR ≥ 30",
+        "category": "Standard",
+        "details": "Usual dose and interval."
       },
       {
         "min": 10,
         "max": 30,
-        "label": "eGFR 10–29 mL/min/1.73 m²",
+        "label": "eGFR 10–29",
         "category": "Extended interval",
-        "details": "Consider reducing frequency, for example 500 mg twice daily, depending on severity and site of infection."
+        "details": "Reduce frequency (e.g. bd) according to severity and local guidance."
       },
       {
         "min": null,
         "max": 10,
-        "label": "eGFR < 10 mL/min/1.73 m² or dialysis",
-        "category": "Further reduction / specialist advice",
-        "details": "Use lower doses or prolonged intervals and seek renal or microbiology advice for serious infection."
+        "label": "eGFR < 10 / dialysis",
+        "category": "Further reduction",
+        "details": "Lower dose or longer interval; seek renal/microbiology advice in severe infection."
       }
     ],
     "notes": [
-      "Amoxicillin is generally safe in CKD but can accumulate at very low eGFR.",
-      "Follow local antimicrobial guidelines for indications and dose."
+      "Follow local antimicrobial guidance for indication and exact dosing."
     ]
   },
   {
     "id": "co-amoxiclav",
     "name": "Co-amoxiclav",
     "searchTerms": ["co-amoxiclav", "amoxicillin clavulanic"],
-    "className": "Amoxicillin plus clavulanic acid",
+    "className": "Amoxicillin + clavulanic acid",
     "tags": ["Antibiotic"],
-    "usualDose": "Typical adult dose is 500 mg or 875 mg of amoxicillin with clavulanic acid twice or three times daily depending on preparation and indication.",
+    "usualDose": "500/125 mg tds or 875/125 mg bd depending on prep.",
     "renalBands": [
       {
         "min": 30,
         "max": null,
-        "label": "eGFR ≥ 30 mL/min/1.73 m²",
-        "category": "Standard dosing",
-        "details": "Use usual dose according to indication."
+        "label": "eGFR ≥ 30",
+        "category": "Standard",
+        "details": "Usual dosing per indication."
       },
       {
         "min": 10,
         "max": 30,
-        "label": "eGFR 10–29 mL/min/1.73 m²",
+        "label": "eGFR 10–29",
         "category": "Extended interval",
-        "details": "Reduce frequency, for example to twice daily dosing, according to local guidance."
+        "details": "Reduce frequency (e.g. bd) as per BNF/local guidance."
       },
       {
         "min": null,
         "max": 10,
-        "label": "eGFR < 10 mL/min/1.73 m² or dialysis",
-        "category": "Further reduction / consider alternative",
-        "details": "Use lower doses or alternative agents; seek local renal or antimicrobial advice."
+        "label": "eGFR < 10 / dialysis",
+        "category": "Further reduction",
+        "details": "Consider alternative or further dose/interval reduction with specialist advice."
       }
     ],
     "notes": [
-      "Watch for cholestatic liver injury, particularly with increasing age.",
-      "Use according to local antimicrobial formulary."
+      "Monitor LFTs if prolonged course; be aware of cholestatic hepatitis risk."
     ]
   },
   {
@@ -643,139 +864,101 @@
     "name": "Nitrofurantoin",
     "searchTerms": ["nitrofurantoin", "macrobid"],
     "className": "Urinary antibacterial",
-    "tags": ["UTI", "Avoid at low eGFR"],
-    "usualDose": "For uncomplicated lower UTI, typical adult dose is 100 mg modified release twice daily or 50 mg four times daily for 3–7 days.",
+    "tags": ["UTI"],
+    "usualDose": "100 mg MR bd or 50 mg qds for 3–7 days.",
     "renalBands": [
       {
         "min": 45,
         "max": null,
-        "label": "eGFR ≥ 45 mL/min/1.73 m²",
-        "category": "Standard use",
-        "details": "Can be used for short course treatment of lower UTI if no evidence of upper tract infection."
+        "label": "eGFR ≥ 45",
+        "category": "Standard short course",
+        "details": "Use for lower UTI only if no upper tract features."
       },
       {
         "min": 30,
         "max": 45,
-        "label": "eGFR 30–44 mL/min/1.73 m²",
-        "category": "Short course only / caution",
-        "details": "Some guidance allows short courses in this range if benefits outweigh risks; avoid long term prophylaxis."
+        "label": "eGFR 30–44",
+        "category": "Short course only",
+        "details": "Some guidance allows short-course use if benefits outweigh risks; avoid prophylaxis."
       },
       {
         "min": null,
         "max": 30,
-        "label": "eGFR < 30 mL/min/1.73 m²",
+        "label": "eGFR < 30",
         "category": "Avoid",
-        "details": "Avoid nitrofurantoin because urinary concentrations are inadequate and toxicity risk increases."
+        "details": "Avoid due to poor urinary levels and higher toxicity risk."
       }
     ],
     "notes": [
-      "Do not use for suspected upper UTI or systemic sepsis.",
-      "Avoid long term prophylaxis in CKD and in people with significant lung disease."
+      "Avoid in suspected pyelonephritis or sepsis."
     ]
   },
   {
     "id": "trimethoprim",
     "name": "Trimethoprim",
     "searchTerms": ["trimethoprim"],
-    "className": "Dihydrofolate reductase inhibitor antibiotic",
+    "className": "Dihydrofolate reductase inhibitor",
     "tags": ["UTI", "Hyperkalaemia risk"],
-    "usualDose": "Typical adult dose is 200 mg twice daily for 3–7 days in uncomplicated UTI; lower doses are used for prophylaxis.",
+    "usualDose": "200 mg bd for 3–7 days (acute UTI).",
     "renalBands": [
       {
         "min": 30,
         "max": null,
-        "label": "eGFR ≥ 30 mL/min/1.73 m²",
-        "category": "Standard short course",
-        "details": "Use usual short course doses; consider lower doses in older or frail patients."
+        "label": "eGFR ≥ 30",
+        "category": "Standard",
+        "details": "Usual short course dosing."
       },
       {
         "min": 15,
         "max": 30,
-        "label": "eGFR 15–29 mL/min/1.73 m²",
+        "label": "eGFR 15–29",
         "category": "Dose reduction",
-        "details": "Reduce total dose, for example 200 mg once daily or extend dose interval."
+        "details": "Reduce total dose or extend interval (e.g. 200 mg od)."
       },
       {
         "min": null,
         "max": 15,
-        "label": "eGFR < 15 mL/min/1.73 m²",
-        "category": "Avoid / specialist advice",
-        "details": "Avoid where possible because of accumulation, hyperkalaemia and risk of acute kidney injury."
+        "label": "eGFR < 15",
+        "category": "Avoid / specialist",
+        "details": "Avoid if possible due to hyperkalaemia and creatinine rise."
       }
     ],
     "notes": [
-      "Trimethoprim can increase creatinine and potassium, particularly with ACE inhibitors, ARBs or spironolactone.",
-      "Check renal function and electrolytes if used in CKD or with interacting medicines."
+      "Check K⁺ and creatinine if using in patients on ACEI/ARB/spironolactone."
     ]
   },
   {
     "id": "cefalexin",
     "name": "Cefalexin",
     "searchTerms": ["cefalexin", "cephalexin"],
-    "className": "First generation cephalosporin",
+    "className": "1st-generation cephalosporin",
     "tags": ["Antibiotic"],
-    "usualDose": "Typical adult dose is 500 mg two to four times daily depending on indication.",
+    "usualDose": "500 mg bd–qds depending on indication.",
     "renalBands": [
       {
         "min": 50,
         "max": null,
-        "label": "eGFR ≥ 50 mL/min/1.73 m²",
-        "category": "Standard dosing",
-        "details": "Use usual dosing interval for indication and severity."
+        "label": "eGFR ≥ 50",
+        "category": "Standard",
+        "details": "Usual dose and frequency."
       },
       {
         "min": 10,
         "max": 50,
-        "label": "eGFR 10–49 mL/min/1.73 m²",
+        "label": "eGFR 10–49",
         "category": "Extended interval",
-        "details": "Reduce frequency, for example 500 mg twice daily, according to infection severity and local guidance."
+        "details": "Reduce frequency (e.g. bd) as per BNF/local guidance."
       },
       {
         "min": null,
         "max": 10,
-        "label": "eGFR < 10 mL/min/1.73 m²",
+        "label": "eGFR < 10",
         "category": "Further reduction",
-        "details": "Consider 500 mg once daily or alternative agents as per renal dosing tables."
+        "details": "Low dose or longer interval; seek renal/micro advice in serious infection."
       }
     ],
     "notes": [
-      "Cephalosporins are mainly renally cleared and can accumulate at low eGFR, increasing risk of neurotoxicity.",
-      "Follow local UTI and skin or soft tissue infection guidelines."
-    ]
-  },
-  {
-    "id": "ciprofloxacin",
-    "name": "Ciprofloxacin",
-    "searchTerms": ["ciprofloxacin", "cipro"],
-    "className": "Fluoroquinolone antibiotic",
-    "tags": ["Antibiotic"],
-    "usualDose": "Typical adult oral dose is 250–750 mg twice daily depending on infection and severity.",
-    "renalBands": [
-      {
-        "min": 60,
-        "max": null,
-        "label": "eGFR ≥ 60 mL/min/1.73 m²",
-        "category": "Standard dosing",
-        "details": "Use dose according to indication and local guidance; avoid unnecessary use because of resistance and side effects."
-      },
-      {
-        "min": 30,
-        "max": 60,
-        "label": "eGFR 30–59 mL/min/1.73 m²",
-        "category": "Dose reduction",
-        "details": "Consider reducing dose or frequency, for example 250–500 mg twice daily, in line with BNF and local protocols."
-      },
-      {
-        "min": null,
-        "max": 30,
-        "label": "eGFR < 30 mL/min/1.73 m²",
-        "category": "Further reduction / specialist advice",
-        "details": "Use lower doses or extended intervals and seek microbiology advice for serious infections."
-      }
-    ],
-    "notes": [
-      "Fluoroquinolones carry risks of tendon rupture, neuropathy and QT prolongation; reserve for appropriate indications.",
-      "Use with caution in patients with previous tendon disorders, epilepsy or concurrent QT prolonging drugs."
+      "Watch for neurotoxicity at very low eGFR and high doses."
     ]
   },
 
@@ -784,161 +967,40 @@
     "name": "Digoxin",
     "searchTerms": ["digoxin"],
     "className": "Cardiac glycoside",
-    "tags": ["Heart failure", "Rate control", "Narrow therapeutic index"],
-    "usualDose": "Typical maintenance dose is 62.5–250 micrograms once daily depending on age, renal function and indication.",
+    "tags": ["HF", "Rate control", "Narrow therapeutic index"],
+    "usualDose": "62.5–250 micrograms od according to age, renal function and indication.",
     "renalBands": [
       {
         "min": 60,
         "max": null,
-        "label": "eGFR ≥ 60 mL/min/1.73 m²",
-        "category": "Standard cautious dosing",
-        "details": "Use lower maintenance doses in older adults and those at risk of toxicity."
+        "label": "eGFR ≥ 60",
+        "category": "Standard low-ish dosing",
+        "details": "Use lower doses in older adults; monitor levels if concern."
       },
       {
         "min": 30,
         "max": 60,
-        "label": "eGFR 30–59 mL/min/1.73 m²",
+        "label": "eGFR 30–59",
         "category": "Dose reduction",
-        "details": "Use reduced maintenance dose, often 62.5–125 micrograms daily or on alternate days, with level monitoring."
+        "details": "Often 62.5–125 micrograms od or on alternate days; check levels if possible."
       },
       {
         "min": 15,
         "max": 30,
-        "label": "eGFR 15–29 mL/min/1.73 m²",
+        "label": "eGFR 15–29",
         "category": "Marked reduction",
-        "details": "Use very low doses such as 62.5 micrograms daily or on alternate days, and monitor levels regularly."
+        "details": "Very low doses (e.g. 62.5 micrograms od/alt days); monitor for toxicity."
       },
       {
         "min": null,
         "max": 15,
-        "label": "eGFR < 15 mL/min/1.73 m²",
+        "label": "eGFR < 15",
         "category": "Specialist dosing",
-        "details": "Use only with digoxin level monitoring and specialist supervision."
+        "details": "Dose only with level monitoring and specialist supervision."
       }
     ],
     "notes": [
-      "Digoxin is renally cleared and toxicity risk is higher in CKD, hypokalaemia and hypomagnesaemia.",
-      "Monitor digoxin levels and electrolytes if toxicity is suspected."
-    ]
-  },
-  {
-    "id": "aciclovir",
-    "name": "Aciclovir (oral)",
-    "searchTerms": ["aciclovir", "acyclovir"],
-    "className": "Antiviral",
-    "tags": ["Antiviral"],
-    "usualDose": "Typical oral dose is 400–800 mg three to five times daily depending on indication, such as herpes simplex or shingles.",
-    "renalBands": [
-      {
-        "min": 50,
-        "max": null,
-        "label": "eGFR ≥ 50 mL/min/1.73 m²",
-        "category": "Standard dosing",
-        "details": "Use usual dose and frequency according to indication."
-      },
-      {
-        "min": 10,
-        "max": 50,
-        "label": "eGFR 10–49 mL/min/1.73 m²",
-        "category": "Dose reduction",
-        "details": "Reduce frequency, for example 800 mg twice daily for shingles, in line with BNF or SPC."
-      },
-      {
-        "min": null,
-        "max": 10,
-        "label": "eGFR < 10 mL/min/1.73 m² or dialysis",
-        "category": "Further reduction / specialist advice",
-        "details": "Substantially reduce dose or extend intervals and seek specialist advice for systemic infection."
-      }
-    ],
-    "notes": [
-      "Aciclovir can cause crystal nephropathy and neurotoxicity at high doses, especially in CKD or dehydration.",
-      "Advise good oral fluid intake and adjust dose at low eGFR."
-    ]
-  },
-
-  {
-    "id": "morphine-oral",
-    "name": "Morphine (oral)",
-    "searchTerms": ["morphine"],
-    "className": "Opioid analgesic",
-    "tags": ["Opioid", "Avoid in severe CKD if possible"],
-    "usualDose": "Immediate release and modified release preparations are used. Dose depends on indication and previous opioid exposure.",
-    "renalBands": [
-      {
-        "min": 60,
-        "max": null,
-        "label": "eGFR ≥ 60 mL/min/1.73 m²",
-        "category": "Standard cautious dosing",
-        "details": "Titrate short acting morphine to effect then convert to modified release if appropriate."
-      },
-      {
-        "min": 30,
-        "max": 60,
-        "label": "eGFR 30–59 mL/min/1.73 m²",
-        "category": "Use lower doses",
-        "details": "Morphine metabolites accumulate; use reduced doses and or longer intervals. Monitor for sedation and confusion."
-      },
-      {
-        "min": 15,
-        "max": 30,
-        "label": "eGFR 15–29 mL/min/1.73 m²",
-        "category": "Avoid if possible",
-        "details": "Avoid regular morphine if alternatives are suitable. If used, give very low doses with close monitoring."
-      },
-      {
-        "min": null,
-        "max": 15,
-        "label": "eGFR < 15 mL/min/1.73 m² or dialysis",
-        "category": "Do not use",
-        "details": "Morphine and active metabolites accumulate markedly; use alternative opioids under specialist advice."
-      }
-    ],
-    "notes": [
-      "Morphine 6 glucuronide accumulates in CKD and can cause profound sedation and respiratory depression.",
-      "Consider alternative opioids such as fentanyl or alfentanil in severe CKD under palliative care or pain team guidance."
-    ]
-  },
-  {
-    "id": "oxycodone-oral",
-    "name": "Oxycodone (oral)",
-    "searchTerms": ["oxycodone"],
-    "className": "Opioid analgesic",
-    "tags": ["Opioid"],
-    "usualDose": "Dose depends on indication and previous opioid exposure. Use opioid conversion tables when switching from morphine.",
-    "renalBands": [
-      {
-        "min": 60,
-        "max": null,
-        "label": "eGFR ≥ 60 mL/min/1.73 m²",
-        "category": "Standard cautious dosing",
-        "details": "Titrate dose to effect. Use similar precautions to morphine regarding sedation and constipation."
-      },
-      {
-        "min": 30,
-        "max": 60,
-        "label": "eGFR 30–59 mL/min/1.73 m²",
-        "category": "Dose reduction",
-        "details": "Use lower starting doses and or longer intervals compared with normal renal function."
-      },
-      {
-        "min": 15,
-        "max": 30,
-        "label": "eGFR 15–29 mL/min/1.73 m²",
-        "category": "Marked reduction / consider alternatives",
-        "details": "Further reduce doses and monitor closely for sedation and confusion; consider switching to a more suitable opioid if problems occur."
-      },
-      {
-        "min": null,
-        "max": 15,
-        "label": "eGFR < 15 mL/min/1.73 m² or dialysis",
-        "category": "Specialist advice",
-        "details": "Use only under specialist guidance, often at very low doses or with alternative opioids preferred."
-      }
-    ],
-    "notes": [
-      "Oxycodone metabolites are renally cleared and can accumulate; it may be preferred to morphine in moderate CKD but still needs dose reduction.",
-      "Use your opioid conversion and renal tools together when switching opioids."
+      "Toxicity risk rises in CKD, hypokalaemia and hypomagnesaemia; review interacting drugs."
     ]
   }
 ]
