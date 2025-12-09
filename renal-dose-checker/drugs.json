@@ -1864,5 +1864,515 @@
       "Can raise blood pressure; avoid uncontrolled hypertension.",
       "Useful alternative when antimuscarinics are poorly tolerated."
     ]
+  },
+    {
+    "id": "amoxicillin",
+    "name": "Amoxicillin",
+    "searchTerms": ["amoxicillin"],
+    "className": "Penicillin antibiotic",
+    "tags": ["Antibiotic"],
+    "usualDose": "250–500 mg three times daily (higher in severe infections).",
+    "renalBands": [
+      {
+        "min": 30,
+        "max": null,
+        "label": "eGFR ≥ 30",
+        "category": "Standard",
+        "details": "Use usual dosing."
+      },
+      {
+        "min": null,
+        "max": 30,
+        "label": "eGFR < 30",
+        "category": "Dose reduction",
+        "details": "Reduce dosing frequency (e.g. 500 mg twice daily)."
+      }
+    ],
+    "notes": [
+      "Generally well tolerated; adjust dosing in severe impairment.",
+      "Safe in pregnancy and breastfeeding."
+    ]
+  },
+  {
+    "id": "co-amoxiclav",
+    "name": "Co-amoxiclav",
+    "searchTerms": ["coamoxiclav", "augmentin"],
+    "className": "Penicillin + beta-lactamase inhibitor",
+    "tags": ["Antibiotic"],
+    "usualDose": "500/125 mg three times daily.",
+    "renalBands": [
+      {
+        "min": 30,
+        "max": null,
+        "label": "eGFR ≥ 30",
+        "category": "Standard",
+        "details": "Usual dose can be used."
+      },
+      {
+        "min": 10,
+        "max": 30,
+        "label": "eGFR 10–29",
+        "category": "Dose reduction",
+        "details": "Consider 500/125 mg twice daily (BNF-based)."
+      },
+      {
+        "min": null,
+        "max": 10,
+        "label": "eGFR < 10",
+        "category": "Further reduction",
+        "details": "500/125 mg once daily or specialist advice depending on severity."
+      }
+    ],
+    "notes": [
+      "Avoid the 875 mg strength in CKD due to accumulation risk.",
+      "Monitor LFTs with prolonged use."
+    ]
+  },
+  {
+    "id": "phenoxymethylpenicillin",
+    "name": "Phenoxymethylpenicillin (Pen V)",
+    "searchTerms": ["penicillin v", "phenoxymethylpenicillin"],
+    "className": "Penicillin antibiotic",
+    "tags": ["Antibiotic"],
+    "usualDose": "250–500 mg four times daily depending on indication.",
+    "renalBands": [
+      {
+        "min": null,
+        "max": null,
+        "label": "All eGFR ranges",
+        "category": "Standard",
+        "details": "No dose adjustment usually required."
+      }
+    ],
+    "notes": [
+      "Preferred for tonsillitis/erysipelas in adults and children."
+    ]
+  },
+  {
+    "id": "flucloxacillin",
+    "name": "Flucloxacillin",
+    "searchTerms": ["flucloxacillin"],
+    "className": "Penicillin antibiotic",
+    "tags": ["Antibiotic"],
+    "usualDose": "500 mg four times daily.",
+    "renalBands": [
+      {
+        "min": 10,
+        "max": null,
+        "label": "eGFR ≥ 10",
+        "category": "Standard",
+        "details": "Usual dose is appropriate."
+      },
+      {
+        "min": null,
+        "max": 10,
+        "label": "eGFR < 10",
+        "category": "Caution",
+        "details": "No formal renal adjustment but monitor hepatic function and for neurotoxicity in severe renal failure."
+      }
+    ],
+    "notes": [
+      "Useful for cellulitis and MSSA infections.",
+      "Take on an empty stomach for better absorption."
+    ]
+  },
+  {
+    "id": "clarithromycin",
+    "name": "Clarithromycin",
+    "searchTerms": ["clarithromycin"],
+    "className": "Macrolide antibiotic",
+    "tags": ["Antibiotic"],
+    "usualDose": "250–500 mg twice daily.",
+    "renalBands": [
+      {
+        "min": 30,
+        "max": null,
+        "label": "eGFR ≥ 30",
+        "category": "Standard",
+        "details": "Usual dosing allowed."
+      },
+      {
+        "min": null,
+        "max": 30,
+        "label": "eGFR < 30",
+        "category": "Dose reduction",
+        "details": "Reduce dose by 50% or increase dosing interval."
+      }
+    ],
+    "notes": [
+      "Major CYP3A4 interactions; check carefully.",
+      "QT prolongation risk increases in CKD."
+    ]
+  },
+  {
+    "id": "azithromycin",
+    "name": "Azithromycin",
+    "searchTerms": ["azithromycin"],
+    "className": "Macrolide antibiotic",
+    "tags": ["Antibiotic"],
+    "usualDose": "500 mg once daily for 3 days (or other regimens depending on indication).",
+    "renalBands": [
+      {
+        "min": null,
+        "max": null,
+        "label": "All eGFR ranges",
+        "category": "No renal adjustment",
+        "details": "No formal adjustment required."
+      }
+    ],
+    "notes": [
+      "Use caution with QT-prolonging drugs.",
+      "Less CYP interaction than clarithromycin."
+    ]
+  },
+  {
+    "id": "doxycycline",
+    "name": "Doxycycline",
+    "searchTerms": ["doxycycline"],
+    "className": "Tetracycline antibiotic",
+    "tags": ["Antibiotic"],
+    "usualDose": "200 mg day 1 then 100 mg daily.",
+    "renalBands": [
+      {
+        "min": null,
+        "max": null,
+        "label": "All renal function",
+        "category": "No adjustment",
+        "details": "Preferred tetracycline in CKD as elimination is non-renal."
+      }
+    ],
+    "notes": [
+      "Avoid in pregnancy & in children under 12.",
+      "Minimise sun exposure."
+    ]
+  },
+  {
+    "id": "ciprofloxacin",
+    "name": "Ciprofloxacin",
+    "searchTerms": ["cipro", "ciprofloxacin"],
+    "className": "Fluoroquinolone antibiotic",
+    "tags": ["Antibiotic"],
+    "usualDose": "250–500 mg twice daily depending on indication.",
+    "renalBands": [
+      {
+        "min": 60,
+        "max": null,
+        "label": "eGFR ≥ 60",
+        "category": "Standard",
+        "details": "Use usual dose."
+      },
+      {
+        "min": 30,
+        "max": 60,
+        "label": "eGFR 30–59",
+        "category": "Mild reduction",
+        "details": "Reduce dose (e.g. 250 mg twice daily or extend interval)."
+      },
+      {
+        "min": null,
+        "max": 30,
+        "label": "eGFR < 30",
+        "category": "Moderate reduction",
+        "details": "Reduce further – check BNF/SPC."
+      }
+    ],
+    "notes": [
+      "Tendinopathy risk increased in CKD, older adults & steroid use.",
+      "QT prolongation risk."
+    ]
+  },
+  {
+    "id": "nitrofurantoin",
+    "name": "Nitrofurantoin",
+    "searchTerms": ["nitrofurantoin"],
+    "className": "Urinary antibiotic",
+    "tags": ["UTI"],
+    "usualDose": "100 mg twice daily (or 50 mg four times daily).",
+    "renalBands": [
+      {
+        "min": 45,
+        "max": null,
+        "label": "eGFR ≥ 45",
+        "category": "Standard",
+        "details": "Usual dosing can be used."
+      },
+      {
+        "min": 30,
+        "max": 45,
+        "label": "eGFR 30–44",
+        "category": "Conditional use",
+        "details": "Short-course (3–7 days) may be used for lower UTI only if benefits outweigh risks (MHRA)."
+      },
+      {
+        "min": null,
+        "max": 30,
+        "label": "eGFR < 30",
+        "category": "Avoid",
+        "details": "Ineffective and risk of toxicity; avoid."
+      }
+    ],
+    "notes": [
+      "Not for upper UTI or pyelonephritis.",
+      "Check local UTI guidelines."
+    ]
+  },
+  {
+    "id": "trimethoprim",
+    "name": "Trimethoprim",
+    "searchTerms": ["trimethoprim"],
+    "className": "Folate antagonist antibiotic",
+    "tags": ["UTI"],
+    "usualDose": "200 mg twice daily for 3 days.",
+    "renalBands": [
+      {
+        "min": 30,
+        "max": null,
+        "label": "eGFR ≥ 30",
+        "category": "Standard",
+        "details": "Use usual dose."
+      },
+      {
+        "min": null,
+        "max": 30,
+        "label": "eGFR < 30",
+        "category": "Dose reduction",
+        "details": "Reduce dose/frequency; avoid if possible due to hyperkalaemia risk."
+      }
+    ],
+    "notes": [
+      "Hyperkalaemia risk increased in CKD and with ACEi/ARB/spironolactone.",
+      "Avoid in pregnancy."
+    ]
+  },
+  {
+    "id": "metronidazole",
+    "name": "Metronidazole",
+    "searchTerms": ["metronidazole", "flagyl"],
+    "className": "Nitroimidazole antibiotic",
+    "tags": ["Antibiotic"],
+    "usualDose": "400 mg twice or three times daily.",
+    "renalBands": [
+      {
+        "min": null,
+        "max": null,
+        "label": "All renal function",
+        "category": "No adjustment",
+        "details": "Use usual dosing."
+      }
+    ],
+    "notes": [
+      "Reduce dose only in severe hepatic impairment.",
+      "Avoid alcohol due to disulfiram-like reaction."
+    ]
+  },
+  {
+    "id": "cefalexin",
+    "name": "Cefalexin",
+    "searchTerms": ["cefalexin", "cephalexin"],
+    "className": "Cephalosporin antibiotic",
+    "tags": ["Antibiotic"],
+    "usualDose": "250–500 mg every 6–8 hours.",
+    "renalBands": [
+      {
+        "min": 50,
+        "max": null,
+        "label": "eGFR ≥ 50",
+        "category": "Standard",
+        "details": "Usual dosing."
+      },
+      {
+        "min": 10,
+        "max": 50,
+        "label": "eGFR 10–49",
+        "category": "Reduction",
+        "details": "Reduce frequency (e.g. 500 mg twice daily)."
+      },
+      {
+        "min": null,
+        "max": 10,
+        "label": "eGFR < 10",
+        "category": "Further reduction",
+        "details": "Lower dose or interval; check BNF/SPC."
+      }
+    ],
+    "notes": [
+      "Good for pregnancy-safe UTI and SSTI.",
+      "May cause GI upset."
+    ]
+  },
+  {
+    "id": "acyclovir",
+    "name": "Aciclovir",
+    "searchTerms": ["aciclovir", "acyclovir"],
+    "className": "Antiviral",
+    "tags": ["HSV", "VZV"],
+    "usualDose": "200–800 mg depending on indication.",
+    "renalBands": [
+      {
+        "min": 50,
+        "max": null,
+        "label": "eGFR ≥ 50",
+        "category": "Standard",
+        "details": "Usual dose."
+      },
+      {
+        "min": 25,
+        "max": 50,
+        "label": "eGFR 25–49",
+        "category": "Reduction",
+        "details": "Reduce frequency (e.g. every 12 hours)."
+      },
+      {
+        "min": 10,
+        "max": 25,
+        "label": "eGFR 10–24",
+        "category": "Further reduction",
+        "details": "Increase interval (e.g. every 24 hours)."
+      },
+      {
+        "min": null,
+        "max": 10,
+        "label": "eGFR < 10",
+        "category": "Marked reduction",
+        "details": "Use extended intervals; check SPC."
+      }
+    ],
+    "notes": [
+      "Hydrate well to reduce crystalluria risk.",
+      "Neurotoxicity risk increases in severe CKD."
+    ]
+  },
+  {
+    "id": "valaciclovir",
+    "name": "Valaciclovir",
+    "searchTerms": ["valaciclovir", "valacyclovir"],
+    "className": "Antiviral",
+    "tags": ["HSV", "VZV"],
+    "usualDose": "500 mg twice daily for HSV; higher for VZV.",
+    "renalBands": [
+      {
+        "min": 50,
+        "max": null,
+        "label": "eGFR ≥ 50",
+        "category": "Standard",
+        "details": "Usual dose."
+      },
+      {
+        "min": 30,
+        "max": 50,
+        "label": "eGFR 30–49",
+        "category": "Mild reduction",
+        "details": "Reduce frequency."
+      },
+      {
+        "min": 10,
+        "max": 30,
+        "label": "eGFR 10–29",
+        "category": "Moderate reduction",
+        "details": "Lower dose/frequency based on indication."
+      },
+      {
+        "min": null,
+        "max": 10,
+        "label": "eGFR < 10",
+        "category": "Severe reduction",
+        "details": "Marked dose reduction required; check SPC."
+      }
+    ],
+    "notes": [
+      "Better oral bioavailability than aciclovir.",
+      "Hydration important."
+    ]
+  },
+  {
+    "id": "prednisolone",
+    "name": "Prednisolone",
+    "searchTerms": ["prednisolone"],
+    "className": "Corticosteroid",
+    "tags": ["Steroid"],
+    "usualDose": "Varies by indication.",
+    "renalBands": [
+      {
+        "min": null,
+        "max": null,
+        "label": "All renal ranges",
+        "category": "No dose change",
+        "details": "Steroid doses depend on indication, not renal function."
+      }
+    ],
+    "notes": [
+      "Monitor BP, glucose, mood and infection risk.",
+      "Taper slowly after long-term use."
+    ]
+  },
+  {
+    "id": "methotrexate",
+    "name": "Methotrexate",
+    "searchTerms": ["methotrexate"],
+    "className": "DMARD",
+    "tags": ["Rheumatology"],
+    "usualDose": "7.5–25 mg once weekly.",
+    "renalBands": [
+      {
+        "min": 60,
+        "max": null,
+        "label": "eGFR ≥ 60",
+        "category": "Standard",
+        "details": "Usual weekly dose may be used with monitoring."
+      },
+      {
+        "min": 30,
+        "max": 60,
+        "label": "eGFR 30–59",
+        "category": "Dose reduction",
+        "details": "Consider 50–70% of usual dose; monitor FBC, LFTs and eGFR closely."
+      },
+      {
+        "min": null,
+        "max": 30,
+        "label": "eGFR < 30",
+        "category": "Avoid",
+        "details": "Avoid due to risk of severe toxicity (myelosuppression)."
+      }
+    ],
+    "notes": [
+      "Ensure folic acid supplementation.",
+      "Never take daily — weekly only."
+    ]
+  },
+  {
+    "id": "allopurinol-extra",
+    "name": "Allopurinol (alternative entry)",
+    "searchTerms": ["allopurinol"],
+    "className": "Xanthine oxidase inhibitor",
+    "tags": ["Gout"],
+    "usualDose": "100–300 mg daily, titrated.",
+    "renalBands": [
+      {
+        "min": 60,
+        "max": null,
+        "label": "eGFR ≥ 60",
+        "category": "Standard",
+        "details": "May use standard titration."
+      },
+      {
+        "min": 30,
+        "max": 60,
+        "label": "eGFR 30–59",
+        "category": "Lower start",
+        "details": "Start with 50–100 mg daily; titrate to urate."
+      },
+      {
+        "min": null,
+        "max": 30,
+        "label": "eGFR < 30",
+        "category": "Specialist only",
+        "details": "Use with extreme caution; hypersensitivity risk increased."
+      }
+    ],
+    "notes": [
+      "Separate duplicate entry optional – delete if unwanted.",
+      "Check HLA-B*5801 in high-risk ethnic groups if available."
+    ]
   }
 ]
