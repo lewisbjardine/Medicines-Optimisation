@@ -1,9 +1,9 @@
-// app.js — Renal Dose Checker logic (modular)
-// Loads DRUG_DATA from drugs.js
-
+// app.js — logic for Renal Dose Calculator
 import { DRUG_DATA } from "./drugs.js";
 
-/* --------------------- DOM ELEMENTS ---------------------- */
+/************************************************************
+ * DOM helpers
+ ************************************************************/
 
 const searchView = document.getElementById("search-view");
 const drugView = document.getElementById("drug-view");
@@ -13,160 +13,211 @@ const drugSearchInput = document.getElementById("drug-search");
 const suggestionsBox = document.getElementById("search-suggestions");
 
 const backButton = document.getElementById("back-button");
-
 const drugNameEl = document.getElementById("drug-name");
 const drugClassEl = document.getElementById("drug-class");
 const drugTagsEl = document.getElementById("drug-tags");
 const drugUsualDoseEl = document.getElementById("drug-usual-dose");
-const renalBandsEl = document.getElementById("renal-bands");
 const egfrSummaryEl = document.getElementById("egfr-summary");
+const renalBandsEl = document.getElementById("renal-bands");
 const drugNotesEl = document.getElementById("drug-notes");
 
 let currentEgfr = null;
-
-/* ------------------------- eGFR --------------------------- */
-
-function updateEgfr() {
-  const value = parseFloat(egfrInput.value);
-  currentEgfr = Number.isFinite(value) && value >= 0 ? value : null;
-}
-egfrInput.addEventListener("input", updateEgfr);
-
-/* ------------------------ SEARCH -------------------------- */
 
 function normalise(str) {
   return (str || "").toLowerCase().trim();
 }
 
+function parseEgfr(value) {
+  if (!value && value !== 0) return null;
+  const n = Number(value);
+  if (!Number.isFinite(n) || n < 0) return null;
+  return n;
+}
+
+function updateEgfr() {
+  currentEgfr = parseEgfr(egfrInput.value);
+}
+
+egfrInput.addEventListener("input", () => {
+  updateEgfr();
+});
+
+/************************************************************
+ * Search / suggestions
+ ************************************************************/
+
 function searchDrugs(query) {
   const q = normalise(query);
   if (q.length < 2) return [];
-
-  return DRUG_DATA.filter(drug =>
-    normalise(drug.name).includes(q) ||
-    (drug.searchTerms || []).some(term => normalise(term).includes(q))
-  ).sort((a, b) => a.name.localeCompare(b.name));
+  return DRUG_DATA.filter((drug) => {
+    const nameMatch = normalise(drug.name).includes(q);
+    const termMatch = (drug.searchTerms || []).some((t) =>
+      normalise(t).includes(q)
+    );
+    return nameMatch || termMatch;
+  }).sort((a, b) => a.name.localeCompare(b.name));
 }
 
-/* ---------------------- AUTOCOMPLETE ---------------------- */
-
-let suggestionDelay;
+function clearSuggestions() {
+  suggestionsBox.innerHTML = "";
+  suggestionsBox.classList.add("hidden");
+}
 
 function renderSuggestions(results) {
   if (!results.length) {
-    suggestionsBox.style.display = "none";
-    suggestionsBox.innerHTML = "";
+    clearSuggestions();
     return;
   }
-
   suggestionsBox.innerHTML = "";
-
-  results.slice(0, 12).forEach(drug => {
+  results.slice(0, 12).forEach((drug) => {
     const btn = document.createElement("button");
     btn.type = "button";
     btn.textContent = drug.name;
     btn.addEventListener("click", () => {
-      suggestionsBox.style.display = "none";
+      clearSuggestions();
       openDrug(drug.id);
     });
     suggestionsBox.appendChild(btn);
   });
-
-  suggestionsBox.style.display = "block";
+  suggestionsBox.classList.remove("hidden");
 }
 
+let suggestionTimeout = null;
+
 drugSearchInput.addEventListener("input", () => {
-  clearTimeout(suggestionDelay);
-  suggestionDelay = setTimeout(() => {
-    const results = searchDrugs(drugSearchInput.value);
+  const value = drugSearchInput.value;
+  clearTimeout(suggestionTimeout);
+  suggestionTimeout = setTimeout(() => {
+    const results = searchDrugs(value);
     renderSuggestions(results);
   }, 120);
 });
 
-// Prevent dropdown from closing immediately on Safari/WebKit
-document.addEventListener("mousedown", (e) => {
-  if (e.target === drugSearchInput || suggestionsBox.contains(e.target)) return;
-  suggestionsBox.style.display = "none";
+drugSearchInput.addEventListener("focus", () => {
+  const results = searchDrugs(drugSearchInput.value);
+  renderSuggestions(results);
 });
 
-/* ---------------------- DRUG VIEW ------------------------- */
+document.addEventListener("click", (e) => {
+  if (!suggestionsBox.contains(e.target) && e.target !== drugSearchInput) {
+    clearSuggestions();
+  }
+});
 
-function getBandForEgfr(bands, egfr) {
+drugSearchInput.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") {
+    e.preventDefault();
+    const results = searchDrugs(drugSearchInput.value);
+    if (results.length === 1) {
+      clearSuggestions();
+      openDrug(results[0].id);
+    } else if (results.length > 1) {
+      // If multiple matches, default to the first
+      clearSuggestions();
+      openDrug(results[0].id);
+    }
+  }
+});
+
+/************************************************************
+ * Drug detail view
+ ************************************************************/
+
+function getBandForEgfr(renalBands, egfr) {
   if (egfr == null) return null;
-  return bands.find(b =>
-    (b.min == null || egfr >= b.min) &&
-    (b.max == null || egfr < b.max)
-  );
+  for (const band of renalBands) {
+    const minOk = band.min == null || egfr >= band.min;
+    const maxOk = band.max == null || egfr < band.max;
+    if (minOk && maxOk) return band;
+  }
+  return null;
 }
 
-function openDrug(id) {
-  const drug = DRUG_DATA.find(d => d.id === id);
+function openDrug(drugId) {
+  const drug = DRUG_DATA.find((d) => d.id === drugId);
   if (!drug) return;
 
   updateEgfr();
 
-  // Title + class
+  // Populate basic info
   drugNameEl.textContent = drug.name;
   drugClassEl.textContent = drug.className || "";
+  drugUsualDoseEl.textContent = drug.usualDose || "";
 
   // Tags
   drugTagsEl.innerHTML = "";
-  (drug.tags || []).forEach(tag => {
+  (drug.tags || []).forEach((tag) => {
     const span = document.createElement("span");
     span.className = "pill";
     span.textContent = tag;
     drugTagsEl.appendChild(span);
   });
 
-  // Usual dose
-  drugUsualDoseEl.textContent = drug.usualDose || "";
-
-  // Renal dosing bands
+  // Renal bands
   renalBandsEl.innerHTML = "";
-  const highlightBand = getBandForEgfr(drug.renalBands, currentEgfr);
-
-  drug.renalBands.forEach(band => {
+  const highlightBand = getBandForEgfr(drug.renalBands || [], currentEgfr);
+  (drug.renalBands || []).forEach((band) => {
     const li = document.createElement("li");
     li.className = "renal-band";
 
-    if (band === highlightBand) {
+    if (highlightBand && highlightBand === band) {
       li.classList.add("highlight");
     }
 
-    li.innerHTML = `
-      <div class="renal-band-header">
-        <div class="renal-band-label">${band.label}</div>
-        <div class="renal-band-category">${band.category}</div>
-      </div>
-      <div class="renal-band-body">${band.details}</div>
-    `;
+    const header = document.createElement("div");
+    header.className = "renal-band-header";
 
+    const labelEl = document.createElement("div");
+    labelEl.className = "renal-band-label";
+    labelEl.textContent = band.label;
+    header.appendChild(labelEl);
+
+    if (band.category) {
+      const catEl = document.createElement("div");
+      catEl.className = "renal-band-category";
+      catEl.textContent = band.category;
+      header.appendChild(catEl);
+    }
+
+    const body = document.createElement("div");
+    body.className = "renal-band-body";
+    body.textContent = band.details;
+
+    li.appendChild(header);
+    li.appendChild(body);
     renalBandsEl.appendChild(li);
   });
 
-  // eGFR summary
-  egfrSummaryEl.textContent =
-    currentEgfr == null
-      ? "No eGFR entered — all renal bands shown."
-      : `Current eGFR: ${currentEgfr} mL/min/1.73m². Highlighted band applies.`;
+  // eGFR summary text
+  if (currentEgfr != null) {
+    egfrSummaryEl.textContent =
+      "Current eGFR entered: " +
+      currentEgfr +
+      " mL/min/1.73m². Highlighted band shows the renal dosing category that matches this value. For DOACs, calculate dose using creatinine clearance (Cockcroft–Gault) rather than eGFR.";
+  } else {
+    egfrSummaryEl.textContent =
+      "No eGFR value entered – all renal bands are shown. Enter eGFR on the search page to highlight the most relevant band.";
+  }
 
   // Notes
   drugNotesEl.innerHTML = "";
-  (drug.notes || []).forEach(note => {
+  (drug.notes || []).forEach((note) => {
     const li = document.createElement("li");
     li.textContent = note;
     drugNotesEl.appendChild(li);
   });
 
-  // Switch views
+  // Show detail view
   searchView.classList.add("hidden");
   drugView.classList.remove("hidden");
-  window.scrollTo({ top: 0 });
+  window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
 backButton.addEventListener("click", () => {
   drugView.classList.add("hidden");
   searchView.classList.remove("hidden");
-  suggestionsBox.style.display = "none";
   drugSearchInput.focus();
 });
+
+// Initialise egfr
+updateEgfr();
