@@ -2374,5 +2374,446 @@
       "Separate duplicate entry optional – delete if unwanted.",
       "Check HLA-B*5801 in high-risk ethnic groups if available."
     ]
+  },
+    {
+    "id": "warfarin",
+    "name": "Warfarin",
+    "searchTerms": ["warfarin"],
+    "className": "Vitamin K antagonist anticoagulant",
+    "tags": ["Anticoagulant"],
+    "usualDose": "Individualised to target INR (commonly maintenance 1–10 mg daily).",
+    "renalBands": [
+      {
+        "min": null,
+        "max": null,
+        "label": "All eGFR ranges",
+        "category": "INR-guided",
+        "details": "Dose based on INR; renal impairment does not directly alter warfarin dose but risk of bleeding may increase in CKD."
+      }
+    ],
+    "notes": [
+      "Frequent INR monitoring required, especially after changes in renal function, diet or interacting drugs.",
+      "Consider bleeding risks in advanced CKD; adjust target INR or anticoagulation strategy if needed."
+    ]
+  },
+  {
+    "id": "digoxin",
+    "name": "Digoxin",
+    "searchTerms": ["digoxin"],
+    "className": "Cardiac glycoside",
+    "tags": ["Heart failure", "Rate control"],
+    "usualDose": "62.5–250 μg once daily (depending on age, weight, renal function).",
+    "renalBands": [
+      {
+        "min": 60,
+        "max": null,
+        "label": "eGFR ≥ 60",
+        "category": "Standard low-ish dosing",
+        "details": "Usual once-daily maintenance dosing; monitor for toxicity especially in older/frail patients."
+      },
+      {
+        "min": 30,
+        "max": 60,
+        "label": "eGFR 30–59",
+        "category": "Dose reduction",
+        "details": "Consider 62.5–125 μg once daily or alternate-day dosing; monitor levels if possible."
+      },
+      {
+        "min": 15,
+        "max": 30,
+        "label": "eGFR 15–29",
+        "category": "Marked reduction",
+        "details": "Use lower doses (e.g. 62.5 μg once daily or alternate days); toxicity risk increased."
+      },
+      {
+        "min": null,
+        "max": 15,
+        "label": "eGFR < 15 / dialysis",
+        "category": "Specialist dosing",
+        "details": "Use only under specialist/specialist advice with level monitoring if available."
+      }
+    ],
+    "notes": [
+      "Monitor potassium, magnesium and renal function; hypokalaemia increases toxicity risk.",
+      "Beware interactions (e.g. with verapamil, amiodarone, macrolides)."
+    ]
+  },
+  {
+    "id": "metoclopramide",
+    "name": "Metoclopramide",
+    "searchTerms": ["metoclopramide"],
+    "className": "Antiemetic / prokinetic",
+    "tags": ["GI"],
+    "usualDose": "10 mg up to three times daily before meals (max 30 mg/day).",
+    "renalBands": [
+      {
+        "min": 10,
+        "max": null,
+        "label": "eGFR ≥ 10",
+        "category": "Standard dosing",
+        "details": "Use usual dosing with caution; reduce frequency in lower eGFR per local guidance."
+      },
+      {
+        "min": null,
+        "max": 10,
+        "label": "eGFR < 10",
+        "category": "Avoid / specialist",
+        "details": "Often avoided due to increased risk of accumulation and neurological side-effects."
+      }
+    ],
+    "notes": [
+      "Prolonged use (>5 days) not recommended because of risk of tardive dyskinesia.",
+      "Use lowest effective dose for shortest duration."
+    ]
+  },
+  {
+    "id": "ondansetron",
+    "name": "Ondansetron",
+    "searchTerms": ["ondansetron", "zofran"],
+    "className": "5-HT3 antagonist antiemetic",
+    "tags": ["Antiemetic"],
+    "usualDose": "4–8 mg 1–3 times daily (PO) depending on cause of nausea/vomiting.",
+    "renalBands": [
+      {
+        "min": null,
+        "max": null,
+        "label": "All eGFR ranges",
+        "category": "No renal adjustment",
+        "details": "Usual doses acceptable; monitor for QT prolongation especially if other risk factors present."
+      }
+    ],
+    "notes": [
+      "Use with caution in combination with other QT-prolonging agents or in electrolyte disturbance (e.g. CKD, diuretics)."
+    ]
+  },
+  {
+    "id": "esomeprazole",
+    "name": "Esomeprazole",
+    "searchTerms": ["esomeprazole"],
+    "className": "Proton pump inhibitor",
+    "tags": ["GI"],
+    "usualDose": "20–40 mg once daily (depending on indication).",
+    "renalBands": [
+      {
+        "min": null,
+        "max": null,
+        "label": "All eGFR",
+        "category": "No adjustment",
+        "details": "PPI dose not renally adjusted."
+      }
+    ],
+    "notes": [
+      "Long-term PPI risks (hypomagnesaemia, fractures, C. difficile) may be higher in CKD — review need regularly."
+    ]
+  },
+  {
+    "id": "allopurinol",
+    "name": "Allopurinol",
+    "searchTerms": ["allopurinol"],
+    "className": "Xanthine oxidase inhibitor (urate-lowering)",
+    "tags": ["Gout"],
+    "usualDose": "100–300 mg daily (titrated gradually).",
+    "renalBands": [
+      {
+        "min": 60,
+        "max": null,
+        "label": "eGFR ≥ 60",
+        "category": "Standard titration",
+        "details": "Use standard initiation and titration."
+      },
+      {
+        "min": 30,
+        "max": 60,
+        "label": "eGFR 30–59",
+        "category": "Lower start",
+        "details": "Start at 50–100 mg daily; titrate carefully."
+      },
+      {
+        "min": 15,
+        "max": 30,
+        "label": "eGFR 15–29",
+        "category": "Cautious use",
+        "details": "Consider 50 mg on alternate days; titrate slowly under monitoring."
+      },
+      {
+        "min": null,
+        "max": 15,
+        "label": "eGFR < 15",
+        "category": "Specialist decision",
+        "details": "Use only under specialist supervision; risk of hypersensitivity increased."
+      }
+    ],
+    "notes": [
+      "Dose to serum urate and monitor for rash or signs of hypersensitivity.",
+      "Ensure adequate hydration to reduce risk of xanthine nephropathy."
+    ]
+  },
+  {
+    "id": "allopurinol-highdose",
+    "name": "Allopurinol (higher-dose titration)",
+    "searchTerms": ["allopurinol high dose"],
+    "className": "Xanthine oxidase inhibitor",
+    "tags": ["Gout"],
+    "usualDose": "Up to 300 mg daily depending on urate target.",
+    "renalBands": [
+      {
+        "min": 60,
+        "max": null,
+        "label": "eGFR ≥ 60",
+        "category": "Standard titration",
+        "details": "Use as per urate target and local protocol."
+      },
+      {
+        "min": 30,
+        "max": 60,
+        "label": "eGFR 30–59",
+        "category": "Lower max dose",
+        "details": "Aim for lower maintenance dose (e.g. ≤ 200 mg/day); monitor closely."
+      },
+      {
+        "min": null,
+        "max": 30,
+        "label": "eGFR < 30",
+        "category": "Specialist only",
+        "details": "Use only under specialist/rheumatology guidance."
+      }
+    ],
+    "notes": [
+      "Alternative entry to existing allopurinol – helpful if local protocol distinguishes low- vs high-dose initiation."
+    ]
+  },
+  {
+    "id": "ursodeoxycholic-acid",
+    "name": "Ursodeoxycholic acid",
+    "searchTerms": ["ursodeoxycholic acid", "udca"],
+    "className": "Bile acid / hepatoprotective",
+    "tags": ["Liver"],
+    "usualDose": "250–500 mg 1–2 times daily depending on indication.",
+    "renalBands": [
+      {
+        "min": null,
+        "max": null,
+        "label": "All eGFR ranges",
+        "category": "No renal adjustment",
+        "details": "No dose change needed for CKD."
+      }
+    ],
+    "notes": [
+      "Used in cholestatic liver disease and gallstone dissolution.",
+      "Monitor LFTs regularly."
+    ]
+  },
+  {
+    "id": "levetiracetam",
+    "name": "Levetiracetam",
+    "searchTerms": ["levetiracetam", "keppra"],
+    "className": "Antiepileptic",
+    "tags": ["Epilepsy", "Renally cleared"],
+    "usualDose": "500–3000 mg/day in 2 divided doses (normal renal function).",
+    "renalBands": [
+      {
+        "min": 80,
+        "max": null,
+        "label": "CrCl ≥ 80",
+        "category": "Standard dosing",
+        "details": "Usual maintenance doses may be used."
+      },
+      {
+        "min": 50,
+        "max": 80,
+        "label": "CrCl 50–79",
+        "category": "Mild reduction",
+        "details": "Consider moderate dose reduction; monitor tolerance."
+      },
+      {
+        "min": 30,
+        "max": 50,
+        "label": "CrCl 30–49",
+        "category": "Moderate reduction",
+        "details": "Reduce daily dose or increase dosing interval."
+      },
+      {
+        "min": 15,
+        "max": 30,
+        "label": "CrCl 15–29",
+        "category": "Significant reduction",
+        "details": "Use lower doses as per SPC; monitor for adverse effects."
+      },
+      {
+        "min": null,
+        "max": 15,
+        "label": "CrCl < 15 / dialysis",
+        "category": "Specialist dosing",
+        "details": "Use only under specialist supervision; adjust around dialysis if applicable."
+      }
+    ],
+    "notes": [
+      "Minimal drug interactions; renally excreted — dosing must be adjusted for impaired renal function.",
+      "Common adverse effects: somnolence, weakness; reduce dose in CKD to reduce toxicity."
+    ]
+  },
+  {
+    "id": "prednisone",
+    "name": "Prednisone",
+    "searchTerms": ["prednisone"],
+    "className": "Corticosteroid",
+    "tags": ["Steroid"],
+    "usualDose": "Varies widely depending on indication.",
+    "renalBands": [
+      {
+        "min": null,
+        "max": null,
+        "label": "All eGFR ranges",
+        "category": "No renal adjustment",
+        "details": "Dosing guided by indication, not renal function."
+      }
+    ],
+    "notes": [
+      "Monitor blood pressure, glucose, electrolytes, bone health.",
+      "Use lowest effective dose and taper slowly where indicated."
+    ]
+  },
+  {
+    "id": "ibuprofen",
+    "name": "Ibuprofen",
+    "searchTerms": ["ibuprofen", "advil", "nurofen"],
+    "className": "NSAID",
+    "tags": ["Pain", "Anti-inflammatory", "Analgesic"],
+    "usualDose": "200–400 mg every 4–6 hours (max 2400 mg/day depending on age/indication).",
+    "renalBands": [
+      {
+        "min": 60,
+        "max": null,
+        "label": "eGFR ≥ 60",
+        "category": "Standard",
+        "details": "Use lowest effective dose for shortest duration; monitor renal function."
+      },
+      {
+        "min": 30,
+        "max": 60,
+        "label": "eGFR 30–59",
+        "category": "Caution",
+        "details": "Avoid repeated courses; consider alternative analgesia."
+      },
+      {
+        "min": null,
+        "max": 30,
+        "label": "eGFR < 30",
+        "category": "Avoid",
+        "details": "NSAIDs generally avoided due to high risk of AKI and fluid/electrolyte disturbance."
+      }
+    ],
+    "notes": [
+      "Advise sick-day rules, avoid dehydration, monitor U&E if repeated dosing.",
+      "Prefer non-NSAID analgesics (paracetamol, opioids if needed) in CKD."
+    ]
+  },
+  {
+    "id": "paracetamol",
+    "name": "Paracetamol",
+    "searchTerms": ["paracetamol", "acetaminophen"],
+    "className": "Analgesic / antipyretic",
+    "tags": ["Pain"],
+    "usualDose": "500–1000 mg every 4–6 hours (max 4 g/day in normal renal/hepatic function).",
+    "renalBands": [
+      {
+        "min": null,
+        "max": null,
+        "label": "All eGFR ranges",
+        "category": "No adjustment",
+        "details": "Usual dosing acceptable; some suggest lower max dose in advanced CKD depending on comorbidities."
+      }
+    ],
+    "notes": [
+      "Safe first-line analgesic in CKD if no contraindications; monitor for liver disease if long-term use."
+    ]
+  },
+  {
+    "id": "oxycodone",
+    "name": "Oxycodone (immediate release)",
+    "searchTerms": ["oxycodone"],
+    "className": "Opioid analgesic",
+    "tags": ["Pain", "Opioid"],
+    "usualDose": "5–10 mg every 4–6 hours (dose varies by tolerance and indication).",
+    "renalBands": [
+      {
+        "min": 60,
+        "max": null,
+        "label": "eGFR ≥ 60",
+        "category": "Standard",
+        "details": "Usual doses may be used."
+      },
+      {
+        "min": 30,
+        "max": 60,
+        "label": "eGFR 30–59",
+        "category": "Caution",
+        "details": "Reduce dose and extend intervals; monitor for accumulation."
+      },
+      {
+        "min": null,
+        "max": 30,
+        "label": "eGFR < 30",
+        "category": "Significant reduction",
+        "details": "Use lower doses; consider alternative analgesia if possible."
+      }
+    ],
+    "notes": [
+      "Opioid toxicity risk increased in CKD — use lowest effective dose and monitor sedation, respiratory status, renal & fluid status."
+    ]
+  },
+  {
+    "id": "morphine",
+    "name": "Morphine (immediate release)",
+    "searchTerms": ["morphine"],
+    "className": "Opioid analgesic",
+    "tags": ["Pain", "Opioid"],
+    "usualDose": "5–10 mg every 4 hours (subject to indication and tolerance).",
+    "renalBands": [
+      {
+        "min": 60,
+        "max": null,
+        "label": "eGFR ≥ 60",
+        "category": "Standard",
+        "details": "Usual dosing acceptable."
+      },
+      {
+        "min": 30,
+        "max": 60,
+        "label": "eGFR 30–59",
+        "category": "Moderate reduction",
+        "details": "Use lower doses and longer intervals; monitor for accumulation of active metabolites."
+      },
+      {
+        "min": null,
+        "max": 30,
+        "label": "eGFR < 30",
+        "category": "Significant reduction / avoid if possible",
+        "details": "Prefer alternative (e.g. fentanyl, buprenorphine) if available; if used dose very cautiously."
+      }
+    ],
+    "notes": [
+      "In CKD, morphine metabolites accumulate and risk respiratory depression; use with extreme caution in advanced renal impairment."
+    ]
+  },
+  {
+    "id": "lansoprazole",
+    "name": "Lansoprazole",
+    "searchTerms": ["lansoprazole"],
+    "className": "Proton pump inhibitor",
+    "tags": ["GI"],
+    "usualDose": "15–30 mg once daily depending on indication.",
+    "renalBands": [
+      {
+        "min": null,
+        "max": null,
+        "label": "All eGFR ranges",
+        "category": "No adjustment",
+        "details": "PPI dose generally not adjusted for renal function."
+      }
+    ],
+    "notes": [
+      "Review long-term need; risk-benefit in CKD similar to general population but monitor electrolytes."
+    ]
   }
 ]
