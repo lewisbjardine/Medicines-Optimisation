@@ -1,8 +1,8 @@
-// app.js — logic for Renal Dose Calculator
+// app.js — logic for Renal Dose Calculator (modular)
 import { DRUG_DATA } from "./drugs.js";
 
 /************************************************************
- * DOM helpers
+ * DOM references
  ************************************************************/
 
 const searchView = document.getElementById("search-view");
@@ -23,12 +23,20 @@ const drugNotesEl = document.getElementById("drug-notes");
 
 let currentEgfr = null;
 
+// Ensure initial view state
+searchView.style.display = "block";
+drugView.style.display = "none";
+
+/************************************************************
+ * Helpers
+ ************************************************************/
+
 function normalise(str) {
   return (str || "").toLowerCase().trim();
 }
 
 function parseEgfr(value) {
-  if (!value && value !== 0) return null;
+  if (value === "" || value === null || value === undefined) return null;
   const n = Number(value);
   if (!Number.isFinite(n) || n < 0) return null;
   return n;
@@ -38,9 +46,7 @@ function updateEgfr() {
   currentEgfr = parseEgfr(egfrInput.value);
 }
 
-egfrInput.addEventListener("input", () => {
-  updateEgfr();
-});
+egfrInput.addEventListener("input", updateEgfr);
 
 /************************************************************
  * Search / suggestions
@@ -49,6 +55,7 @@ egfrInput.addEventListener("input", () => {
 function searchDrugs(query) {
   const q = normalise(query);
   if (q.length < 2) return [];
+
   return DRUG_DATA.filter((drug) => {
     const nameMatch = normalise(drug.name).includes(q);
     const termMatch = (drug.searchTerms || []).some((t) =>
@@ -60,7 +67,7 @@ function searchDrugs(query) {
 
 function clearSuggestions() {
   suggestionsBox.innerHTML = "";
-  suggestionsBox.classList.add("hidden");
+  suggestionsBox.style.display = "none";
 }
 
 function renderSuggestions(results) {
@@ -68,6 +75,7 @@ function renderSuggestions(results) {
     clearSuggestions();
     return;
   }
+
   suggestionsBox.innerHTML = "";
   results.slice(0, 12).forEach((drug) => {
     const btn = document.createElement("button");
@@ -79,7 +87,8 @@ function renderSuggestions(results) {
     });
     suggestionsBox.appendChild(btn);
   });
-  suggestionsBox.classList.remove("hidden");
+
+  suggestionsBox.style.display = "block";
 }
 
 let suggestionTimeout = null;
@@ -99,7 +108,10 @@ drugSearchInput.addEventListener("focus", () => {
 });
 
 document.addEventListener("click", (e) => {
-  if (!suggestionsBox.contains(e.target) && e.target !== drugSearchInput) {
+  if (
+    e.target !== drugSearchInput &&
+    !suggestionsBox.contains(e.target)
+  ) {
     clearSuggestions();
   }
 });
@@ -108,14 +120,10 @@ drugSearchInput.addEventListener("keydown", (e) => {
   if (e.key === "Enter") {
     e.preventDefault();
     const results = searchDrugs(drugSearchInput.value);
-    if (results.length === 1) {
-      clearSuggestions();
-      openDrug(results[0].id);
-    } else if (results.length > 1) {
-      // If multiple matches, default to the first
-      clearSuggestions();
-      openDrug(results[0].id);
-    }
+    if (!results.length) return;
+    clearSuggestions();
+    // If multiple matches, just open the first for now
+    openDrug(results[0].id);
   }
 });
 
@@ -139,7 +147,7 @@ function openDrug(drugId) {
 
   updateEgfr();
 
-  // Populate basic info
+  // Basic info
   drugNameEl.textContent = drug.name;
   drugClassEl.textContent = drug.className || "";
   drugUsualDoseEl.textContent = drug.usualDose || "";
@@ -156,6 +164,7 @@ function openDrug(drugId) {
   // Renal bands
   renalBandsEl.innerHTML = "";
   const highlightBand = getBandForEgfr(drug.renalBands || [], currentEgfr);
+
   (drug.renalBands || []).forEach((band) => {
     const li = document.createElement("li");
     li.className = "renal-band";
@@ -188,7 +197,7 @@ function openDrug(drugId) {
     renalBandsEl.appendChild(li);
   });
 
-  // eGFR summary text
+  // eGFR summary
   if (currentEgfr != null) {
     egfrSummaryEl.textContent =
       "Current eGFR entered: " +
@@ -207,17 +216,14 @@ function openDrug(drugId) {
     drugNotesEl.appendChild(li);
   });
 
-  // Show detail view
-  searchView.classList.add("hidden");
-  drugView.classList.remove("hidden");
+  // “New page” effect: hide search card, show drug card
+  searchView.style.display = "none";
+  drugView.style.display = "block";
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
 backButton.addEventListener("click", () => {
-  drugView.classList.add("hidden");
-  searchView.classList.remove("hidden");
+  drugView.style.display = "none";
+  searchView.style.display = "block";
   drugSearchInput.focus();
 });
-
-// Initialise egfr
-updateEgfr();
