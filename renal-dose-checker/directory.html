@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Renal Dose Calculator – Drug Directory</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="stylesheet" href="../shared/styles.css">
+
+  <style>
+    .directory-app {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 1rem;
+    }
+
+    h1 {
+      margin-bottom: 0.5rem;
+    }
+
+    .drug-list {
+      background: #fff;
+      border-radius: 0.75rem;
+      padding: 1rem 1.25rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      margin-top: 1rem;
+    }
+
+    .letter-section {
+      margin-top: 1.5rem;
+    }
+
+    .letter-section h2 {
+      border-bottom: 2px solid #e5e7eb;
+      padding-bottom: 0.25rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .drug-link {
+      display: block;
+      padding: 0.4rem 0.2rem;
+      color: #0f766e;
+      text-decoration: none;
+      font-size: 1rem;
+    }
+
+    .drug-link:hover {
+      text-decoration: underline;
+    }
+
+    .back-button {
+      margin-top: 1rem;
+      display: inline-block;
+      background: #e2e8f0;
+      padding: 0.5rem 0.9rem;
+      border-radius: 999px;
+      color: #111827;
+      text-decoration: none;
+    }
+
+    .back-button:hover {
+      background: #cbd5f0;
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-content">
+    <h1 class="header-title">Medicines Optimisation Tools</h1>
+    <nav>
+      <a href="../index.html" class="home-link">← Home</a>
+    </nav>
+  </div>
+</header>
+
+<div class="directory-app">
+  <h1>Medicines A–Z Directory</h1>
+  <p>Browse all medicines included in the renal dose calculator.</p>
+
+  <div id="drug-directory" class="drug-list">
+    Loading drug list…
+  </div>
+
+  <a href="./index.html" class="back-button">← Back to Renal Calculator</a>
+</div>
+
+<script>
+  async function loadDirectory() {
+    const container = document.getElementById('drug-directory');
+
+    try {
+      const res = await fetch('./drugs.json', { cache: 'no-store' });
+      const drugs = await res.json();
+
+      // Sort alphabetically
+      drugs.sort((a, b) => a.name.localeCompare(b.name));
+
+      // Group A-Z
+      const grouped = {};
+      drugs.forEach(drug => {
+        const letter = drug.name[0].toUpperCase();
+        if (!grouped[letter]) grouped[letter] = [];
+        grouped[letter].push(drug);
+      });
+
+      // Render
+      container.innerHTML = '';
+
+      Object.keys(grouped).sort().forEach(letter => {
+        const section = document.createElement('div');
+        section.className = 'letter-section';
+
+        const header = document.createElement('h2');
+        header.textContent = letter;
+        section.appendChild(header);
+
+        grouped[letter].forEach(drug => {
+          const link = document.createElement('a');
+          link.className = 'drug-link';
+          link.href = 'drug.html?id=' + encodeURIComponent(drug.id);
+          link.textContent = drug.name;
+          section.appendChild(link);
+        });
+
+        container.appendChild(section);
+      });
+
+    } catch (err) {
+      console.error(err);
+      container.innerHTML = "Failed to load drug list.";
+    }
+  }
+
+  loadDirectory();
+</script>
+
+</body>
+</html>
