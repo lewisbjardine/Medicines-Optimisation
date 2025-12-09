@@ -2815,5 +2815,594 @@
     "notes": [
       "Review long-term need; risk-benefit in CKD similar to general population but monitor electrolytes."
     ]
+  },
+    {
+    "id": "bisoprolol",
+    "name": "Bisoprolol",
+    "searchTerms": ["bisoprolol"],
+    "className": "Beta-blocker",
+    "tags": ["Heart failure", "Hypertension"],
+    "usualDose": "2.5–10 mg once daily.",
+    "renalBands": [
+      {
+        "min": 40,
+        "max": null,
+        "label": "eGFR ≥ 40",
+        "category": "Standard",
+        "details": "Use usual dosing and titration."
+      },
+      {
+        "min": 20,
+        "max": 40,
+        "label": "eGFR 20–39",
+        "category": "Caution",
+        "details": "Titrate slowly; monitor heart rate and renal function."
+      },
+      {
+        "min": null,
+        "max": 20,
+        "label": "eGFR < 20",
+        "category": "Lower starting dose",
+        "details": "Begin at lower doses; titrate cautiously."
+      }
+    ],
+    "notes": [
+      "Common first-line beta blocker in HF and HTN.",
+      "Watch for bradycardia and hypotension in CKD."
+    ]
+  },
+  {
+    "id": "atenolol",
+    "name": "Atenolol",
+    "searchTerms": ["atenolol"],
+    "className": "Beta-blocker",
+    "tags": ["Hypertension"],
+    "usualDose": "25–100 mg daily.",
+    "renalBands": [
+      {
+        "min": 35,
+        "max": null,
+        "label": "eGFR ≥ 35",
+        "category": "Standard",
+        "details": "Renal elimination significant; usual dosing acceptable."
+      },
+      {
+        "min": 15,
+        "max": 35,
+        "label": "eGFR 15–34",
+        "category": "Reduction",
+        "details": "Reduce dose (e.g. half dose) or extend interval."
+      },
+      {
+        "min": null,
+        "max": 15,
+        "label": "eGFR < 15",
+        "category": "Marked reduction",
+        "details": "Specialist guidance or alternative beta-blocker preferred."
+      }
+    ],
+    "notes": [
+      "Renally cleared → more bradycardia in CKD.",
+      "Prefer bisoprolol or carvedilol in HF."
+    ]
+  },
+  {
+    "id": "carvedilol",
+    "name": "Carvedilol",
+    "searchTerms": ["carvedilol"],
+    "className": "Beta-blocker",
+    "tags": ["Heart failure"],
+    "usualDose": "3.125 mg twice daily, titrated to 25–50 mg/day.",
+    "renalBands": [
+      {
+        "min": null,
+        "max": null,
+        "label": "All eGFR ranges",
+        "category": "No renal adjustment",
+        "details": "Primarily hepatic metabolism; use usual titration with BP monitoring."
+      }
+    ],
+    "notes": [
+      "Useful in HF with CKD; avoid rapid dose increases.",
+      "Monitor BP, renal function and fluid status."
+    ]
+  },
+  {
+    "id": "isosorbide-mononitrate",
+    "name": "Isosorbide mononitrate",
+    "searchTerms": ["isosorbide mononitrate", "imdur"],
+    "className": "Nitrate vasodilator",
+    "tags": ["Angina"],
+    "usualDose": "20–60 mg once or twice daily depending on preparation.",
+    "renalBands": [
+      {
+        "min": null,
+        "max": null,
+        "label": "All renal ranges",
+        "category": "No adjustment",
+        "details": "Use usual dosing; avoid tolerance by maintaining nitrate-free interval."
+      }
+    ],
+    "notes": [
+      "Headache common early on.",
+      "Avoid with PDE-5 inhibitors."
+    ]
+  },
+  {
+    "id": "ranolazine",
+    "name": "Ranolazine",
+    "searchTerms": ["ranolazine"],
+    "className": "Anti-anginal",
+    "tags": ["Angina"],
+    "usualDose": "375–750 mg twice daily.",
+    "renalBands": [
+      {
+        "min": 30,
+        "max": null,
+        "label": "eGFR ≥ 30",
+        "category": "Cautious use",
+        "details": "Start at low dose and titrate carefully."
+      },
+      {
+        "min": null,
+        "max": 30,
+        "label": "eGFR < 30",
+        "category": "Avoid",
+        "details": "Accumulation and QT prolongation risk increased."
+      }
+    ],
+    "notes": [
+      "Monitor ECG for QT intervals.",
+      "Many interactions via CYP3A4."
+    ]
+  },
+  {
+    "id": "fexofenadine",
+    "name": "Fexofenadine",
+    "searchTerms": ["fexofenadine", "telfast"],
+    "className": "Non-sedating antihistamine",
+    "tags": ["Allergy"],
+    "usualDose": "120–180 mg once daily.",
+    "renalBands": [
+      {
+        "min": null,
+        "max": null,
+        "label": "All eGFR",
+        "category": "No strong renal adjustment",
+        "details": "Renal elimination increases exposure; consider lower dose in severe CKD."
+      }
+    ],
+    "notes": [
+      "Less sedating than cetirizine or loratadine.",
+      "Avoid grapefruit juice (↓ absorption)."
+    ]
+  },
+  {
+    "id": "cetirizine",
+    "name": "Cetirizine",
+    "searchTerms": ["cetirizine", "zyrtec"],
+    "className": "Antihistamine",
+    "tags": ["Allergy"],
+    "usualDose": "10 mg once daily.",
+    "renalBands": [
+      {
+        "min": 50,
+        "max": null,
+        "label": "eGFR ≥ 50",
+        "category": "Standard",
+        "details": "Use usual dosing."
+      },
+      {
+        "min": 10,
+        "max": 50,
+        "label": "eGFR 10–49",
+        "category": "Reduction",
+        "details": "Give 5 mg once daily."
+      },
+      {
+        "min": null,
+        "max": 10,
+        "label": "eGFR < 10",
+        "category": "Avoid or use 5 mg intermittently",
+        "details": "Avoid unless benefit outweighs risk."
+      }
+    ],
+    "notes": [
+      "More sedating in renal impairment due to accumulation."
+    ]
+  },
+  {
+    "id": "loratadine",
+    "name": "Loratadine",
+    "searchTerms": ["loratadine"],
+    "className": "Non-sedating antihistamine",
+    "tags": ["Allergy"],
+    "usualDose": "10 mg once daily.",
+    "renalBands": [
+      {
+        "min": null,
+        "max": 30,
+        "label": "eGFR < 30",
+        "category": "Lower dose",
+        "details": "Use 5 mg once daily."
+      },
+      {
+        "min": 30,
+        "max": null,
+        "label": "eGFR ≥ 30",
+        "category": "Standard",
+        "details": "Use usual dosing."
+      }
+    ],
+    "notes": [
+      "Metabolism hepatic but renal excretion of metabolites increases sedation risk in CKD."
+    ]
+  },
+  {
+    "id": "montelukast",
+    "name": "Montelukast",
+    "searchTerms": ["montelukast", "singulair"],
+    "className": "Leukotriene receptor antagonist",
+    "tags": ["Asthma"],
+    "usualDose": "10 mg once daily (adult).",
+    "renalBands": [
+      {
+        "min": null,
+        "max": null,
+        "label": "All renal ranges",
+        "category": "No adjustment",
+        "details": "No dose change required."
+      }
+    ],
+    "notes": [
+      "Watch for neuropsychiatric side effects.",
+      "Used as add-on therapy in asthma."
+    ]
+  },
+  {
+    "id": "fluticasone-inhaled",
+    "name": "Fluticasone (inhaled)",
+    "searchTerms": ["fluticasone", "flixotide"],
+    "className": "Inhaled corticosteroid",
+    "tags": ["Asthma"],
+    "usualDose": "100–1000 micrograms daily depending on severity.",
+    "renalBands": [
+      {
+        "min": null,
+        "max": null,
+        "label": "All eGFR",
+        "category": "No adjustment",
+        "details": "Inhaled corticosteroid effect not determined by renal function."
+      }
+    ],
+    "notes": [
+      "Rinse mouth to prevent thrush.",
+      "Monitor for systemic steroid effects at higher doses."
+    ]
+  },
+  {
+    "id": "beclometasone-inhaled",
+    "name": "Beclometasone (inhaled)",
+    "searchTerms": ["beclometasone", "clenil"],
+    "className": "Inhaled corticosteroid",
+    "tags": ["Asthma"],
+    "usualDose": "100–400 micrograms/day (up to 800 in severe cases).",
+    "renalBands": [
+      {
+        "min": null,
+        "max": null,
+        "label": "All renal function",
+        "category": "No adjustment",
+        "details": "ICS not renally adjusted."
+      }
+    ],
+    "notes": [
+      "Monitor control and step up/down per asthma guidelines."
+    ]
+  },
+  {
+    "id": "salmeterol",
+    "name": "Salmeterol",
+    "searchTerms": ["salmeterol", "serevent"],
+    "className": "Long-acting beta agonist",
+    "tags": ["Asthma", "COPD"],
+    "usualDose": "50 micrograms twice daily.",
+    "renalBands": [
+      {
+        "min": null,
+        "max": null,
+        "label": "All eGFR",
+        "category": "No adjustment",
+        "details": "Systemic exposure low; no renal dosing required."
+      }
+    ],
+    "notes": [
+      "Never use LABA without ICS in asthma.",
+      "Monitor for tremor/palpitations."
+    ]
+  },
+  {
+    "id": "clotrimazole-topical",
+    "name": "Clotrimazole (topical)",
+    "searchTerms": ["clotrimazole"],
+    "className": "Antifungal (topical)",
+    "tags": ["Dermatology"],
+    "usualDose": "Apply 2–3 times daily.",
+    "renalBands": [
+      {
+        "min": null,
+        "max": null,
+        "label": "All renal ranges",
+        "category": "No systemic adjustment",
+        "details": "Negligible systemic absorption → no renal adjustment."
+      }
+    ],
+    "notes": [
+      "Useful for candidiasis, tinea, intertrigo.",
+      "Minimal interactions."
+    ]
+  },
+  {
+    "id": "acyclovir-topical",
+    "name": "Aciclovir (topical)",
+    "searchTerms": ["aciclovir topical"],
+    "className": "Antiviral (topical)",
+    "tags": ["Dermatology"],
+    "usualDose": "Apply 5 times daily for HSV lesions.",
+    "renalBands": [
+      {
+        "min": null,
+        "max": null,
+        "label": "All eGFR",
+        "category": "No adjustment",
+        "details": "Topical absorption minimal; no renal dosing concerns."
+      }
+    ],
+    "notes": [
+      "Limited efficacy vs oral therapy; used for mild episodes."
+    ]
+  },
+  {
+    "id": "betamethasone-topical",
+    "name": "Betamethasone (topical)",
+    "searchTerms": ["betamethasone"],
+    "className": "Topical corticosteroid",
+    "tags": ["Dermatology"],
+    "usualDose": "Apply thin layer 1–2 times daily.",
+    "renalBands": [
+      {
+        "min": null,
+        "max": null,
+        "label": "Not systemically dosed",
+        "category": "No renal adjustment",
+        "details": "Systemic absorption low unless used on large areas."
+      }
+    ],
+    "notes": [
+      "Avoid long-term use on thin skin.",
+      "Monitor for local steroid atrophy."
+    ]
+  },
+  {
+    "id": "tacrolimus-topical",
+    "name": "Tacrolimus ointment",
+    "searchTerms": ["tacrolimus topical", "protopic"],
+    "className": "Topical calcineurin inhibitor",
+    "tags": ["Dermatology"],
+    "usualDose": "Apply once or twice daily.",
+    "renalBands": [
+      {
+        "min": null,
+        "max": null,
+        "label": "Topical only",
+        "category": "No renal adjustment",
+        "details": "Systemic levels minimal; avoid on large raw areas."
+      }
+    ],
+    "notes": [
+      "Useful for eczema where steroids unsuitable.",
+      "Photosensitivity: advise sun protection."
+    ]
+  },
+  {
+    "id": "mesalazine",
+    "name": "Mesalazine",
+    "searchTerms": ["mesalazine", "5-asa"],
+    "className": "Aminosalicylate for IBD",
+    "tags": ["GI", "IBD"],
+    "usualDose": "2–4 g/day depending on formulation.",
+    "renalBands": [
+      {
+        "min": 60,
+        "max": null,
+        "label": "eGFR ≥ 60",
+        "category": "Standard",
+        "details": "Usual dosing acceptable."
+      },
+      {
+        "min": 30,
+        "max": 60,
+        "label": "eGFR 30–59",
+        "category": "Caution",
+        "details": "Use with renal monitoring; consider lower maintenance doses."
+      },
+      {
+        "min": null,
+        "max": 30,
+        "label": "eGFR < 30",
+        "category": "Avoid",
+        "details": "Risk of nephrotoxicity higher; specialist guidance required."
+      }
+    ],
+    "notes": [
+      "Monitor renal function regularly; mesalazine nephritis is rare but serious.",
+      "Not interchangeable between brands."
+    ]
+  },
+  {
+    "id": "sulfasalazine",
+    "name": "Sulfasalazine",
+    "searchTerms": ["sulfasalazine"],
+    "className": "Aminosalicylate / DMARD",
+    "tags": ["IBD", "Rheumatology"],
+    "usualDose": "500 mg–1 g twice daily (escalating).",
+    "renalBands": [
+      {
+        "min": 30,
+        "max": null,
+        "label": "eGFR ≥ 30",
+        "category": "Cautious standard",
+        "details": "Monitor U&E, FBC; maintain hydration."
+      },
+      {
+        "min": null,
+        "max": 30,
+        "label": "eGFR < 30",
+        "category": "Caution / avoid",
+        "details": "Use only with close monitoring or avoid."
+      }
+    ],
+    "notes": [
+      "Haemolysis in G6PD deficiency possible.",
+      "Monitor full blood count and LFTs."
+    ]
+  },
+  {
+    "id": "ferrous-fumarate",
+    "name": "Ferrous fumarate",
+    "searchTerms": ["ferrous fumarate", "iron"],
+    "className": "Iron supplement",
+    "tags": ["Anaemia"],
+    "usualDose": "200–210 mg once or twice daily depending on regimen.",
+    "renalBands": [
+      {
+        "min": null,
+        "max": null,
+        "label": "No renal adjustment",
+        "category": "Standard",
+        "details": "Use usual oral dosing."
+      }
+    ],
+    "notes": [
+      "CKD-related anaemia often requires IV iron or ESAs rather than oral supplementation.",
+      "GI upset common — consider alternate-day dosing."
+    ]
+  },
+  {
+    "id": "folic-acid",
+    "name": "Folic acid",
+    "searchTerms": ["folic acid"],
+    "className": "Vitamin supplement",
+    "tags": ["Anaemia"],
+    "usualDose": "5 mg daily (or as per indication).",
+    "renalBands": [
+      {
+        "min": null,
+        "max": null,
+        "label": "All renal ranges",
+        "category": "Standard",
+        "details": "Oral folate is not renally dosed."
+      }
+    ],
+    "notes": [
+      "Treat underlying cause of deficiency.",
+      "Used weekly alongside methotrexate (not same day)."
+    ]
+  },
+  {
+    "id": "calcium-carbonate",
+    "name": "Calcium carbonate",
+    "searchTerms": ["calcium carbonate"],
+    "className": "Calcium supplement / phosphate binder",
+    "tags": ["Bone health", "CKD-MBD"],
+    "usualDose": "Varies by preparation; e.g. 1.25 g twice daily.",
+    "renalBands": [
+      {
+        "min": null,
+        "max": null,
+        "label": "Not renally adjusted",
+        "category": "Standard",
+        "details": "Dose guided by calcium/phosphate levels, not eGFR."
+      }
+    ],
+    "notes": [
+      "Monitor calcium; risk of hypercalcaemia particularly in CKD with vitamin D therapy."
+    ]
+  },
+  {
+    "id": "amitriptyline",
+    "name": "Amitriptyline",
+    "searchTerms": ["amitriptyline"],
+    "className": "Tricyclic antidepressant",
+    "tags": ["Depression", "Neuropathic pain"],
+    "usualDose": "10–75 mg daily for pain (much higher for depression).",
+    "renalBands": [
+      {
+        "min": null,
+        "max": null,
+        "label": "All renal function",
+        "category": "No adjustment",
+        "details": "Titrate cautiously due to anticholinergic load in CKD."
+      }
+    ],
+    "notes": [
+      "Sedation and anticholinergic effects more pronounced in CKD.",
+      "Avoid in significant urinary retention."
+    ]
+  },
+  {
+    "id": "sertraline",
+    "name": "Sertraline",
+    "searchTerms": ["sertraline"],
+    "className": "SSRI",
+    "tags": ["Depression", "Anxiety"],
+    "usualDose": "25–200 mg once daily.",
+    "renalBands": [
+      {
+        "min": null,
+        "max": null,
+        "label": "All eGFR",
+        "category": "No adjustment",
+        "details": "Preferred SSRI in CKD due to safer renal profile."
+      }
+    ],
+    "notes": [
+      "Monitor sodium — SSRIs can cause hyponatraemia, especially in older CKD patients."
+    ]
+  },
+  {
+    "id": "mirtazapine",
+    "name": "Mirtazapine",
+    "searchTerms": ["mirtazapine"],
+    "className": "NaSSA antidepressant",
+    "tags": ["Depression", "Insomnia"],
+    "usualDose": "15–45 mg at night.",
+    "renalBands": [
+      {
+        "min": 40,
+        "max": null,
+        "label": "eGFR ≥ 40",
+        "category": "Standard",
+        "details": "Usual doses may be used."
+      },
+      {
+        "min": 15,
+        "max": 40,
+        "label": "eGFR 15–39",
+        "category": "Caution",
+        "details": "Start at 15 mg and titrate slowly."
+      },
+      {
+        "min": null,
+        "max": 15,
+        "label": "eGFR < 15",
+        "category": "Lower dosing",
+        "details": "Use with caution; reduced clearance may increase sedation."
+      }
+    ],
+    "notes": [
+      "Good option for poor appetite and insomnia.",
+      "Monitor sodium in older patients."
+    ]
   }
 ]
