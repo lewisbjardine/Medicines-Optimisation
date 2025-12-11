@@ -550,10 +550,6 @@ footer {
 
   // ========= Antidepressant dataset =========
   const regimenOptionsConfig = {
-    venlafaxine_mr: [
-      { id: "once_daily",  label: "Once daily (e.g. in the morning)" },
-      { id: "twice_daily", label: "Twice daily (split between morning and evening)" }
-    ],
     venlafaxine_ir: [
       { id: "once_daily",  label: "Once daily" },
       { id: "twice_daily", label: "Twice daily (split between morning and evening)" }
@@ -1236,11 +1232,16 @@ footer {
   function buildCurrentRegimenSentence(drug, dose) {
     const regimen = regimenChoiceByDrug[drug.id];
 
+    // Venlafaxine MR is always once daily in UK practice
+    if (drug.id === "venlafaxine_mr") {
+      return `You are on ${drug.name} ${dose} mg once daily.`;
+    }
+
     if (!regimen || !drugHasRegimenOptions(drug)) {
       return `You are on ${drug.name} ${dose} mg each day.`;
     }
 
-    if (drug.id === "venlafaxine_mr" || drug.id === "venlafaxine_ir") {
+    if (drug.id === "venlafaxine_ir") {
       if (regimen === "twice_daily") {
         return `You are on a total of ${dose} mg of ${drug.name} each day, split into two doses (morning and evening).`;
       }
@@ -1260,7 +1261,7 @@ footer {
     return `You are on ${drug.name} ${dose} mg each day.`;
   }
 
-function describeDoseForPatient(drug, dose, pattern) {
+function describeDoseForPatientfunction describeDoseForPatient(drug, dose, pattern) {
     pattern = pattern || "daily";
 
     if (dose === 0) {
@@ -1270,8 +1271,24 @@ function describeDoseForPatient(drug, dose, pattern) {
     const regimen = regimenChoiceByDrug[drug.id] || null;
     const key = String(dose);
 
-    // Venlafaxine MR / IR – allow OD vs BD wording but never TDS
-    if (drug.id === "venlafaxine_mr" || drug.id === "venlafaxine_ir") {
+    // Venlafaxine MR – always once daily
+    if (drug.id === "venlafaxine_mr") {
+      const base = `${dose} mg of ${drug.name} once daily.`;
+
+      if (pattern === "alt_day") {
+        return `On alternate days, take ${base}`;
+      }
+      if (pattern === "every_3_days") {
+        return `Every 3 days, take ${base}`;
+      }
+      if (pattern === "weekly") {
+        return `Once a week, on the same day each week, take ${base}`;
+      }
+      return `Take ${base}`;
+    }
+
+    // Venlafaxine IR – allow OD vs BD wording but never TDS
+    if (drug.id === "venlafaxine_ir") {
       const base = regimen === "twice_daily"
         ? `a total of ${dose} mg of ${drug.name} each day, split into two doses (morning and evening) as you do now.`
         : `${dose} mg of ${drug.name} once daily.`;
@@ -2236,7 +2253,6 @@ function describeDoseForPatient(drug, dose, pattern) {
     document.querySelector(`.tab-button[data-tab="${initialTab}"]`).classList.add("active");
     Object.keys(tabs).forEach(id => {
       tabs[id].classList.toggle("hidden", id !== initialTab);
-    });
     
     // Additional handler: respond to meta show/hide options inside dropdowns
     function handleMetaOption(selectEl, doseSelect) {
