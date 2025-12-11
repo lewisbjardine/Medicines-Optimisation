@@ -554,6 +554,10 @@ footer {
       { id: "once_daily",  label: "Once daily (e.g. in the morning)" },
       { id: "twice_daily", label: "Twice daily (split between morning and evening)" }
     ],
+    venlafaxine_ir: [
+      { id: "once_daily",  label: "Once daily" },
+      { id: "twice_daily", label: "Twice daily (split between morning and evening)" }
+    ],
     trazodone: [
       { id: "once_nightly",  label: "Once at night" },
       { id: "divided_daily", label: "Divided doses through the day (2–3 times daily)" }
@@ -1236,7 +1240,7 @@ footer {
       return `You are on ${drug.name} ${dose} mg each day.`;
     }
 
-    if (drug.id === "venlafaxine_mr") {
+    if (drug.id === "venlafaxine_mr" || drug.id === "venlafaxine_ir") {
       if (regimen === "twice_daily") {
         return `You are on a total of ${dose} mg of ${drug.name} each day, split into two doses (morning and evening).`;
       }
@@ -1266,13 +1270,8 @@ function describeDoseForPatient(drug, dose, pattern) {
     const regimen = regimenChoiceByDrug[drug.id] || null;
     const key = String(dose);
 
-    // Keep detailed per-dose mapping for venlafaxine IR
-    if (pattern === "daily" && drug.id === "venlafaxine_ir" && venlafaxineIrRegimens[key]) {
-      return venlafaxineIrRegimens[key];
-    }
-
-    // Venlafaxine MR – allow OD vs BD wording
-    if (drug.id === "venlafaxine_mr") {
+    // Venlafaxine MR / IR – allow OD vs BD wording but never TDS
+    if (drug.id === "venlafaxine_mr" || drug.id === "venlafaxine_ir") {
       const base = regimen === "twice_daily"
         ? `a total of ${dose} mg of ${drug.name} each day, split into two doses (morning and evening) as you do now.`
         : `${dose} mg of ${drug.name} once daily.`;
@@ -1668,13 +1667,9 @@ function describeDoseForPatient(drug, dose, pattern) {
     });
 
     const smsText =
-      `Plan to reduce ${drug.name}
-
-` +
+      `Plan to reduce ${drug.name}\n\n` +
       buildCurrentRegimenSentence(drug, startDose) +
-      ` We will reduce this gradually, week by week:
-
-` +
+      ` We will reduce this gradually, week by week:\n\n` +
       smsLines.join("\n") +
       `\n\nIf you get severe dizziness, strange "electric shock" feelings, very low mood or thoughts of harming yourself, ` +
       `contact the surgery, NHS 111 or 999/A&E urgently.`;
@@ -2266,12 +2261,23 @@ function describeDoseForPatient(drug, dose, pattern) {
 
     fromDrugSelect.addEventListener("change", () => {
       handleMetaOption(fromDrugSelect, fromDoseSelect);
+      if (fromRegimenSelect) {
+        refreshRegimenField(fromDrugSelect, fromRegimenSelect, "fromRegimenField");
+      }
+      saveState({ fromDrug: fromDrugSelect.value, fromDose: fromDoseSelect.value });
     });
+
     toDrugSelect.addEventListener("change", () => {
       handleMetaOption(toDrugSelect, toDrugDoseSelect);
+      saveState({ toDrug: toDrugSelect.value, toDrugDose: toDrugDoseSelect.value });
     });
+
     stopDrugSelect.addEventListener("change", () => {
       handleMetaOption(stopDrugSelect, stopDoseSelect);
+      if (stopRegimenSelect) {
+        refreshRegimenField(stopDrugSelect, stopRegimenSelect, "stopRegimenField");
+      }
+      saveState({ stopDrug: stopDrugSelect.value, stopDose: stopDoseSelect.value });
     });
 
     // Collapse back to common list when clicking outside antidepressant selects
@@ -2284,74 +2290,16 @@ function describeDoseForPatient(drug, dose, pattern) {
       if (!isInSelect && showAllAntidepressants) {
         showAllAntidepressants = false;
         saveState({ showAllAntidepressants });
-
-        const currentFrom = fromDrugSelect.value;
-        const currentTo = toDrugSelect.value;
-        const currentStop = stopDrugSelect.value;
-
-        populateDrugSelect(fromDrugSelect, showAllAntidepressants, currentFrom);
-        populateDrugSelect(toDrugSelect, showAllAntidepressants, currentTo);
-        populateDrugSelect(stopDrugSelect, showAllAntidepressants, currentStop);
-
-        populateDoseSelect(fromDrugSelect.value, fromDoseSelect, state.fromDose);
-        populateToDrugDose(toDrugSelect.value, toDrugDoseSelect, state.toDrugDose);
-        populateDoseSelect(stopDrugSelect.value, stopDoseSelect, state.stopDose);
-      }
-    });
-});
-
-    const profileButtons = document.querySelectorAll(".taper-profile-button");
-    profileButtons.forEach(btn => {
-      if (btn.dataset.profile === taperProfile) {
-        btn.classList.add("active");
-      } else {
-        btn.classList.remove("active");
-      }
-
-      btn.addEventListener("click", () => {
-        taperProfile = btn.dataset.profile || "standard";
-        profileButtons.forEach(b => b.classList.remove("active"));
-        btn.classList.add("active");
-        saveState({ taperProfile });
-
-        const drugId = stopDrugSelect.value;
-        const dose = stopDoseSelect.value;
-        if (drugId && dose) {
-          const res = generateStopPlan(drugId, dose, durationSelect.value, taperProfile);
-          document.getElementById("stopClinician").textContent = res.clinician;
-          document.getElementById("stopSMS").textContent = res.sms;
-          document.getElementById("stopTablets").textContent = res.tablets;
+        populateDrugSelect(fromDrugSelect, showAllAntidepressants, fromDrugSelect.value);
+        populateDrugSelect(toDrugSelect, showAllAntidepressants, toDrugSelect.value);
+        populateDrugSelect(stopDrugSelect, showAllAntidepressants, stopDrugSelect.value);
+        populateDoseSelect(fromDrugSelect.value, fromDoseSelect);
+        populateToDrugDose(toDrugSelect.value, toDrugDoseSelect);
+        populateDoseSelect(stopDrugSelect.value, stopDoseSelect);
+        const toggleBtn = document.getElementById("toggleMoreAntidepressants");
+        if (toggleBtn) {
+          toggleBtn.textContent = "Show all antidepressants ▼";
         }
-      });
-    });
-
-    // Toggle showAll / collapsed lists
-    if (toggleBtn) {
-      toggleBtn.addEventListener("click", () => {
-        showAllAntidepressants = !showAllAntidepressants;
-        updateToggleLabel();
-
-        const currentFrom = fromDrugSelect.value;
-        const currentTo = toDrugSelect.value;
-        const currentStop = stopDrugSelect.value;
-
-        populateDrugSelect(fromDrugSelect, showAllAntidepressants, currentFrom);
-        populateDrugSelect(toDrugSelect, showAllAntidepressants, currentTo);
-        populateDrugSelect(stopDrugSelect, showAllAntidepressants, currentStop);
-
-        populateDoseSelect(fromDrugSelect.value, fromDoseSelect, state.fromDose);
-        populateToDrugDose(toDrugSelect.value, toDrugDoseSelect, state.toDrugDose);
-        populateDoseSelect(stopDrugSelect.value, stopDoseSelect, state.stopDose);
-
-        saveState({ showAllAntidepressants });
-      });
-    }
-
-    fromDrugSelect.addEventListener("change", () => {
-      populateDoseSelect(fromDrugSelect.value, fromDoseSelect);
-      saveState({ fromDrug: fromDrugSelect.value, fromDose: fromDoseSelect.value });
-      if (fromRegimenSelect) {
-        refreshRegimenField(fromDrugSelect, fromRegimenSelect, "fromRegimenField");
       }
     });
 
@@ -2359,21 +2307,8 @@ function describeDoseForPatient(drug, dose, pattern) {
       saveState({ fromDrug: fromDrugSelect.value, fromDose: fromDoseSelect.value });
     });
 
-    toDrugSelect.addEventListener("change", () => {
-      populateToDrugDose(toDrugSelect.value, toDrugDoseSelect);
-      saveState({ toDrug: toDrugSelect.value, toDrugDose: toDrugDoseSelect.value });
-    });
-
     toDrugDoseSelect.addEventListener("change", () => {
       saveState({ toDrug: toDrugSelect.value, toDrugDose: toDrugDoseSelect.value });
-    });
-
-    stopDrugSelect.addEventListener("change", () => {
-      populateDoseSelect(stopDrugSelect.value, stopDoseSelect);
-      saveState({ stopDrug: stopDrugSelect.value, stopDose: stopDoseSelect.value });
-      if (stopRegimenSelect) {
-        refreshRegimenField(stopDrugSelect, stopRegimenSelect, "stopRegimenField");
-      }
     });
 
     stopDoseSelect.addEventListener("change", () => {
@@ -2390,17 +2325,6 @@ function describeDoseForPatient(drug, dose, pattern) {
         if (!drug) return;
         regimenChoiceByDrug[drug.id] = fromRegimenSelect.value;
         saveState({ regimenChoiceByDrug });
-        if (document.getElementById("switchClinician").textContent.trim()) {
-          const res = generateSwitchPlan(
-            fromDrugSelect.value,
-            fromDoseSelect.value,
-            toDrugSelect.value,
-            toDrugDoseSelect.value
-          );
-          document.getElementById("switchClinician").textContent = res.clinician;
-          document.getElementById("switchSMS").textContent = res.sms;
-          document.getElementById("switchTablets").textContent = res.tablets;
-        }
       });
     }
 
@@ -2410,17 +2334,6 @@ function describeDoseForPatient(drug, dose, pattern) {
         if (!drug) return;
         regimenChoiceByDrug[drug.id] = stopRegimenSelect.value;
         saveState({ regimenChoiceByDrug });
-        if (document.getElementById("stopClinician").textContent.trim()) {
-          const res = generateStopPlan(
-            stopDrugSelect.value,
-            stopDoseSelect.value,
-            durationSelect.value,
-            taperProfile
-          );
-          document.getElementById("stopClinician").textContent = res.clinician;
-          document.getElementById("stopSMS").textContent = res.sms;
-          document.getElementById("stopTablets").textContent = res.tablets;
-        }
       });
     }
 
