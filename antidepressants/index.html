@@ -407,7 +407,7 @@ footer {
   <meta charset="UTF-8" />
   <title>Switch &amp; Stop AD</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="style.css" />
+  
 </head>
 <body>
 <header>
@@ -2724,14 +2724,12 @@ cts
 
     if (stopRegimenSelect) {
       stopRegimenSelect.addEventListener("change", () => {
-        const drug = getDrugById(stopDrugSelect.value);
         if (!drug) return;
         regimenChoiceByDrug[drug.id] = stopRegimenSelect.value;
         saveState({ regimenChoiceByDrug });
       });
     }if (venlaConfigBtn) {
   venlaConfigBtn.addEventListener("click", () => {
-    const drug = getDrugById(stopDrugSelect.value);
     if (!isVenlafaxine(drug)) {
       alert("Venlafaxine tablet regimen is only needed when venlafaxine is selected.");
       return;
