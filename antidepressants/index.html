@@ -550,6 +550,10 @@ footer {
 
   // ========= Antidepressant dataset =========
   const regimenOptionsConfig = {
+    venlafaxine_mr: [
+      { id: "once_daily",  label: "Once daily (e.g. in the morning)" },
+      { id: "twice_daily", label: "Twice daily (split between morning and evening)" }
+    ],
     venlafaxine_ir: [
       { id: "once_daily",  label: "Once daily" },
       { id: "twice_daily", label: "Twice daily (split between morning and evening)" }
@@ -1229,7 +1233,45 @@ footer {
     "375": "Take 150 mg in the morning, 75 mg at midday and 150 mg in the evening (total 375 mg per day)."
   };
 
-  function buildCurrentRegimenSentence(drug, dose) {
+  function splitVenlafaxineIrBd(totalMg) {
+  const unit = 37.5;
+  if (totalMg % unit !== 0) return null;
+  const totalUnits = Math.round(totalMg / unit);
+  const strengthsUnits = [2, 1]; // 75 mg (2 units), 37.5 mg (1 unit)
+
+  function isFeasible(units) {
+    // With 2 and 1-unit tablets any integer is feasible, but keep for clarity/possible future changes
+    let remaining = units;
+    for (const s of strengthsUnits) {
+      const n = Math.floor(remaining / s);
+      remaining -= n * s;
+    }
+    return remaining === 0;
+  }
+
+  let best = null;
+
+  for (let uMorning = 1; uMorning <= totalUnits - 1; uMorning++) {
+    const uEvening = totalUnits - uMorning;
+    if (!isFeasible(uMorning) || !isFeasible(uEvening)) continue;
+
+    const diff = Math.abs(uMorning - uEvening);
+    const maxDoseUnits = Math.max(uMorning, uEvening);
+
+    if (!best || diff < best.diff || (diff === best.diff && maxDoseUnits < best.maxDoseUnits)) {
+      best = { uMorning, uEvening, diff, maxDoseUnits };
+    }
+  }
+
+  if (!best) return null;
+
+  return {
+    morning: best.uMorning * unit,
+    evening: best.uEvening * unit
+  };
+}
+
+function buildCurrentRegimenSentence(drug, dose) {
     const regimen = regimenChoiceByDrug[drug.id];
 
     // Venlafaxine MR is always once daily in UK practice
@@ -1243,6 +1285,10 @@ footer {
 
     if (drug.id === "venlafaxine_ir") {
       if (regimen === "twice_daily") {
+        const split = splitVenlafaxineIrBd(dose);
+        if (split) {
+          return `You are on ${drug.name} ${split.morning} mg in the morning and ${split.evening} mg in the evening (total ${dose} mg each day).`;
+        }
         return `You are on a total of ${dose} mg of ${drug.name} each day, split into two doses (morning and evening).`;
       }
       return `You are on ${drug.name} ${dose} mg once daily.`;
@@ -1287,22 +1333,37 @@ function describeDoseForPatient(drug, dose, pattern) {
       return `Take ${base}`;
     }
 
-    // Venlafaxine IR – allow OD vs BD wording but never TDS
+    // Venlafaxine IR – allow explicit OD vs BD wording but never TDS
     if (drug.id === "venlafaxine_ir") {
-      const base = regimen === "twice_daily"
-        ? `a total of ${dose} mg of ${drug.name} each day, split into two doses (morning and evening) as you do now.`
-        : `${dose} mg of ${drug.name} once daily.`;
+      if (regimen === "twice_daily") {
+        const split = splitVenlafaxineIrBd(dose);
+        const base = split
+          ? `${split.morning} mg in the morning and ${split.evening} mg in the evening (total ${dose} mg of ${drug.name} each day).`
+          : `a total of ${dose} mg of ${drug.name} each day, split into two doses (morning and evening).`;
 
-      if (pattern === "alt_day") {
-        return `On alternate days, take ${base}`;
+        if (pattern === "alt_day") {
+          return `On alternate days, take ${base}`;
+        }
+        if (pattern === "every_3_days") {
+          return `Every 3 days, take ${base}`;
+        }
+        if (pattern === "weekly") {
+          return `Once a week, on the same day each week, take ${base}`;
+        }
+        return `Take ${base}`;
+      } else {
+        const base = `${dose} mg of ${drug.name} once daily.`;
+        if (pattern === "alt_day") {
+          return `On alternate days, take ${base}`;
+        }
+        if (pattern === "every_3_days") {
+          return `Every 3 days, take ${base}`;
+        }
+        if (pattern === "weekly") {
+          return `Once a week, on the same day each week, take ${base}`;
+        }
+        return `Take ${base}`;
       }
-      if (pattern === "every_3_days") {
-        return `Every 3 days, take ${base}`;
-      }
-      if (pattern === "weekly") {
-        return `Once a week, on the same day each week, take ${base}`;
-      }
-      return `Take ${base}`;
     }
 
     // Trazodone – once-nightly vs divided
@@ -2253,7 +2314,7 @@ function describeDoseForPatient(drug, dose, pattern) {
     document.querySelector(`.tab-button[data-tab="${initialTab}"]`).classList.add("active");
     Object.keys(tabs).forEach(id => {
       tabs[id].classList.toggle("hidden", id !== initialTab);
-});
+    });
     
     // Additional handler: respond to meta show/hide options inside dropdowns
     function handleMetaOption(selectEl, doseSelect) {
