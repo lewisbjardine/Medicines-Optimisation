@@ -385,6 +385,11 @@ footer {
       </div>
     </div>
 
+    <div class="field" id="fromRegimenField" style="margin-top:0.5rem; display:none;">
+      <label for="fromRegimen">Usual schedule for current antidepressant</label>
+      <select id="fromRegimen"></select>
+    </div>
+
     <div class="button-row">
       <button class="primary" id="generateSwitch">Generate plan</button>
       <button class="secondary" id="clearSwitch">Clear</button>
@@ -449,6 +454,10 @@ footer {
           <option value="long">6 – 24 months</option>
           <option value="very_long">&gt; 2 years</option>
         </select>
+      </div>
+      <div class="field" id="stopRegimenField" style="display:none;">
+        <label for="stopRegimen">Usual schedule for this antidepressant</label>
+        <select id="stopRegimen"></select>
       </div>
     </div>
 
@@ -537,8 +546,24 @@ footer {
   let selectedTaperOptionId = null;
   let lastFocusedElementBeforeModal = null;
   let showAllAntidepressants = false; // collapsed by default
+  let regimenChoiceByDrug = {}; // e.g. { venlafaxine_mr: "once_daily" }
 
   // ========= Antidepressant dataset =========
+  const regimenOptionsConfig = {
+    venlafaxine_mr: [
+      { id: "once_daily",  label: "Once daily (e.g. in the morning)" },
+      { id: "twice_daily", label: "Twice daily (split between morning and evening)" }
+    ],
+    trazodone: [
+      { id: "once_nightly",  label: "Once at night" },
+      { id: "divided_daily", label: "Divided doses through the day (2–3 times daily)" }
+    ]
+  };
+
+  function drugHasRegimenOptions(drug) {
+    return !!drug && !!regimenOptionsConfig[drug.id];
+  }
+
   const antidepressants = [
     // SSRIs
     {
@@ -663,7 +688,7 @@ footer {
       id: "mirtazapine",
       name: "Mirtazapine",
       class: "NaSSA",
-      dailyDoses: [7.5, 15, 22.5, 30, 37.5, 45],
+      dailyDoses: [15, 30, 45],
       halfLife: "medium",
       withdrawalRisk: "medium",
       ukLicensed: true,
@@ -1204,28 +1229,103 @@ footer {
     "375": "Take 150 mg in the morning, 75 mg at midday and 150 mg in the evening (total 375 mg per day)."
   };
 
-  function describeDoseForPatient(drug, dose, pattern) {
+  function buildCurrentRegimenSentence(drug, dose) {
+    const regimen = regimenChoiceByDrug[drug.id];
+
+    if (!regimen || !drugHasRegimenOptions(drug)) {
+      return `You are on ${drug.name} ${dose} mg each day.`;
+    }
+
+    if (drug.id === "venlafaxine_mr") {
+      if (regimen === "twice_daily") {
+        return `You are on a total of ${dose} mg of ${drug.name} each day, split into two doses (morning and evening).`;
+      }
+      return `You are on ${drug.name} ${dose} mg once daily.`;
+    }
+
+    if (drug.id === "trazodone") {
+      if (regimen === "once_nightly") {
+        return `You are on ${drug.name} ${dose} mg at night.`;
+      }
+      if (regimen === "divided_daily") {
+        return `You are on a total of ${dose} mg of ${drug.name} each day, split into two or three doses.`;
+      }
+    }
+
+    // Fallback for any other drug you later wire up
+    return `You are on ${drug.name} ${dose} mg each day.`;
+  }
+
+function describeDoseForPatient(drug, dose, pattern) {
     pattern = pattern || "daily";
+
     if (dose === 0) {
       return `Do not take ${drug.name} this week (you have stopped).`;
     }
+
+    const regimen = regimenChoiceByDrug[drug.id] || null;
     const key = String(dose);
-    if (pattern === "daily") {
-      if (drug.id === "venlafaxine_ir" && venlafaxineIrRegimens[key]) {
-        return venlafaxineIrRegimens[key];
+
+    // Keep detailed per-dose mapping for venlafaxine IR
+    if (pattern === "daily" && drug.id === "venlafaxine_ir" && venlafaxineIrRegimens[key]) {
+      return venlafaxineIrRegimens[key];
+    }
+
+    // Venlafaxine MR – allow OD vs BD wording
+    if (drug.id === "venlafaxine_mr") {
+      const base = regimen === "twice_daily"
+        ? `a total of ${dose} mg of ${drug.name} each day, split into two doses (morning and evening) as you do now.`
+        : `${dose} mg of ${drug.name} once daily.`;
+
+      if (pattern === "alt_day") {
+        return `On alternate days, take ${base}`;
       }
-      return `Take ${dose} mg of ${drug.name} once daily.`;
-    } else if (pattern === "alt_day") {
+      if (pattern === "every_3_days") {
+        return `Every 3 days, take ${base}`;
+      }
+      if (pattern === "weekly") {
+        return `Once a week, on the same day each week, take ${base}`;
+      }
+      return `Take ${base}`;
+    }
+
+    // Trazodone – once-nightly vs divided
+    if (drug.id === "trazodone") {
+      let base;
+      if (regimen === "once_nightly") {
+        base = `${dose} mg of ${drug.name} at night.`;
+      } else if (regimen === "divided_daily") {
+        base = `a total of ${dose} mg of ${drug.name} each day, split into 2–3 doses as you do now.`;
+      } else {
+        base = `${dose} mg of ${drug.name} each day.`;
+      }
+
+      if (pattern === "alt_day") {
+        return `On alternate days, take ${base}`;
+      }
+      if (pattern === "every_3_days") {
+        return `Every 3 days, take ${base}`;
+      }
+      if (pattern === "weekly") {
+        return `Once a week, on the same day each week, take ${base}`;
+      }
+      return `Take ${base}`;
+    }
+
+    // Generic wording for everything else
+    if (pattern === "alt_day") {
       return `Take ${dose} mg of ${drug.name} on alternate days.`;
-    } else if (pattern === "every_3_days") {
+    }
+    if (pattern === "every_3_days") {
       return `Take ${dose} mg of ${drug.name} every 3 days.`;
-    } else if (pattern === "weekly") {
+    }
+    if (pattern === "weekly") {
       return `Take ${dose} mg of ${drug.name} once this week (for example on the same day each week).`;
     }
     return `Take ${dose} mg of ${drug.name} once daily.`;
   }
 
-  // ========= Stopping taper logic =========
+// ========= Stopping taper logic =========
   function computeBaseTaperSteps(drug, startDose, durationBand) {
     const minDose = Math.min(...drug.dailyDoses);
     const isLowestDose = startDose === minDose;
@@ -1568,8 +1668,13 @@ footer {
     });
 
     const smsText =
-      `Plan to reduce ${drug.name}\n\n` +
-      `You are on ${drug.name} ${startDose} mg each day. We will reduce this gradually, week by week:\n\n` +
+      `Plan to reduce ${drug.name}
+
+` +
+      buildCurrentRegimenSentence(drug, startDose) +
+      ` We will reduce this gradually, week by week:
+
+` +
       smsLines.join("\n") +
       `\n\nIf you get severe dizziness, strange "electric shock" feelings, very low mood or thoughts of harming yourself, ` +
       `contact the surgery, NHS 111 or 999/A&E urgently.`;
@@ -1629,7 +1734,8 @@ footer {
 
     const intro =
       `Your switching plan\n\n` +
-      `You are changing from ${from.name} ${startDose} mg each day to ${to.name}.\n\n`;
+      buildCurrentRegimenSentence(from, startDose) +
+      ` We are changing this to ${to.name}.\n\n`;
 
     const safety =
       `\n\nIf you feel very agitated, confused, feverish, have severe diarrhoea, or have thoughts of harming yourself, ` +
@@ -2045,6 +2151,9 @@ footer {
     const stopDoseSelect = document.getElementById("stopDose");
     const durationSelect = document.getElementById("duration");
 
+    const fromRegimenSelect = document.getElementById("fromRegimen");
+    const stopRegimenSelect = document.getElementById("stopRegimen");
+
     const tabButtons = document.querySelectorAll(".tab-button");
     const tabs = {
       switching: document.getElementById("switching"),
@@ -2061,6 +2170,7 @@ footer {
 
     const state = loadState();
     showAllAntidepressants = !!state.showAllAntidepressants;
+    regimenChoiceByDrug = state.regimenChoiceByDrug || {};
 
     // Toggle label function
     const toggleBtn = document.getElementById("toggleAntidepressantList");
@@ -2072,6 +2182,38 @@ footer {
     }
     updateToggleLabel();
 
+    function refreshRegimenField(drugSelect, regimenSelect, fieldId) {
+      const drug = getDrugById(drugSelect.value);
+      const field = document.getElementById(fieldId);
+      if (!field || !regimenSelect) return;
+
+      regimenSelect.innerHTML = "";
+
+      if (!drugHasRegimenOptions(drug)) {
+        field.style.display = "none";
+        return;
+      }
+
+      const opts = regimenOptionsConfig[drug.id];
+      opts.forEach(o => {
+        const optEl = document.createElement("option");
+        optEl.value = o.id;
+        optEl.textContent = o.label;
+        regimenSelect.appendChild(optEl);
+      });
+
+      const saved = regimenChoiceByDrug[drug.id];
+      if (saved && opts.some(o => o.id === saved)) {
+        regimenSelect.value = saved;
+      } else {
+        regimenSelect.value = opts[0].id;
+        regimenChoiceByDrug[drug.id] = opts[0].id;
+        saveState({ regimenChoiceByDrug });
+      }
+
+      field.style.display = "block";
+    }
+
     // Initial population of selects
     populateDrugSelect(fromDrugSelect, showAllAntidepressants, state.fromDrug && getDrugById(state.fromDrug) ? state.fromDrug : null);
     populateDrugSelect(toDrugSelect, showAllAntidepressants, state.toDrug && getDrugById(state.toDrug) ? state.toDrug : null);
@@ -2080,6 +2222,9 @@ footer {
     populateDoseSelect(fromDrugSelect.value, fromDoseSelect, state.fromDose);
     populateToDrugDose(toDrugSelect.value, toDrugDoseSelect, state.toDrugDose);
     populateDoseSelect(stopDrugSelect.value, stopDoseSelect, state.stopDose);
+
+    refreshRegimenField(fromDrugSelect, fromRegimenSelect, "fromRegimenField");
+    refreshRegimenField(stopDrugSelect, stopRegimenSelect, "stopRegimenField");
 
     if (state.duration) {
       durationSelect.value = state.duration;
@@ -2205,6 +2350,9 @@ footer {
     fromDrugSelect.addEventListener("change", () => {
       populateDoseSelect(fromDrugSelect.value, fromDoseSelect);
       saveState({ fromDrug: fromDrugSelect.value, fromDose: fromDoseSelect.value });
+      if (fromRegimenSelect) {
+        refreshRegimenField(fromDrugSelect, fromRegimenSelect, "fromRegimenField");
+      }
     });
 
     fromDoseSelect.addEventListener("change", () => {
@@ -2223,6 +2371,9 @@ footer {
     stopDrugSelect.addEventListener("change", () => {
       populateDoseSelect(stopDrugSelect.value, stopDoseSelect);
       saveState({ stopDrug: stopDrugSelect.value, stopDose: stopDoseSelect.value });
+      if (stopRegimenSelect) {
+        refreshRegimenField(stopDrugSelect, stopRegimenSelect, "stopRegimenField");
+      }
     });
 
     stopDoseSelect.addEventListener("change", () => {
@@ -2232,6 +2383,46 @@ footer {
     durationSelect.addEventListener("change", () => {
       saveState({ duration: durationSelect.value });
     });
+
+    if (fromRegimenSelect) {
+      fromRegimenSelect.addEventListener("change", () => {
+        const drug = getDrugById(fromDrugSelect.value);
+        if (!drug) return;
+        regimenChoiceByDrug[drug.id] = fromRegimenSelect.value;
+        saveState({ regimenChoiceByDrug });
+        if (document.getElementById("switchClinician").textContent.trim()) {
+          const res = generateSwitchPlan(
+            fromDrugSelect.value,
+            fromDoseSelect.value,
+            toDrugSelect.value,
+            toDrugDoseSelect.value
+          );
+          document.getElementById("switchClinician").textContent = res.clinician;
+          document.getElementById("switchSMS").textContent = res.sms;
+          document.getElementById("switchTablets").textContent = res.tablets;
+        }
+      });
+    }
+
+    if (stopRegimenSelect) {
+      stopRegimenSelect.addEventListener("change", () => {
+        const drug = getDrugById(stopDrugSelect.value);
+        if (!drug) return;
+        regimenChoiceByDrug[drug.id] = stopRegimenSelect.value;
+        saveState({ regimenChoiceByDrug });
+        if (document.getElementById("stopClinician").textContent.trim()) {
+          const res = generateStopPlan(
+            stopDrugSelect.value,
+            stopDoseSelect.value,
+            durationSelect.value,
+            taperProfile
+          );
+          document.getElementById("stopClinician").textContent = res.clinician;
+          document.getElementById("stopSMS").textContent = res.sms;
+          document.getElementById("stopTablets").textContent = res.tablets;
+        }
+      });
+    }
 
     document.getElementById("generateSwitch").addEventListener("click", () => {
       const res = generateSwitchPlan(
