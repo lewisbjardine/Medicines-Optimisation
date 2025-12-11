@@ -332,82 +332,12 @@ footer {
   text-align: right;
 }
 
-
-/* Venlafaxine tablet regimen modal */
-.modal-backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.45);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 50;
-}
-
-.modal-backdrop.hidden {
-  display: none;
-}
-
-.modal-panel {
-  background: #fff;
-  max-width: 480px;
-  width: 100%;
-  border-radius: 0.75rem;
-  padding: 1.5rem 1.75rem;
-  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.25);
-}
-
-.venla-regimen-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1.25rem;
-  margin: 1rem 0 0.75rem;
-}
-
-.venla-pill-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 0.4rem;
-  font-size: 0.9rem;
-}
-
-.venla-pill-row span {
-  flex: 1;
-}
-
-.venla-pill-row .counter {
-  display: inline-flex;
-  gap: 0.25rem;
-  align-items: center;
-}
-
-.venla-pill-row button {
-  padding: 0.15rem 0.45rem;
-  border-radius: 999px;
-  border: 1px solid #cbd5f5;
-  background: #e5edff;
-  cursor: pointer;
-  font-size: 0.8rem;
-}
-
-.modal-total {
-  font-size: 0.9rem;
-  margin-top: 0.25rem;
-}
-
-.modal-actions {
-  margin-top: 1.1rem;
-  display: flex;
-  justify-content: flex-end;
-  gap: 0.5rem;
-}
 </style>
 
   <meta charset="UTF-8" />
   <title>Switch &amp; Stop AD</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 <header>
@@ -525,12 +455,6 @@ footer {
           <option value="very_long">&gt; 2 years</option>
         </select>
       </div>
-<div class="button-row" id="venlaConfigRow" style="display:none; margin-top:0.4rem;">
-  <button type="button" id="venlaConfigBtn" class="secondary">
-    Configure venlafaxine tablet regimen…
-  </button>
-</div>
-
       <div class="field" id="stopRegimenField" style="display:none;">
         <label for="stopRegimen">Usual schedule for this antidepressant</label>
         <select id="stopRegimen"></select>
@@ -591,32 +515,6 @@ footer {
     </p>
   </section>
 </main>
-<div id="venlaRegimenModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="venlaRegimenTitle">
-  <div class="modal-panel">
-    <h2 id="venlaRegimenTitle">Configure venlafaxine tablet regimen</h2>
-    <p class="modal-description">
-      Choose the exact tablets the patient takes in the morning and evening. This will be used to build a weekly tablet-based taper.
-    </p>
-    <p id="venlaDrugLabel" class="modal-drug-label"></p>
-    <div class="venla-regimen-grid">
-      <div>
-        <h3>Morning</h3>
-        <div id="venlaMorningControls"></div>
-      </div>
-      <div>
-        <h3>Evening</h3>
-        <div id="venlaEveningControls"></div>
-      </div>
-    </div>
-    <p class="modal-total" id="venlaTotals"></p>
-    <div class="modal-actions">
-      <button type="button" id="venlaCancelBtn" class="secondary">Cancel</button>
-      <button type="button" id="venlaSaveBtn" class="primary">Save regimen</button>
-    </div>
-  </div>
-</div>
-
-
 
 <footer>
   Switch &amp; Stop AD – beta | Last updated: Dec 2025
@@ -649,10 +547,13 @@ footer {
   let lastFocusedElementBeforeModal = null;
   let showAllAntidepressants = false; // collapsed by default
   let regimenChoiceByDrug = {}; // e.g. { venlafaxine_mr: "once_daily" }
-  let venlaRegimen = null; // tablet-based venlafaxine regimen for stopping
 
   // ========= Antidepressant dataset =========
   const regimenOptionsConfig = {
+    venlafaxine_mr: [
+      { id: "once_daily",  label: "Once daily (e.g. in the morning)" },
+      { id: "twice_daily", label: "Twice daily (split between morning and evening)" }
+    ],
     venlafaxine_ir: [
       { id: "once_daily",  label: "Once daily" },
       { id: "twice_daily", label: "Twice daily (split between morning and evening)" }
@@ -662,246 +563,6 @@ footer {
       { id: "divided_daily", label: "Divided doses through the day (2–3 times daily)" }
     ]
   };
-// ========= Venlafaxine tablet-based taper helpers =========
-function isVenlafaxine(drug) {
-  return !!drug && (drug.id === "venlafaxine_ir" || drug.id === "venlafaxine_mr");
-}
-
-function getVenlaStrengths(drugId) {
-  if (drugId === "venlafaxine_ir") {
-    return [37.5, 75];
-  }
-  if (drugId === "venlafaxine_mr") {
-    return [37.5, 75, 150];
-  }
-  return [];
-}
-
-function openVenlaModal(drugId) {
-  const modal = document.getElementById("venlaRegimenModal");
-  const label = document.getElementById("venlaDrugLabel");
-  const morningContainer = document.getElementById("venlaMorningControls");
-  const eveningContainer = document.getElementById("venlaEveningControls");
-  const totalsEl = document.getElementById("venlaTotals");
-
-  const drug = getDrugById(drugId);
-  const strengths = getVenlaStrengths(drugId);
-
-  label.textContent = drug
-    ? `Current regimen for ${drug.name} – specify tablets`
-    : "Current venlafaxine regimen";
-
-  function buildSide(container) {
-    container.innerHTML = "";
-    strengths.forEach(str => {
-      const row = document.createElement("div");
-      row.className = "venla-pill-row";
-      const label = document.createElement("span");
-      label.textContent = `${str} mg tablets`;
-      const counter = document.createElement("div");
-      counter.className = "counter";
-
-      const minus = document.createElement("button");
-      minus.type = "button";
-      minus.textContent = "–";
-
-      const plus = document.createElement("button");
-      plus.type = "button";
-      plus.textContent = "+";
-
-      const value = document.createElement("span");
-      value.textContent = "0";
-
-      minus.addEventListener("click", () => {
-        const current = parseInt(value.textContent, 10) || 0;
-        if (current > 0) {
-          value.textContent = String(current - 1);
-          updateTotals();
-        }
-      });
-
-      plus.addEventListener("click", () => {
-        const current = parseInt(value.textContent, 10) || 0;
-        value.textContent = String(current + 1);
-        updateTotals();
-      });
-
-      counter.appendChild(minus);
-      counter.appendChild(value);
-      counter.appendChild(plus);
-
-      row.appendChild(label);
-      row.appendChild(counter);
-      container.appendChild(row);
-    });
-  }
-
-  function readSide(container) {
-    const result = [];
-    const rows = container.querySelectorAll(".venla-pill-row");
-    rows.forEach(row => {
-      const label = row.querySelector("span");
-      const mg = parseFloat(label.textContent);
-      const value = parseInt(row.querySelector(".counter span:nth-child(2)").textContent, 10) || 0;
-      for (let i = 0; i < value; i++) {
-        result.push(mg);
-      }
-    });
-    return result;
-  }
-
-  function updateTotals() {
-    const morning = readSide(morningContainer);
-    const evening = readSide(eveningContainer);
-    const morningMg = morning.reduce((a, b) => a + b, 0);
-    const eveningMg = evening.reduce((a, b) => a + b, 0);
-    const total = morningMg + eveningMg;
-    totalsEl.textContent =
-      `Morning: ${morningMg} mg, Evening: ${eveningMg} mg, Total: ${total} mg per day.`;
-  }
-
-  buildSide(morningContainer);
-  buildSide(eveningContainer);
-  updateTotals();
-
-  // Pre-populate if we already have a regimen
-  if (venlaRegimen && venlaRegimen.drugId === drugId) {
-    const populateSide = (container, pills) => {
-      const rows = container.querySelectorAll(".venla-pill-row");
-      rows.forEach(row => {
-        const label = row.querySelector("span");
-        const mg = parseFloat(label.textContent);
-        const count = pills.filter(p => p === mg).length;
-        row.querySelector(".counter span:nth-child(2)").textContent = String(count);
-      });
-    };
-    populateSide(morningContainer, venlaRegimen.morning || []);
-    populateSide(eveningContainer, venlaRegimen.evening || []);
-    updateTotals();
-  }
-
-  modal.classList.remove("hidden");
-
-  function handleSave() {
-    const morning = readSide(morningContainer);
-    const evening = readSide(eveningContainer);
-    const total = morning.concat(evening).reduce((a, b) => a + b, 0);
-    if (total === 0) {
-      alert("Please add at least one venlafaxine tablet to morning or evening.");
-      return;
-    }
-    venlaRegimen = { drugId, morning, evening };
-    saveState({ venlaRegimen });
-    modal.classList.add("hidden");
-
-    // Ensure stop dose matches this total
-    const stopDoseSelect = document.getElementById("stopDose");
-    if (stopDoseSelect) {
-      let opt = Array.from(stopDoseSelect.options).find(o => Number(o.value) === total);
-      if (!opt) {
-        opt = document.createElement("option");
-        opt.value = String(total);
-        opt.textContent = `${total} mg (from configured tablets)`;
-        stopDoseSelect.appendChild(opt);
-      }
-      stopDoseSelect.value = String(total);
-    }
-  }
-
-  function handleCancel() {
-    modal.classList.add("hidden");
-  }
-
-  document.getElementById("venlaSaveBtn").onclick = handleSave;
-  document.getElementById("venlaCancelBtn").onclick = handleCancel;
-}
-
-// Tablet-based venlafaxine taper: remove one tablet per week
-function generateVenlaTabletTaper(drug, regimen) {
-  const weeks = [];
-  let weekNumber = 1;
-  let morning = (regimen.morning || []).slice();
-  let evening = (regimen.evening || []).slice();
-
-  function totalMg(pills) {
-    return pills.reduce((a, b) => a + b, 0);
-  }
-
-  function describePills(pills) {
-    if (!pills.length) return "no tablets";
-    const counts = {};
-    pills.forEach(mg => {
-      counts[mg] = (counts[mg] || 0) + 1;
-    });
-    return Object.keys(counts)
-      .sort((a, b) => parseFloat(a) - parseFloat(b))
-      .map(mg => `${counts[mg]} × ${mg} mg`)
-      .join(" + ");
-  }
-
-  function pushWeek() {
-    const mMg = totalMg(morning);
-    const eMg = totalMg(evening);
-    const total = mMg + eMg;
-    weeks.push({
-      week: weekNumber,
-      morning: morning.slice(),
-      evening: evening.slice(),
-      totalMg: total
-    });
-    weekNumber += 1;
-  }
-
-  function removeOneTablet() {
-    const mMg = totalMg(morning);
-    const eMg = totalMg(evening);
-    if (mMg + eMg === 0) return false;
-
-    // Prefer to reduce the higher-dose side
-    let side = eMg > mMg ? "evening" : "morning";
-    let pills = side === "evening" ? evening : morning;
-    if (!pills.length) {
-      side = side === "evening" ? "morning" : "evening";
-      pills = side === "evening" ? evening : morning;
-      if (!pills.length) return false;
-    }
-
-    // Remove the smallest tablet on that side
-    pills.sort((a, b) => a - b);
-    pills.shift();
-    return true;
-  }
-
-  while (totalMg(morning) + totalMg(evening) > 0) {
-    pushWeek();
-    removeOneTablet();
-  }
-
-  // Final week: stopped
-  weeks.push({
-    week: weekNumber,
-    morning: [],
-    evening: [],
-    totalMg: 0
-  });
-
-  const clinicianLines = weeks.map(w => {
-    if (w.totalMg === 0) {
-      return `Week ${w.week}: stop ${drug.name} (no tablets).`;
-    }
-    return `Week ${w.week}: ${drug.name} – morning: ${describePills(w.morning)}; evening: ${describePills(w.evening)} (total ${w.totalMg} mg/day).`;
-  });
-
-  const smsLines = weeks.map(w => {
-    if (w.totalMg === 0) {
-      return `Week ${w.week}: Do not take any ${drug.name} this week.`;
-    }
-    return `Week ${w.week}: Take ${describePills(w.morning)} in the morning and ${describePills(w.evening)} in the evening (total ${w.totalMg} mg each day).`;
-  });
-
-  return { clinicianLines, smsLines };
-}
-
 
   function drugHasRegimenOptions(drug) {
     return !!drug && !!regimenOptionsConfig[drug.id];
@@ -1964,54 +1625,6 @@ function describeDoseForPatient(drug, dose, pattern) {
       return { clinician: "Please select a drug and dose.", sms: "", tablets: "" };
     }
 
-    // Special tablet-based taper for venlafaxine IR / MR
-    if (drug.id === "venlafaxine_ir" || drug.id === "venlafaxine_mr") {
-      if (!venlaRegimen || venlaRegimen.drugId !== drug.id) {
-        return {
-          clinician: "Please configure the venlafaxine tablet regimen first (morning and evening tablets).",
-          sms: "",
-          tablets: ""
-        };
-      }
-      const tabletPlan = generateVenlaTabletTaper(drug, venlaRegimen);
-
-      const durationTextMap = {
-        short: "< 6 weeks",
-        medium: "6 weeks – 6 months",
-        long: "6 – 24 months",
-        very_long: "> 2 years"
-      };
-      const durationText = durationTextMap[durationBand] || "unspecified";
-
-      const clinicianText =
-        `Plan – gradual reduction of ${drug.name} based on current tablet regimen (standard tablet taper: 1 tablet per week; duration of use: ${durationText})\n\n` +
-        tabletPlan.clinicianLines.map(l => `• ${l}`).join("\n") +
-        `\n\nRationale & counselling:\n` +
-        `• Uses stepwise weekly changes in the actual tablets taken (morning and evening), avoiding unachievable intermediate doses.\n` +
-        `• Shorter, clinically realistic taper compared with very long micro-steps, but can be repeated or slowed if needed.\n` +
-        `• Advised about withdrawal symptoms (dizziness, "electric shock" sensations, nausea, sensory disturbance, anxiety, low mood) and difference from relapse.\n` +
-        `• Advised to contact the surgery if withdrawal is severe or depressive symptoms return; consider pausing or slowing taper.\n` +
-        `• Documented crisis/safety netting (self-harm, suicidal ideation) and agreed review plan.\n`;
-
-      const smsIntro =
-        `Plan to reduce ${drug.name}\n\n` +
-        `We will reduce this gradually by changing the number of tablets you take in the morning and evening each week. ` +
-        `Your GP or pharmacist will help you check each step.\n\n`;
-
-      const smsText = smsIntro + tabletPlan.smsLines.join("\n");
-
-      const tabletsText = "This taper is based on the configured venlafaxine tablet regimen (morning and evening tablets).";
-
-      return { clinician: clinicianText, sms: smsText, tablets: tabletsText };
-    }
-
-    profile = profile || "standard";
-    const drug = getDrugById(drugId);
-    const startDose = Number(dose);
-    if (!drug || !startDose) {
-      return { clinician: "Please select a drug and dose.", sms: "", tablets: "" };
-    }
-
     const weeks = computeStopWeeks(drug, startDose, durationBand, profile);
 
     const durationTextMap = {
@@ -2550,14 +2163,11 @@ function describeDoseForPatient(drug, dose, pattern) {
 
     userHasClickedGenerateStop = false;
 
-    const venlaConfigRow = document.getElementById("venlaConfigRow");
-const venlaConfigBtn = document.getElementById("venlaConfigBtn");
+    const state = loadState();
+    showAllAntidepressants = !!state.showAllAntidepressants;
+    regimenChoiceByDrug = state.regimenChoiceByDrug || {};
 
-const state = loadState();
-showAllAntidepressants = !!state.showAllAntidepressants;
-regimenChoiceByDrug = state.regimenChoiceByDrug || {};
-venlaRegimen = state.venlaRegimen || null;
-// Toggle label function
+    // Toggle label function
     const toggleBtn = document.getElementById("toggleAntidepressantList");
     function updateToggleLabel() {
       if (!toggleBtn) return;
@@ -2627,7 +2237,7 @@ venlaRegimen = state.venlaRegimen || null;
     Object.keys(tabs).forEach(id => {
       tabs[id].classList.toggle("hidden", id !== initialTab);
     });
-    
+
     // Additional handler: respond to meta show/hide options inside dropdowns
     function handleMetaOption(selectEl, doseSelect) {
       const val = selectEl.value;
@@ -2664,17 +2274,14 @@ venlaRegimen = state.venlaRegimen || null;
     });
 
     stopDrugSelect.addEventListener("change", () => {
-  handleMetaOption(stopDrugSelect, stopDoseSelect);
-  const drug = getDrugById(stopDrugSelect.value);
-  if (stopRegimenSelect) {
-    refreshRegimenField(stopDrugSelect, stopRegimenSelect, "stopRegimenField");
-  }
-  if (venlaConfigRow) {
-    venlaConfigRow.style.display = isVenlafaxine(drug) ? "flex" : "none";
-  }
-  saveState({ stopDrug: stopDrugSelect.value, stopDose: stopDoseSelect.value });
-});
-cts
+      handleMetaOption(stopDrugSelect, stopDoseSelect);
+      if (stopRegimenSelect) {
+        refreshRegimenField(stopDrugSelect, stopRegimenSelect, "stopRegimenField");
+      }
+      saveState({ stopDrug: stopDrugSelect.value, stopDose: stopDoseSelect.value });
+    });
+
+    // Collapse back to common list when clicking outside antidepressant selects
     document.addEventListener("click", (ev) => {
       const isInSelect =
         ev.target.closest("#fromDrug") ||
@@ -2724,20 +2331,12 @@ cts
 
     if (stopRegimenSelect) {
       stopRegimenSelect.addEventListener("change", () => {
+        const drug = getDrugById(stopDrugSelect.value);
         if (!drug) return;
         regimenChoiceByDrug[drug.id] = stopRegimenSelect.value;
         saveState({ regimenChoiceByDrug });
       });
-    }if (venlaConfigBtn) {
-  venlaConfigBtn.addEventListener("click", () => {
-    if (!isVenlafaxine(drug)) {
-      alert("Venlafaxine tablet regimen is only needed when venlafaxine is selected.");
-      return;
     }
-    openVenlaModal(drug.id);
-  });
-}
-
 
     document.getElementById("generateSwitch").addEventListener("click", () => {
       const res = generateSwitchPlan(
