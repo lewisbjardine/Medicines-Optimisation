@@ -2236,6 +2236,7 @@ function describeDoseForPatient(drug, dose, pattern) {
     document.querySelector(`.tab-button[data-tab="${initialTab}"]`).classList.add("active");
     Object.keys(tabs).forEach(id => {
       tabs[id].classList.toggle("hidden", id !== initialTab);
+    });
     
     // Additional handler: respond to meta show/hide options inside dropdowns
     function handleMetaOption(selectEl, doseSelect) {
