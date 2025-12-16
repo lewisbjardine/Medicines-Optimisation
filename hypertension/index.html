@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Hypertension management assistant</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="../shared/styles.css">
+<style>
+main{max-width:1200px;margin:1.2rem auto;padding:1rem;background:#fff;border-radius:6px;box-shadow:0 2px 6px rgba(0,0,0,.1)}
+.small{font-size:.82rem}
+.section{margin-top:1.2rem}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem}
+.matrix{border:1px solid var(--nhs-border);border-radius:4px;overflow:hidden}
+.row{display:grid;grid-template-columns:180px repeat(6,1fr) 120px;gap:.25rem;padding:.38rem;border-bottom:1px solid #eee;align-items:center;font-size:.78rem}
+.row:last-child{border-bottom:none}
+.header-row{background:#f0f4f5;font-weight:bold}
+.dose-btn{padding:.2rem .35rem;border:1px solid var(--nhs-border);border-radius:4px;text-align:center;cursor:pointer;user-select:none}
+.dose-btn.current{background:#e8f4ff;border-color:#0072ce;font-weight:bold}
+.dose-btn.blocked{background:#f5f5f5;color:#888;text-decoration:line-through}
+.block-btn{font-size:.7rem}
+.instructions{background:#f0f4f5;border-left:4px solid #0072ce;padding:.6rem;margin-bottom:.8rem;font-size:.82rem}
+.alert{border-radius:4px;padding:.6rem;margin:.4rem 0;font-size:.85rem}
+.alert.warn{background:#fdecea;border:1px solid #d4351c}
+.alert.info{background:#e8f4ff;border:1px solid #0072ce}
+.flag-add{color:#00703c;font-weight:bold}
+.flag-change{color:#6f4c00;font-weight:bold}
+textarea{width:100%;min-height:7.5rem}
+</style>
+</head>
+<body>
+<header>
+<h1>Hypertension management assistant</h1>
+<p class="subtitle">NICE NG136 aligned – decision support only</p>
+<a href="../index.html" class="return-home">Back to home</a>
+</header>
+<main>
+<div class="instructions">
+<strong>Medication entry:</strong>
+• Click a dose to select / unselect current<br>
+• Double-click a dose to block (not tolerated)<br>
+• Click blocked dose to reset<br>
+• Use Block to block the whole drug
+</div>
+
+<section class="card small">
+<h2>1. Patient factors</h2>
+<div class="grid">
+  <div><label>Age band</label>
+    <select id="ageBand">
+      <option value="lt55">&lt;55</option>
+      <option value="55to79" selected>55–79</option>
+      <option value="ge80">≥80</option>
+    </select>
+  </div>
+  <div><label>Ethnicity</label>
+    <select id="ethnicity">
+      <option value="other">White / Other</option>
+      <option value="black">Black African or Caribbean</option>
+    </select>
+  </div>
+  <div><label>Risk factors</label>
+    <select id="risks" multiple size="5">
+      <option value="dm">Diabetes</option>
+      <option value="ckd">CKD</option>
+      <option value="proteinuria">Proteinuria</option>
+      <option value="ihd">IHD</option>
+      <option value="hf">Heart failure</option>
+    </select>
+    <div class="hint">Hold Ctrl / Cmd to select multiple</div>
+  </div>
+</div>
+</section>
+
+<section class="card section small">
+<h2>2. Current antihypertensive treatment</h2>
+<div class="grid-2">
+  <div>
+    <h3>A – ACE inhibitors</h3><div class="matrix" id="ACE"></div>
+    <h3 style="margin-top:.8rem">A – ARBs</h3><div class="matrix" id="ARB"></div>
+  </div>
+  <div>
+    <h3>C – Calcium-channel blockers</h3><div class="matrix" id="CCB"></div>
+    <h3 style="margin-top:.8rem">D – Thiazide / thiazide-like</h3><div class="matrix" id="THZ"></div>
+    <h3 style="margin-top:.8rem">Other / Step 4</h3><div class="matrix" id="OTH"></div>
+  </div>
+</div>
+</section>
+
+<section class="card section small">
+<h2>3. Blood pressure</h2>
+<div class="grid">
+  <div><label>Measurement</label>
+    <select id="bpType"><option value="clinic">Clinic</option><option value="home">Home / ABPM</option></select>
+  </div>
+  <div><label>BP</label><input id="bpValue" placeholder="e.g. 152/94"></div>
+</div>
+</section>
+
+<section class="card section small">
+<h2>4. Recommendation</h2>
+<button id="genBtn">Generate plan</button>
+<div id="alerts"></div>
+<div class="output-box" id="planBox"></div>
+<div style="margin-top:.8rem">
+  <strong>Clinician note</strong>
+  <button class="copy-btn" id="copyClin">Copy</button>
+  <textarea id="clinicianText" readonly></textarea>
+</div>
+<div style="margin-top:.8rem">
+  <strong>Patient information</strong>
+  <button class="copy-btn" id="copyPt">Copy</button>
+  <textarea id="patientText" readonly></textarea>
+</div>
+</section>
+</main>
+
+<script>
+const DATA={
+ ACE:[["Ramipril",["1.25","2.5","5","10"],{class:"A"}],["Lisinopril",["2.5","5","10","20","30","40"],{class:"A"}]],
+ ARB:[["Losartan",["25","50","100"],{class:"A"}],["Candesartan",["4","8","16","32"],{class:"A"}]],
+ CCB:[["Amlodipine",["5","10"],{class:"C"}],["Felodipine MR",["2.5","5","10","20"],{class:"C"}]],
+ THZ:[["Indapamide",["2.5"],{class:"D"}],["Chlortalidone",["25","50"],{class:"D"}]],
+ OTH:[["Spironolactone",["25"],{class:"O"}],["Doxazosin",["1","2","4"],{class:"O"}]]
+};
+
+const state={};
+const drugMeta={};
+Object.keys(DATA).forEach(sec=>DATA[sec].forEach(([n,d,m])=>drugMeta[n]={doses:d,cls:m.class}));
+
+function renderSection(id){
+ const box=document.getElementById(id); box.innerHTML="";
+ const head=document.createElement("div"); head.className="row header-row";
+ head.innerHTML="<div>Drug</div>"+Array(6).fill("<div>Dose</div>").join("")+"<div></div>"; box.appendChild(head);
+ DATA[id].forEach(([name,doses])=>{
+  if(!state[name]) state[name]={c:null,b:new Set(),bd:false};
+  const s=state[name];
+  const row=document.createElement("div"); row.className="row";
+  row.appendChild(Object.assign(document.createElement("div"),{textContent:name}));
+  for(let i=0;i<6;i++){
+    const cell=document.createElement("div");
+    if(doses[i]){
+      const btn=document.createElement("div"); btn.className="dose-btn"; btn.textContent=doses[i]+" mg";
+      if(s.c===doses[i]) btn.classList.add("current");
+      if(s.b.has(doses[i])||s.bd) btn.classList.add("blocked");
+      btn.onclick=()=>{ if(s.bd) return; if(s.b.has(doses[i])) s.b.delete(doses[i]); else s.c=(s.c===doses[i])?null:doses[i]; renderAll(); };
+      btn.ondblclick=()=>{ if(s.bd) return; if(s.c===doses[i]) s.c=null; s.b.add(doses[i]); renderAll(); };
+      cell.appendChild(btn);
+    }
+    row.appendChild(cell);
+  }
+  const block=document.createElement("button"); block.className="secondary block-btn"; block.textContent=s.bd?"Unblock":"Block";
+  block.onclick=()=>{ s.bd=!s.bd; if(s.bd){s.c=null; s.b=new Set(doses);} else s.b.clear(); renderAll(); };
+  row.appendChild(block); box.appendChild(row);
+ });
+}
+function renderAll(){ renderSection("ACE");renderSection("ARB");renderSection("CCB");renderSection("THZ");renderSection("OTH"); }
+renderAll();
+
+function parseBP(){ const m=document.getElementById("bpValue").value.match(/(\d+)(?:\/(\d+))?/); return m?{sys:+m[1],dia:m[2]?+m[2]:null}:null; }
+
+function classAvailable(cls){
+  return Object.keys(state).some(n=>drugMeta[n]?.cls===cls && !state[n].bd && drugMeta[n].doses.some(d=>!state[n].b.has(d)));
+}
+function chooseDrugInClass(cls){
+  for(const n of Object.keys(state)){
+    if(drugMeta[n]?.cls===cls && !state[n].bd){
+      for(const d of drugMeta[n].doses){
+        if(!state[n].b.has(d)) return {name:n,dose:d};
+      }
+    }
+  }
+  return null;
+}
+
+function generatePlan(){
+ const alerts=[]; document.getElementById("alerts").innerHTML="";
+ const bp=parseBP(); if(!bp){ alerts.push("Enter a valid BP."); }
+ alerts.forEach(t=>{const a=document.createElement("div");a.className="alert warn";a.textContent=t;document.getElementById("alerts").appendChild(a);});
+ if(!bp) return;
+
+ const plan=[]; const clin=[]; const pt=[];
+ const haveC = classAvailable("C");
+ const haveD = classAvailable("D");
+
+ if(!haveC){
+   plan.push("<span class='flag-change'>All calcium‑channel blockers are blocked.</span>");
+   const d=chooseDrugInClass("D");
+   if(d){
+     plan.push("<span class='flag-add'>ADD:</span> Start <strong>"+d.name+" "+d.dose+" mg</strong>.");
+     clin.push("All CCBs blocked. Start "+d.name+" "+d.dose+" mg.");
+     pt.push("Because you could not tolerate calcium‑channel blockers, we are starting "+d.name+" instead.");
+   } else {
+     plan.push("No suitable D‑class drug available – consider specialist advice.");
+   }
+ } else {
+   plan.push("CCB class available – standard pathway continues.");
+ }
+
+ document.getElementById("planBox").innerHTML=plan.map(x=>"<div>"+x+"</div>").join("");
+ document.getElementById("clinicianText").value=clin.join("\n");
+ document.getElementById("patientText").value=pt.join("\n");
+}
+
+document.getElementById("genBtn").onclick=generatePlan;
+document.getElementById("copyClin").onclick=()=>navigator.clipboard.writeText(document.getElementById("clinicianText").value);
+document.getElementById("copyPt").onclick=()=>navigator.clipboard.writeText(document.getElementById("patientText").value);
+</script>
+</body>
+</html>
