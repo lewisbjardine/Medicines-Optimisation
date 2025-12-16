@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Hypertension management assistant</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="../shared/styles.css">
+<style>
+main{max-width:1200px;margin:1.2rem auto;padding:1rem;background:#fff;border-radius:6px;box-shadow:0 2px 6px rgba(0,0,0,.1)}
+.small{font-size:.82rem}
+.section{margin-top:1.2rem}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem}
+.matrix{border:1px solid var(--nhs-border);border-radius:4px;overflow:hidden}
+.row{display:grid;grid-template-columns:180px repeat(6,1fr) 120px;gap:.25rem;padding:.38rem;border-bottom:1px solid #eee;align-items:center;font-size:.78rem}
+.row:last-child{border-bottom:none}
+.header-row{background:#f0f4f5;font-weight:bold}
+.dose-btn{padding:.2rem .35rem;border:1px solid var(--nhs-border);border-radius:4px;text-align:center;cursor:pointer;user-select:none}
+.dose-btn.current{background:#e8f4ff;border-color:#0072ce;font-weight:bold}
+.dose-btn.blocked{background:#f5f5f5;color:#888;text-decoration:line-through}
+.block-btn{font-size:.7rem}
+.instructions{background:#f0f4f5;border-left:4px solid #0072ce;padding:.6rem;margin-bottom:.8rem;font-size:.82rem}
+.alert{border-radius:4px;padding:.6rem;margin:.4rem 0;font-size:.85rem}
+.alert.warn{background:#fdecea;border:1px solid #d4351c}
+.alert.info{background:#e8f4ff;border:1px solid #0072ce}
+.flag-add{color:#00703c;font-weight:bold}
+.flag-change{color:#6f4c00;font-weight:bold}
+.flag-stop{color:#d4351c;font-weight:bold}
+textarea{width:100%;min-height:7.5rem}
+.output-head{display:flex;align-items:center;justify-content:space-between;gap:.5rem;margin-top:.6rem}
+
+/* modal */
+.modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.4);display:none;align-items:center;justify-content:center;z-index:999}
+.modal{background:#fff;max-width:540px;border-radius:6px;box-shadow:0 6px 20px rgba(0,0,0,.25);padding:1rem}
+.modal h3{margin-top:0}
+.modal .actions{display:flex;gap:.6rem;justify-content:flex-end;margin-top:1rem}
+.pill{display:inline-block;padding:2px 8px;border-radius:999px;border:1px solid var(--nhs-border);font-size:.78rem;background:#fff}
+</style>
+</head>
+<body>
+
+<div class="modal-backdrop" id="bpModal" role="dialog" aria-modal="true">
+  <div class="modal">
+    <h3>Very high blood pressure detected</h3>
+    <p>
+      Systolic ≥180&nbsp;mmHg or diastolic ≥120&nbsp;mmHg is considered
+      <strong>severe hypertension</strong>.
+    </p>
+    <p>
+      Consider <strong>same-day clinical assessment</strong> depending on symptoms
+      and overall clinical context.
+    </p>
+    <div class="actions">
+      <button class="secondary" onclick="closeModal()">Cancel</button>
+      <button onclick="confirmProceed()">Continue anyway</button>
+    </div>
+  </div>
+</div>
+
+<header>
+<h1>Hypertension management assistant</h1>
+<p class="subtitle">NICE NG136 aligned – decision support only</p>
+<a href="../index.html" class="return-home">Back to home</a>
+</header>
+
+<main>
+
+<div class="instructions">
+<strong>Medication entry:</strong>
+• Click a dose to select / unselect current<br>
+• Double-click a dose to block (not tolerated)<br>
+• Click a blocked dose to reset<br>
+• Use Block on the right to block the whole drug
+</div>
+
+<section class="card small">
+<h2>1. Patient factors</h2>
+<div class="grid">
+  <div>
+    <label>Age band</label>
+    <select id="ageBand">
+      <option value="lt55">&lt;55</option>
+      <option value="55to79" selected>55–79</option>
+      <option value="ge80">≥80</option>
+    </select>
+  </div>
+  <div>
+    <label>Ethnicity</label>
+    <select id="ethnicity">
+      <option value="other">White / Other</option>
+      <option value="black">Black African or Caribbean</option>
+    </select>
+  </div>
+  <div>
+    <label>Risk factors / comorbidity</label>
+    <select id="risks" multiple size="6">
+      <option value="dm">Diabetes</option>
+      <option value="ckd">Chronic kidney disease</option>
+      <option value="proteinuria">Proteinuria / raised ACR</option>
+      <option value="ihd">Ischaemic heart disease</option>
+      <option value="hf">Heart failure</option>
+      <option value="stroke">Previous stroke/TIA</option>
+    </select>
+    <div class="hint">Hold Ctrl / Cmd to select multiple</div>
+  </div>
+</div>
+</section>
+
+<section class="card section small">
+<h2>2. Current antihypertensive treatment</h2>
+<div class="grid-2">
+  <div>
+    <h3>A – ACE inhibitors</h3><div class="matrix" id="ACE"></div>
+    <h3 style="margin-top:.8rem">A – ARBs</h3><div class="matrix" id="ARB"></div>
+  </div>
+  <div>
+    <h3>C – Calcium-channel blockers</h3><div class="matrix" id="CCB"></div>
+    <h3 style="margin-top:.8rem">D – Thiazide / thiazide-like</h3><div class="matrix" id="THZ"></div>
+    <h3 style="margin-top:.8rem">Other / Step 4</h3><div class="matrix" id="OTH"></div>
+  </div>
+</div>
+</section>
+
+<section class="card section small">
+<h2>3. Blood pressure and safety</h2>
+<div class="grid">
+  <div>
+    <label>BP measurement type</label>
+    <select id="bpType">
+      <option value="clinic">Clinic</option>
+      <option value="home">Home / ABPM</option>
+    </select>
+  </div>
+  <div>
+    <label>BP</label>
+    <input id="bpValue" placeholder="e.g. 152/94"> <a href="ahbp.html" class="secondary">AHBP calculator</a>
+    <div class="hint" id="targetHint"></div>
+  </div>
+</div>
+<div class="grid" style="margin-top:.6rem">
+  <div>
+    <label>Potassium (optional, Step 4)</label>
+    <input id="kVal" placeholder="e.g. 4.3">
+  </div>
+  <div>
+    <label>eGFR (optional, Step 4)</label>
+    <input id="egfrVal" placeholder="e.g. 62">
+  </div>
+</div>
+</section>
+
+<section class="card section small">
+<h2>4. Recommendation</h2>
+<div class="output-head">
+  <button id="genBtn">Generate plan</button>
+  <button class="secondary" id="clearBtn">Clear</button>
+</div>
+
+<div id="alerts"></div>
+
+<div class="output-head">
+  <strong>Plan</strong>
+  <span class="pill" id="stepBadge">Step –</span>
+</div>
+<div class="output-box" id="planBox"></div>
+
+<div style="margin-top:.8rem">
+  <div class="output-head">
+    <strong>Clinician note</strong>
+    <button class="copy-btn" id="copyClin">Copy</button>
+  </div>
+  <textarea id="clinicianText" readonly></textarea>
+</div>
+
+<div style="margin-top:.8rem">
+  <div class="output-head">
+    <strong>Patient information</strong>
+    <button class="copy-btn" id="copyPt">Copy</button>
+  </div>
+  <textarea id="patientText" readonly></textarea>
+</div>
+</section>
+
+</main>
+
+<script>
+// STABLE BASELINE — do not refactor initialisation without tests
+(function(){
+  function init(){
+
+    // AHBP handoff
+    try {
+      const bpFromCalc = sessionStorage.getItem('hypertension_bp_value');
+      if (bpFromCalc) {
+        const el = document.getElementById('bpValue');
+        if (el) el.value = bpFromCalc;
+        sessionStorage.removeItem('hypertension_bp_value');
+      }
+    } catch(e) {}
+
+    const DATA = {
+     ACE: [
+      ["Lisinopril",["2.5","5","10","20","30","40"],{cls:"A"}],
+      ["Perindopril",["2","4","6","8"],{cls:"A"}],
+      ["Ramipril",["1.25","2.5","5","10"],{cls:"A"}],
+      ["Captopril",["6.25","12.5","25","50","75"],{cls:"A"}],
+      ["Enalapril",["2.5","5","10","20","40"],{cls:"A"}],
+      ["Fosinopril",["10","20","40"],{cls:"A"}],
+      ["Imidapril",["2.5","5","10","20"],{cls:"A"}],
+      ["Trandolapril",["0.5","1","2","4"],{cls:"A"}]
+     ],
+     ARB: [
+      ["Candesartan",["4","8","16","32"],{cls:"A"}],
+      ["Irbesartan",["75","150","225","300"],{cls:"A"}],
+      ["Losartan",["25","50","100"],{cls:"A"}],
+      ["Azilsartan",["20","40","80"],{cls:"A"}],
+      ["Eprosartan",["600"],{cls:"A"}],
+      ["Olmesartan",["10","20","40"],{cls:"A"}],
+      ["Telmisartan",["20","40","80"],{cls:"A"}],
+      ["Valsartan",["40","80","160","240"],{cls:"A"}]
+     ],
+     CCB: [
+      ["Amlodipine",["5","10"],{cls:"C"}],
+      ["Felodipine MR",["2.5","5","10","20"],{cls:"C"}],
+      ["Lacidipine",["2","4","6"],{cls:"C"}],
+      ["Lercanidipine",["10","20"],{cls:"C"}],
+      ["Nicardipine",["20","30","40"],{cls:"C"}],
+      ["Nifedipine MR",["30","60","90"],{cls:"C"}]
+     ],
+     THZ: [
+      ["Indapamide",["2.5"],{cls:"D"}],
+      ["Chlortalidone",["25","50"],{cls:"D"}],
+      ["Metolazone",["2.5","5"],{cls:"D"}],
+      ["Xipamide",["20"],{cls:"D"}],
+      ["Bendroflumethiazide",["2.5"],{cls:"D", note:"Continue only (not preferred for initiation)"}]
+     ],
+     OTH: [
+      ["Spironolactone",["25"],{cls:"O"}],
+      ["Doxazosin",["1","2","4"],{cls:"O"}],
+      ["Terazosin",["1","2","5","10"],{cls:"O"}],
+      ["Bisoprolol",["2.5","5","10"],{cls:"O"}],
+      ["Carvedilol",["12.5","25","50"],{cls:"O"}],
+      ["Nebivolol",["2.5","5"],{cls:"O"}],
+      ["Atenolol",["25","50"],{cls:"O"}],
+      ["Metoprolol",["100","200"],{cls:"O"}],
+      ["Propranolol",["80","160"],{cls:"O"}],
+      ["Timolol",["5","10","20","30"],{cls:"O"}]
+     ]
+    };
+
+    const PREFERRED = {
+     A: ["Ramipril","Lisinopril","Losartan","Candesartan","Irbesartan","Perindopril","Olmesartan","Valsartan","Telmisartan","Azilsartan","Eprosartan"],
+     C: ["Amlodipine","Felodipine MR","Lercanidipine","Nifedipine MR","Lacidipine","Nicardipine"],
+     D: ["Indapamide","Chlortalidone","Xipamide","Metolazone"],
+     O: ["Spironolactone","Doxazosin","Bisoprolol","Nebivolol","Carvedilol"]
+    };
+
+    const state = {};
+    const meta = {};
+    (function initMeta(){
+      Object.keys(DATA).forEach(sec=>{
+        DATA[sec].forEach(([name,doses,m])=>{
+          meta[name]={doses:[...doses], cls:m.cls, note:m.note||""};
+        });
+      });
+    })();
+
+    function renderSection(id){
+      const box=document.getElementById(id); if(!box) return;
+      box.innerHTML="";
+      const head=document.createElement("div"); head.className="row header-row";
+      head.innerHTML="<div>Drug</div>"+Array(6).fill("<div>Dose</div>").join("")+"<div></div>";
+      box.appendChild(head);
+
+      DATA[id].forEach(([name,doses,m])=>{
+        if(!state[name]) state[name]={c:null,b:new Set(),bd:false};
+        const s=state[name];
+        const row=document.createElement("div"); row.className="row";
+
+        const nameCell=document.createElement("div");
+        nameCell.textContent = name + (m.note ? " *" : "");
+        row.appendChild(nameCell);
+
+        for(let i=0;i<6;i++){
+          const cell=document.createElement("div");
+          if(doses[i]){
+            const btn=document.createElement("div");
+            btn.className="dose-btn";
+            btn.textContent=doses[i]+" mg";
+            if(s.c===doses[i]) btn.classList.add("current");
+            if(s.bd || s.b.has(doses[i])) btn.classList.add("blocked");
+
+            btn.onclick=()=>{
+              if(s.bd) return;
+              if(s.b.has(doses[i])) s.b.delete(doses[i]);
+              else s.c = (s.c===doses[i]) ? null : doses[i];
+              renderAll();
+            };
+            btn.ondblclick=()=>{
+              if(s.bd) return;
+              if(s.c===doses[i]) s.c=null;
+              s.b.add(doses[i]);
+              renderAll();
+            };
+            cell.appendChild(btn);
+          }
+          row.appendChild(cell);
+        }
+
+        const block=document.createElement("button");
+        block.className="secondary block-btn";
+        block.textContent=s.bd ? "Unblock" : "Block";
+        block.onclick=()=>{
+          s.bd=!s.bd;
+          if(s.bd){ s.c=null; s.b=new Set(doses); }
+          else { s.b.clear(); }
+          renderAll();
+        };
+        row.appendChild(block);
+
+        box.appendChild(row);
+      });
+    }
+    function renderAll(){ renderSection("ACE");renderSection("ARB");renderSection("CCB");renderSection("THZ");renderSection("OTH"); }
+    renderAll();
+
+    function parseBP(){
+      const v=document.getElementById("bpValue").value.trim();
+      const m=v.match(/(\d+)(?:\/(\d+))?/);
+      if(!m) return null;
+      return {sys:parseInt(m[1],10), dia:m[2]?parseInt(m[2],10):null};
+    }
+    function getTargets(){
+      const age=document.getElementById("ageBand").value;
+      const bpType=document.getElementById("bpType").value;
+      const ge80 = (age==="ge80");
+      if(bpType==="clinic") return ge80 ? {sys:150,dia:90} : {sys:140,dia:90};
+      return ge80 ? {sys:145,dia:85} : {sys:135,dia:85};
+    }
+    function updateTargetHint(){
+      const t=getTargets();
+      const mode=document.getElementById("bpType").value==="clinic"?"clinic":"home/ABPM";
+      document.getElementById("targetHint").textContent = `Target: <${t.sys}/${t.dia} (${mode})`;
+    }
+    document.getElementById("bpType").addEventListener("change", updateTargetHint);
+    document.getElementById("ageBand").addEventListener("change", updateTargetHint);
+    updateTargetHint();
+
+    function bpUncontrolled(bp,target){
+      if(bp.sys>=target.sys) return true;
+      if(bp.dia!=null && bp.dia>=target.dia) return true;
+      return false;
+    }
+    function severeBP(bp){
+      return (bp.sys>=180) || (bp.dia!=null && bp.dia>=120);
+    }
+
+    let overrideSevere = false;
+    function openModal(){ document.getElementById("bpModal").style.display="flex"; }
+    function closeModal(){ document.getElementById("bpModal").style.display="none"; overrideSevere=false; }
+    function confirmProceed(){ document.getElementById("bpModal").style.display="none"; overrideSevere=true; generatePlan(); }
+    window.closeModal=closeModal;
+    window.confirmProceed=confirmProceed;
+
+    function selectedRisks(){
+      return new Set([...document.getElementById("risks").selectedOptions].map(o=>o.value));
+    }
+    function currentMeds(){
+      const meds=[];
+      Object.keys(state).forEach(n=>{
+        const s=state[n];
+        if(s.c && !s.bd) meds.push({name:n, dose:s.c, cls:meta[n].cls});
+      });
+      return meds;
+    }
+    function classPresent(cls){ return currentMeds().some(m=>m.cls===cls); }
+
+    function classFullyBlocked(cls){
+      const drugs = Object.keys(meta).filter(n=>meta[n].cls===cls);
+      if(!drugs.length) return false;
+      for(const n of drugs){
+        const s = state[n] || {bd:false,b:new Set()};
+        if(s.bd) continue;
+        for(const d of meta[n].doses){
+          if(!s.b.has(d)) return false;
+        }
+      }
+      return true;
+    }
+    function classAvailable(cls){
+      const drugs = Object.keys(meta).filter(n=>meta[n].cls===cls);
+      for(const n of drugs){
+        const s = state[n] || {bd:false,b:new Set()};
+        if(s.bd) continue;
+        for(const d of meta[n].doses){
+          if(!s.b.has(d)) return true;
+        }
+      }
+      return false;
+    }
+
+    function nextDose(name, currentDose){
+      const s=state[name];
+      const doses=meta[name].doses;
+      const idx=doses.indexOf(currentDose);
+      if(idx<0) return null;
+      for(let i=idx+1;i<doses.length;i++){
+        if(!s.b.has(doses[i]) && !s.bd) return doses[i];
+      }
+      return null;
+    }
+    function firstAvailableDose(name){
+      const s=state[name];
+      for(const d of meta[name].doses){
+        if(!s.bd && !s.b.has(d)) return d;
+      }
+      return null;
+    }
+    function chooseDrugForClass(cls, exclude=new Set()){
+      const preferred=PREFERRED[cls]||[];
+      const all=Object.keys(meta).filter(n=>meta[n].cls===cls);
+      const candidates=[...preferred, ...all];
+      for(const n of candidates){
+        if(exclude.has(n)) continue;
+        if(meta[n].cls!==cls) continue;
+        if(!state[n]) state[n]={c:null,b:new Set(),bd:false};
+        if(state[n].bd) continue;
+        const d=firstAvailableDose(n);
+        if(d) return {name:n, dose:d};
+      }
+      return null;
+    }
+    function tryTitrateClass(cls){
+      const meds=currentMeds().filter(m=>m.cls===cls);
+      for(const m of meds){
+        const nxt=nextDose(m.name, m.dose);
+        if(nxt) return {name:m.name, from:m.dose, to:nxt};
+      }
+      return null;
+    }
+
+    function inferStep(){
+      const A=classPresent("A"), C=classPresent("C"), D=classPresent("D");
+      if(!A && !C && !D) return 0;
+      if((A && !C && !D) || (!A && C && !D)) return 1;
+      if(A && C && !D) return 2;
+      if(A && C && D) return 3;
+      return 9;
+    }
+    function firstLinePreference(){
+      const age=document.getElementById("ageBand").value;
+      const eth=document.getElementById("ethnicity").value;
+      const r=selectedRisks();
+      if(r.has("ckd") || r.has("proteinuria") || r.has("dm")) return "A";
+      const ge55 = (age!=="lt55");
+      if(eth==="black" || ge55) return "C";
+      return "A";
+    }
+    function nextAvailableInOrder(order){
+      for(const cls of order){
+        if(classAvailable(cls)) return cls;
+      }
+      return null;
+    }
+
+    function generatePlan(){
+      const alerts=document.getElementById("alerts");
+      const planBox=document.getElementById("planBox");
+      const clinEl=document.getElementById("clinicianText");
+      const ptEl=document.getElementById("patientText");
+      alerts.innerHTML=""; planBox.innerHTML="";
+      clinEl.value=""; ptEl.value="";
+      document.getElementById("stepBadge").textContent="Step –";
+
+      const bp=parseBP();
+      if(!bp){
+        const a=document.createElement("div");
+        a.className="alert warn"; a.textContent="Enter a valid BP (e.g. 152/94).";
+        alerts.appendChild(a);
+        return;
+      }
+      if(severeBP(bp) && !overrideSevere){
+        openModal();
+        return;
+      }
+
+      const target=getTargets();
+      const uncontrolled=bpUncontrolled(bp,target);
+      const meds=currentMeds();
+
+      const lines=[];
+      const clin=[];
+      const pt=[];
+
+      clin.push("Hypertension review (NICE NG136 aligned).");
+      clin.push(`BP (${document.getElementById("bpType").value==="clinic"?"clinic":"home/ABPM"}): ${bp.sys}${bp.dia!=null?"/"+bp.dia:""} mmHg. Target <${target.sys}/${target.dia}.`);
+      clin.push(`Current antihypertensives: ${meds.length?meds.map(m=>m.name+" "+m.dose+" mg").join(", "):"none recorded"}.`);
+
+      if(severeBP(bp)){
+        const w=document.createElement("div");
+        w.className="alert warn";
+        w.textContent="Severe hypertension noted (≥180 systolic or ≥120 diastolic). Consider same-day clinical assessment depending on symptoms.";
+        alerts.appendChild(w);
+        clin.push("Warning: Severe hypertension (≥180 systolic or ≥120 diastolic). Consider same-day clinical assessment depending on symptoms.");
+        pt.push("Your blood pressure reading is very high. Your clinician may advise urgent assessment depending on how you feel.");
+      }
+
+      // class-block messaging
+      ["A","C","D"].forEach(cls=>{
+        if(classFullyBlocked(cls)){
+          const label = (cls==="A") ? "ACEi/ARB" : (cls==="C") ? "CCB" : "Thiazide-like (D)";
+          const msg = `All ${label} options are blocked.`;
+          const i=document.createElement("div");
+          i.className="alert info"; i.textContent=msg;
+          alerts.appendChild(i);
+          lines.push(`<span class="flag-change">${msg}</span>`);
+          clin.push(msg);
+        }
+      });
+
+      const step=inferStep();
+      document.getElementById("stepBadge").textContent = (step===9) ? "Custom" : ("Step "+step);
+
+      if(!uncontrolled){
+        lines.push(`<span class="flag-change">No intensification suggested:</span> BP is at/under target.`);
+        lines.push(`Continue current regimen. Recheck BP routinely and reinforce lifestyle / adherence.`);
+        pt.push("Your blood pressure is within the target range.");
+        pt.push("Continue your current tablets as prescribed. We'll recheck your blood pressure again routinely.");
+      } else {
+        lines.push(`<span class="flag-change">BP above target</span> (target <${target.sys}/${target.dia}).`);
+        lines.push(`Check technique, adherence and consider home/ABPM if clinic readings.`);
+
+        let rec=null;
+        const haveA=classPresent("A"), haveC=classPresent("C"), haveD=classPresent("D");
+
+        if(step===0){
+          const pref=firstLinePreference();
+          const cls = classAvailable(pref) ? pref : nextAvailableInOrder(pref==="A"?["C","D","O"]:["A","D","O"]);
+          if(!cls) rec={type:"info", text:"All first-line classes appear blocked. Consider specialist advice."};
+          else {
+            const chosen=chooseDrugForClass(cls, new Set(["Bendroflumethiazide"]));
+            rec = chosen ? {type:"start", cls, ...chosen} : {type:"info", text:`No available drug found in class ${cls}.`};
+          }
+        } else if(step===1){
+          if(haveA && !haveC){
+            rec = tryTitrateClass("A");
+            if(!rec){
+              const cls = classAvailable("C") ? "C" : nextAvailableInOrder(["D","O"]);
+              if(cls==="C"){
+                const c=chooseDrugForClass("C");
+                rec = c?{type:"add", cls:"C", ...c}:{type:"info", text:"All CCB options blocked."};
+              } else if(cls==="D"){
+                const d=chooseDrugForClass("D", new Set(["Bendroflumethiazide"]));
+                rec = d?{type:"add", cls:"D", ...d}:{type:"info", text:"All D options blocked."};
+              } else {
+                rec = {type:"info", text:"Next class options blocked/unavailable. Consider specialist advice."};
+              }
+            }
+          } else if(haveC && !haveA){
+            rec = tryTitrateClass("C");
+            if(!rec){
+              const cls = classAvailable("A") ? "A" : nextAvailableInOrder(["D","O"]);
+              if(cls==="A"){
+                const a=chooseDrugForClass("A");
+                rec = a?{type:"add", cls:"A", ...a}:{type:"info", text:"All ACEi/ARB options blocked."};
+              } else if(cls==="D"){
+                const d=chooseDrugForClass("D", new Set(["Bendroflumethiazide"]));
+                rec = d?{type:"add", cls:"D", ...d}:{type:"info", text:"All D options blocked."};
+              } else {
+                rec = {type:"info", text:"Next class options blocked/unavailable. Consider specialist advice."};
+              }
+            }
+          } else {
+            rec = tryTitrateClass("C") || tryTitrateClass("A") || {type:"info", text:"Non-standard regimen. Consider aligning to A/C pathway and reassess."};
+          }
+        } else if(step===2){
+          rec = tryTitrateClass("C") || tryTitrateClass("A");
+          if(!rec){
+            if(classAvailable("D")){
+              const d=chooseDrugForClass("D", new Set(["Bendroflumethiazide"]));
+              rec = d?{type:"add", cls:"D", ...d}:{type:"info", text:"All D options blocked."};
+            } else {
+              rec = {type:"info", text:"Thiazide-like options blocked/unavailable. Consider Step 4 options / specialist advice."};
+            }
+          }
+        } else if(step===3){
+          rec = tryTitrateClass("C") || tryTitrateClass("A") || tryTitrateClass("D");
+          if(!rec){
+            const k=parseFloat(document.getElementById("kVal").value);
+            const egfr=parseFloat(document.getElementById("egfrVal").value);
+            const kOk = !isNaN(k) ? (k<=4.5) : null;
+            const egfrOk = !isNaN(egfr) ? (egfr>=45) : null;
+
+            if(!state["Spironolactone"]) state["Spironolactone"]={c:null,b:new Set(),bd:false};
+            const spiroOk = classAvailable("O") && !state["Spironolactone"].bd && firstAvailableDose("Spironolactone") && kOk===true && egfrOk===true;
+
+            if(spiroOk){
+              rec = {type:"add", cls:"O", name:"Spironolactone", dose:"25", note:"Only if K ≤4.5 and eGFR ≥45"};
+            } else {
+              rec = {type:"info", text:"Resistant hypertension (Step 4): consider spironolactone 25 mg OD if K ≤4.5 and eGFR ≥45, or consider an alpha-/beta-blocker if not suitable. Ensure U&Es and consider specialist input."};
+            }
+            if(kOk===null || egfrOk===null){
+              const i=document.createElement("div");
+              i.className="alert info";
+              i.textContent="Step 4 decisions often need recent potassium and eGFR. Enter values if available, or plan bloods before adding spironolactone.";
+              alerts.appendChild(i);
+            }
+          }
+        } else {
+          rec = tryTitrateClass("C") || tryTitrateClass("A") || tryTitrateClass("D") || {type:"info", text:"Current regimen is non-standard. Consider aligning to A+C+D pathway and check secondary causes."};
+        }
+
+        if(rec){
+          if(rec.from){
+            lines.push(`<span class="flag-change">TITRATE:</span> Increase <strong>${rec.name}</strong> from ${rec.from} mg to <strong>${rec.to} mg</strong> (if tolerated).`);
+            clin.push(`Plan: increase ${rec.name} from ${rec.from} mg to ${rec.to} mg (if tolerated).`);
+            pt.push(`We are increasing your blood pressure tablet ${rec.name} from ${rec.from} mg to ${rec.to} mg.`);
+            pt.push(`This is a dose increase of a medicine you are already taking (not a new tablet).`);
+          } else if(rec.type==="start"){
+            lines.push(`<span class="flag-add">ADD:</span> Start <strong>${rec.name} ${rec.dose} mg</strong>.`);
+            clin.push(`Plan: start ${rec.name} ${rec.dose} mg (stepwise escalation).`);
+            pt.push(`We are starting a new blood pressure tablet: ${rec.name} ${rec.dose} mg.`);
+            pt.push(`Take it in addition to your other regular medicines unless your clinician tells you otherwise.`);
+          } else if(rec.type==="add"){
+            lines.push(`<span class="flag-add">ADD:</span> Add <strong>${rec.name} ${rec.dose} mg</strong> to existing treatment.`);
+            if(rec.note) lines.push(`Note: ${rec.note}`);
+            clin.push(`Plan: add ${rec.name} ${rec.dose} mg.` + (rec.note?` (${rec.note})`:""));
+            pt.push(`We are adding a new blood pressure tablet: ${rec.name} ${rec.dose} mg.`);
+            pt.push(`This is <strong>in addition</strong> to your current blood pressure tablets.`);
+          } else if(rec.type==="info"){
+            lines.push(`<span class="flag-change">Review required:</span> ${rec.text}`);
+            clin.push(`Plan: ${rec.text}`);
+            pt.push("Your blood pressure is above target. Your clinician will review the best next medication step based on your medical history and previous tolerability.");
+          }
+        }
+
+        lines.push(`<br><strong>Monitoring:</strong>`);
+        lines.push(`• Recheck BP in ~4–6 weeks after medication changes (earlier if very high BP or symptoms).`);
+        lines.push(`• Consider HBPM/ABPM if clinic readings may be affected by white-coat effect.`);
+        lines.push(`• Check adherence, lifestyle measures, and consider secondary causes if resistant.`);
+        clin.push("Monitoring: BP recheck 4–6 weeks. Consider U&Es 1–2 weeks after starting or increasing ACEi/ARB/diuretic/spironolactone.");
+        pt.push("We'll usually recheck your blood pressure again in about 4–6 weeks after a medication change.");
+      }
+
+      planBox.innerHTML = lines.map(l=>`<div>${l}</div>`).join("");
+      clinEl.value = clin.join("\\n");
+      ptEl.value = pt.join("\\n");
+    }
+
+    document.getElementById("genBtn").addEventListener("click", ()=>{ /* keep override if already acknowledged */ generatePlan(); });
+    document.getElementById("clearBtn").addEventListener("click", ()=>location.reload());
+    document.getElementById("copyClin").addEventListener("click", ()=>navigator.clipboard.writeText(document.getElementById("clinicianText").value));
+    document.getElementById("copyPt").addEventListener("click", ()=>navigator.clipboard.writeText(document.getElementById("patientText").value));
+
+      catch(e){
+        console.error(e);
+        const b=document.createElement('div');
+        b.style.cssText='background:#fdecea;border:1px solid #d4351c;padding:10px;margin:10px;border-radius:6px;font-family:system-ui,Arial;';
+        b.innerHTML='<strong>JavaScript error:</strong> '+(e && e.message ? e.message : e);
+        document.body.prepend(b);
+      }
+    }
+    if(document.readyState==='loading'){
+    } else {
+    }
+    if(typeof closeModal==='function') window.closeModal=closeModal;
+    if(typeof confirmProceed==='function') window.confirmProceed=confirmProceed;
+  }
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+
+</script>
+
+</body>
+</html>
