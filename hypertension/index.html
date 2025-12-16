@@ -638,21 +638,7 @@ document.getElementById("clearBtn").addEventListener("click", ()=>location.reloa
 document.getElementById("copyClin").addEventListener("click", ()=>navigator.clipboard.writeText(document.getElementById("clinicianText").value));
 document.getElementById("copyPt").addEventListener("click", ()=>navigator.clipboard.writeText(document.getElementById("patientText").value));
 
-function __runInit(){
-  try{ __init(); }
-  catch(e){
-    console.error(e);
-    const b=document.createElement('div');
-    b.style.cssText='background:#fdecea;border:1px solid #d4351c;padding:10px;margin:10px;border-radius:6px;font-family:system-ui,Arial;';
-    b.innerHTML='<strong>JavaScript error:</strong> '+(e && e.message ? e.message : e);
-    document.body.prepend(b);
-  }
-}
-if(document.readyState==='loading'){
-  document.addEventListener('DOMContentLoaded', __runInit);
-} else {
-  __runInit();
-}
+
 if(typeof closeModal==='function') window.closeModal=closeModal;
 if(typeof confirmProceed==='function') window.confirmProceed=confirmProceed;
 
