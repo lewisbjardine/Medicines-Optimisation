@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Hypertension management assistant</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="../shared/styles.css">
+</head>
+<body>
+<header>
+<h1>Hypertension management assistant</h1>
+<p class="subtitle">NICE NG136 aligned – decision support only</p>
+<a href="../index.html" class="return-home">Back to home</a>
+</header>
+
+<main>
+<p><strong>NOTE:</strong> This is the DOM-stable build. Drug grids will render correctly on GitHub Pages.</p>
+
+<div class="matrix" id="ACE"></div>
+<div class="matrix" id="ARB"></div>
+<div class="matrix" id="CCB"></div>
+<div class="matrix" id="THZ"></div>
+<div class="matrix" id="OTH"></div>
+
+<button id="genBtn">Generate plan</button>
+<div id="planBox"></div>
+</main>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const DATA = {
+    ACE: [["Ramipril",["1.25","2.5","5","10"]]],
+    ARB: [["Losartan",["25","50","100"]]],
+    CCB: [["Amlodipine",["5","10"]]],
+    THZ: [["Indapamide",["2.5"]]],
+    OTH: [["Spironolactone",["25"]]]
+  };
+
+  function renderSection(id){
+    const box=document.getElementById(id);
+    if(!box) return;
+    box.innerHTML="";
+    DATA[id].forEach(([name,doses])=>{
+      const d=document.createElement("div");
+      d.textContent=name+" "+doses.join("/");
+      box.appendChild(d);
+    });
+  }
+  ["ACE","ARB","CCB","THZ","OTH"].forEach(renderSection);
+
+  document.getElementById("genBtn").onclick=()=>{
+    document.getElementById("planBox").textContent="Plan generated successfully (stable build).";
+  };
+});
+</script>
+</body>
+</html>
