@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Hypertension – medication picker</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="../shared/styles.css">
+<style>
+main{max-width:1000px;margin:1.5rem auto;padding:1rem;background:#fff;border-radius:6px;box-shadow:0 2px 6px rgba(0,0,0,.1)}
+.matrix{border:1px solid var(--nhs-border);border-radius:4px;overflow:hidden}
+.row{display:grid;grid-template-columns:220px 1fr 120px;gap:.5rem;padding:.6rem;border-bottom:1px solid #eee;align-items:center}
+.row:last-child{border-bottom:none}
+.doses span{display:inline-block;margin-right:.6rem;padding:.15rem .35rem;border-radius:4px;cursor:pointer;border:1px solid transparent}
+.doses span:hover{border-color:var(--nhs-border)}
+.dose-current{background:#e8f4ff;border-color:#0072ce;font-weight:bold}
+.dose-blocked{text-decoration:line-through;color:#888;cursor:not-allowed}
+.block-btn{font-size:.8rem}
+.legend{font-size:.85rem;opacity:.8;margin-top:.5rem}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Hypertension – medication picker</h1>
+  <p class="subtitle">Select current dose, block individual doses or whole drugs</p>
+  <a href="../index.html" class="return-home">Back to home</a>
+</header>
+
+<main>
+<section class="card">
+<h2>Current antihypertensive treatment</h2>
+
+<div class="matrix" id="matrix"></div>
+
+<div class="legend">
+• Click a dose to mark it as <strong>current</strong><br>
+• Right‑click a dose to <strong>block / unblock</strong> it (not tolerated)<br>
+• Use “Block drug” to exclude the whole drug
+</div>
+</section>
+</main>
+
+<script>
+(function(){
+const DRUGS = [
+  { name:"Amlodipine", doses:["2.5","5","10"] },
+  { name:"Felodipine MR", doses:["2.5","5","10"] },
+  { name:"Lercanidipine", doses:["10","20"] },
+  { name:"Ramipril", doses:["1.25","2.5","5","10"] },
+  { name:"Lisinopril", doses:["2.5","5","10","20","40"] },
+  { name:"Perindopril", doses:["2","4","8"] },
+  { name:"Losartan", doses:["25","50","100"] },
+  { name:"Candesartan", doses:["2","4","8","16","32"] },
+  { name:"Irbesartan", doses:["75","150","300"] },
+  { name:"Indapamide MR", doses:["1.5"] },
+  { name:"Chlortalidone", doses:["12.5","25"] },
+  { name:"Spironolactone", doses:["12.5","25"] },
+  { name:"Doxazosin MR", doses:["4","8"] },
+  { name:"Bisoprolol", doses:["1.25","2.5","5","10"] }
+];
+
+const state = {};
+const matrix = document.getElementById("matrix");
+if(!matrix) return;
+
+function initState(name, doses){
+  if(!state[name]){
+    state[name] = {
+      current: null,
+      blocked: new Set(),
+      blockDrug: false,
+      allDoses: doses.slice()
+    };
+  }
+}
+
+function render(){
+  matrix.innerHTML = "";
+  DRUGS.forEach(drug => {
+    initState(drug.name, drug.doses);
+    const s = state[drug.name];
+
+    const row = document.createElement("div");
+    row.className = "row";
+
+    const left = document.createElement("strong");
+    left.textContent = drug.name;
+
+    const doseBox = document.createElement("div");
+    doseBox.className = "doses";
+
+    drug.doses.forEach(d => {
+      const sp = document.createElement("span");
+      sp.textContent = d + " mg";
+
+      if(s.blockDrug || s.blocked.has(d)){
+        sp.classList.add("dose-blocked");
+      } else if(s.current === d){
+        sp.classList.add("dose-current");
+      }
+
+      sp.addEventListener("click", () => {
+        if(s.blockDrug || s.blocked.has(d)) return;
+        s.current = d;
+        render();
+      });
+
+      sp.addEventListener("contextmenu", e => {
+        e.preventDefault();
+        if(s.blockDrug) return;
+        if(s.blocked.has(d)){
+          s.blocked.delete(d);
+        } else {
+          s.blocked.add(d);
+          if(s.current === d) s.current = null;
+        }
+        render();
+      });
+
+      doseBox.appendChild(sp);
+    });
+
+    const btn = document.createElement("button");
+    btn.className = "secondary block-btn";
+    btn.textContent = s.blockDrug ? "Unblock drug" : "Block drug";
+    btn.addEventListener("click", () => {
+      s.blockDrug = !s.blockDrug;
+      if(s.blockDrug){
+        s.current = null;
+        s.blocked = new Set(s.allDoses);
+      } else {
+        s.blocked.clear();
+      }
+      render();
+    });
+
+    row.appendChild(left);
+    row.appendChild(doseBox);
+    row.appendChild(btn);
+
+    matrix.appendChild(row);
+  });
+}
+
+render();
+})();</script>
+
+</body>
+</html>
