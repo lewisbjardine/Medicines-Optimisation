@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Hypertension management assistant</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="../shared/styles.css">
+<style>
+main{max-width:1200px;margin:1.2rem auto;padding:1rem;background:#fff;border-radius:6px;box-shadow:0 2px 6px rgba(0,0,0,.1)}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem}
+.matrix{border:1px solid #ccc;border-radius:4px;overflow:hidden}
+.row{display:grid;grid-template-columns:180px repeat(6,1fr) 120px;gap:.25rem;padding:.38rem;border-bottom:1px solid #eee;align-items:center;font-size:.78rem}
+.header-row{background:#f0f4f5;font-weight:bold}
+.dose-btn{padding:.2rem .35rem;border:1px solid #ccc;border-radius:4px;text-align:center;cursor:pointer;user-select:none}
+.dose-btn.current{background:#e8f4ff;border-color:#0072ce;font-weight:bold}
+.dose-btn.blocked{background:#f5f5f5;color:#888;text-decoration:line-through}
+.block-btn{font-size:.7rem}
+.instructions{background:#f0f4f5;border-left:4px solid #0072ce;padding:.6rem;margin-bottom:.8rem;font-size:.82rem}
+</style>
+</head>
+<body>
+
+<header>
+<h1>Hypertension management assistant</h1>
+<p class="subtitle">NICE NG136 aligned – decision support only</p>
+<a href="../index.html" class="return-home">Back to home</a>
+</header>
+
+<main>
+<div class="instructions">
+Click dose = current | Double‑click = block | Block = block whole drug
+</div>
+
+<section>
+<h2>Current antihypertensive treatment</h2>
+<div class="grid-2">
+  <div>
+    <h3>A – ACE inhibitors</h3><div class="matrix" id="ACE"></div>
+    <h3>A – ARBs</h3><div class="matrix" id="ARB"></div>
+  </div>
+  <div>
+    <h3>C – CCBs</h3><div class="matrix" id="CCB"></div>
+    <h3>D – Thiazide‑like</h3><div class="matrix" id="THZ"></div>
+    <h3>Other</h3><div class="matrix" id="OTH"></div>
+  </div>
+</div>
+</section>
+
+<section>
+<h2>Blood pressure</h2>
+<input id="bpValue" placeholder="e.g. 152/94">
+<button id="genBtn">Generate plan</button>
+<div id="planBox"></div>
+</section>
+</main>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+const DATA = {
+ ACE: [["Ramipril",["1.25","2.5","5","10"]]],
+ ARB: [["Losartan",["25","50","100"]]],
+ CCB: [["Amlodipine",["5","10"]]],
+ THZ: [["Indapamide",["2.5"]]],
+ OTH: [["Spironolactone",["25"]]]
+};
+
+const state = {};
+
+function renderSection(id){
+  const box=document.getElementById(id);
+  if(!box) return;
+  box.innerHTML="";
+  const head=document.createElement("div");
+  head.className="row header-row";
+  head.innerHTML="<div>Drug</div>"+Array(6).fill("<div>Dose</div>").join("")+"<div></div>";
+  box.appendChild(head);
+
+  DATA[id].forEach(([name,doses])=>{
+    if(!state[name]) state[name]={c:null,b:new Set(),bd:false};
+    const s=state[name];
+    const row=document.createElement("div"); row.className="row";
+    row.appendChild(Object.assign(document.createElement("div"),{textContent:name}));
+
+    for(let i=0;i<6;i++){
+      const cell=document.createElement("div");
+      if(doses[i]){
+        const btn=document.createElement("div");
+        btn.className="dose-btn";
+        btn.textContent=doses[i]+" mg";
+        if(s.c===doses[i]) btn.classList.add("current");
+        if(s.b.has(doses[i])||s.bd) btn.classList.add("blocked");
+        btn.onclick=()=>{ s.c=(s.c===doses[i])?null:doses[i]; renderAll(); };
+        btn.ondblclick=()=>{ s.b.add(doses[i]); renderAll(); };
+        cell.appendChild(btn);
+      }
+      row.appendChild(cell);
+    }
+    const block=document.createElement("button");
+    block.className="block-btn";
+    block.textContent="Block";
+    block.onclick=()=>{ s.bd=true; s.c=null; s.b=new Set(doses); renderAll(); };
+    row.appendChild(block);
+    box.appendChild(row);
+  });
+}
+
+function renderAll(){
+  ["ACE","ARB","CCB","THZ","OTH"].forEach(renderSection);
+}
+
+renderAll();
+
+function parseBP(){
+  const v=document.getElementById("bpValue").value.trim();
+  const m=v.match(/(\d+)(?:\/(\d+))?/);
+  if(!m) return null;
+  return {sys:+m[1], dia:m[2]?+m[2]:null};
+}
+
+document.getElementById("genBtn").onclick=()=>{
+  const bp=parseBP();
+  document.getElementById("planBox").textContent = bp ? 
+    `BP parsed: ${bp.sys}/${bp.dia}` : "Invalid BP";
+};
+
+});
+</script>
+
+</body>
+</html>
