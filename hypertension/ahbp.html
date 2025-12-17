@@ -24,13 +24,14 @@ input,textarea{width:100%;box-sizing:border-box}
 </header>
 
 <main>
-<label><strong>Add readings</strong></label>
-<textarea id="bpPaste" rows="4" placeholder="Paste readings e.g. 132/82, 128 80, AM 134/84"></textarea>
-<button id="pasteBtn" class="secondary">Add readings</button>
-
 <label style="margin-top:1rem;"><strong>Upload BP image (beta)</strong></label>
 <input type="file" id="bpImage" accept="image/*">
 <div class="status" id="ocrStatus"></div>
+
+<div class="actions">
+  <button id="addRowBtn" class="secondary">Add row</button>
+  <button id="clearRowsBtn" class="secondary">Clear all</button>
+</div>
 
 <div class="actions">
   <button id="calcBtn">Calculate mean</button>
@@ -39,7 +40,7 @@ input,textarea{width:100%;box-sizing:border-box}
 </div>
 
 <table>
-<thead><tr><th>#</th><th>Systolic</th><th>Diastolic</th></tr></thead>
+<thead><tr><th>#</th><th>Systolic</th><th>Diastolic</th><th></th></tr></thead>
 <tbody id="tbody"></tbody>
 </table>
 
@@ -58,8 +59,18 @@ input,textarea{width:100%;box-sizing:border-box}
     const tr=document.createElement("tr");
     tr.innerHTML=`<td>${tbody.children.length+1}</td>
       <td><input class="sys" inputmode="numeric" value="${s}"></td>
-      <td><input class="dia" inputmode="numeric" value="${d}"></td>`;
+      <td><input class="dia" inputmode="numeric" value="${d}"></td>
+      <td><button class="secondary delBtn">✕</button></td>`;
+    tr.querySelector(".delBtn").onclick=()=>{
+      tr.remove();
+      renumber();
+      updateCount();
+    };
     tbody.appendChild(tr);
+  }
+
+  function renumber(){
+    [...tbody.children].forEach((tr,i)=>tr.firstChild.textContent=i+1);
   }
 
   function parsePairs(text){
@@ -90,10 +101,16 @@ input,textarea{width:100%;box-sizing:border-box}
     countPill.textContent=`${getVals().length} readings`;
   }
 
-  document.getElementById("pasteBtn").onclick=()=>{
-    parsePairs(document.getElementById("bpPaste").value).forEach(v=>addRow(v.s,v.d));
-    document.getElementById("bpPaste").value="";
+  document.getElementById("addRowBtn").onclick=()=>{
+    addRow();
     updateCount();
+  };
+
+  document.getElementById("clearRowsBtn").onclick=()=>{
+    tbody.innerHTML="";
+    updateCount();
+    meanOut.textContent="–";
+    useBtn.disabled=true;
   };
 
   document.getElementById("bpImage").onchange=async e=>{
