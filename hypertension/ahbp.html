@@ -164,9 +164,11 @@ input,textarea{width:100%;box-sizing:border-box}
     window.location.href="index.html";
   };
 
-  // Ensure the table shows at least one editable row on load
+  // Ensure the table shows 10 editable rows on load
   if (!tbody.children.length) {
-    addRow();
+    for (let i = 0; i < 10; i++) {
+      addRow();
+    }
     updateCount();
   }
 })();
