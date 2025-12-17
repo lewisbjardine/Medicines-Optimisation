@@ -548,7 +548,7 @@ lines.push(`Excluded/blocked options: ${fmtBlocks()}.`);
  pt.push("Continue your current tablets as prescribed. We'll recheck your blood pressure again routinely.");
  } else {
  lines.push(`<span class="flag-change">BP above target</span> (target <${target.sys}/${target.dia}).`);
- lines.push(`Check technique, adherence and consider home/ABPM if clinic readings.`);
+ lines.push(`Check BP measurement technique and adherence. If readings are from clinic, arrange home BP monitoring or ABPM to confirm control.`);
 
  let rec=null; let preferredBlocked=null;
  const haveA=classPresent("A"), haveC=classPresent("C"), haveD=classPresent("D");
@@ -655,11 +655,11 @@ lines.push(`Excluded/blocked options: ${fmtBlocks()}.`);
  }
 
  lines.push(`<br><strong>Monitoring:</strong>`);
- lines.push(`• Recheck BP in ~4–6 weeks after medication changes (earlier if very high BP or symptoms).`);
- lines.push(`• Consider HBPM/ABPM if clinic readings may be affected by white-coat effect.`);
- lines.push(`• Check adherence, lifestyle measures, and consider secondary causes if resistant.`);
+ lines.push(`• Arrange repeat BP measurement in 4–6 weeks after any medication change (earlier review if BP is very high or symptoms develop).`);
+ lines.push(`• Use home BP monitoring or ABPM if clinic readings may not reflect usual BP.`);
+ lines.push(`• Review adherence and lifestyle factors; consider investigation for secondary hypertension if BP remains uncontrolled.`);
  clin.push("Monitoring: BP recheck 4–6 weeks. Consider U&Es 1–2 weeks after starting or increasing ACEi/ARB/diuretic/spironolactone.");
- pt.push("We'll usually recheck your blood pressure again in about 4–6 weeks after a medication change.");
+ pt.push("Please check your blood pressure again and provide readings to the surgery in 4–6 weeks after this medication change.");
  }
 
  planBox.innerHTML = lines.map(l=>`<div>${l}</div>`).join("");
