@@ -471,18 +471,35 @@ function fmtCurrentMeds(){
   return parts.length?parts.join(', '):'None selected';
 }
 function fmtBlocks(){
-  const blocks=[];
+  const classMap = { A: [], C: [], D: [], O: [] };
+
   Object.keys(meta).forEach(n=>{
-    const s=state[n];
+    const s = state[n];
     if(!s) return;
-    if(s.bd){ blocks.push(`${n} (all doses blocked)`); return; }
-    const bd=[...(s.b||new Set())];
+
+    if(s.bd){
+      classMap[meta[n].cls].push(n);
+      return;
+    }
+
+    const bd = [...(s.b||new Set())];
     if(bd.length){
-      bd.sort((a,b)=>a-b);
-      blocks.push(`${n}: ${bd.join('/') } mg blocked`);
+      classMap[meta[n].cls].push(`${n} ${bd.join('/') } mg`);
     }
   });
-  return blocks.length?blocks.join('; '):'None';
+
+  const out = [];
+
+  Object.keys(classMap).forEach(cls=>{
+    if(classFullyBlocked(cls)){
+      const label = (cls==="A")?"ACEi/ARB":(cls==="C")?"CCB":(cls==="D")?"Thiazide-like":"Other";
+      out.push(`${label} (all options blocked)`);
+    } else if(classMap[cls].length){
+      out.push(classMap[cls].join('; '));
+    }
+  });
+
+  return out.length ? out.join('; ') : 'None';
 }
 
 function generatePlan(){
