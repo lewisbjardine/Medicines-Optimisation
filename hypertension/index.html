@@ -646,7 +646,7 @@ lines.push(`Excluded/blocked options: ${fmtBlocks()}.`);
  if(rec.note) lines.push(`Note: ${rec.note}`);
  clin.push(`Plan: add ${rec.name} ${rec.dose} mg.` + (rec.note?` (${rec.note})`:""));
  pt.push(`We are adding a new blood pressure tablet: ${rec.name} ${rec.dose} mg.`);
- pt.push(`This is <strong>in addition</strong> to your current blood pressure tablets.`);
+ pt.push("This is in addition to your current blood pressure tablets.");
  } else if(rec.type==="info"){
  lines.push(`<span class="flag-change">Review required:</span> ${rec.text}`);
  clin.push(`Plan: ${rec.text}`);
@@ -658,8 +658,17 @@ lines.push(`Excluded/blocked options: ${fmtBlocks()}.`);
  lines.push(`• Arrange repeat BP measurement in 4–6 weeks after any medication change (earlier review if BP is very high or symptoms develop).`);
  lines.push(`• Use home BP monitoring or ABPM if clinic readings may not reflect usual BP.`);
  lines.push(`• Review adherence and lifestyle factors; consider investigation for secondary hypertension if BP remains uncontrolled.`);
+ const needsUEs =
+   currentMeds().some(m => ["A","D","O"].includes(m.cls)) ||
+   (rec && ["A","D","O"].includes(rec.cls));
+ if (needsUEs) {
+   lines.push(`• Check renal function and electrolytes (U&Es) 1–2 weeks after starting or increasing ACEi/ARB, thiazide(-like) diuretics, or spironolactone.`);
+ }
  clin.push("Monitoring: BP recheck 4–6 weeks. Consider U&Es 1–2 weeks after starting or increasing ACEi/ARB/diuretic/spironolactone.");
  pt.push("Please check your blood pressure again and provide readings to the surgery in 4–6 weeks after this medication change.");
+ if (needsUEs) {
+   pt.push("You will also need a blood test to check kidney function and potassium levels 1–2 weeks after this change. Please arrange this with the surgery.");
+ }
  }
 
  planBox.innerHTML = lines.map(l=>`<div>${l}</div>`).join("");
