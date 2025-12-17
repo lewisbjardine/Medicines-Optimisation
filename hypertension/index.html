@@ -679,12 +679,12 @@ lines.push(`Excluded/blocked options: ${fmtBlocks()}.`);
    currentMeds().some(m => ["A","D","O"].includes(m.cls)) ||
    (rec && ["A","D","O"].includes(rec.cls));
  if (needsUEs && rec && rec.name) {
-   lines.push(`• Check renal function and electrolytes (U&Es) 1–2 weeks after starting or increasing ${rec.name}.`);
+   lines.push(`• Check U&Es 1–2 weeks after starting or increasing ${rec.name}.`);
  }
  clin.push("Monitoring: BP recheck 4–6 weeks. Consider U&Es 1–2 weeks after starting or increasing ACEi/ARB/diuretic/spironolactone.");
  pt.push("Please check your blood pressure again and provide readings to the surgery in 4–6 weeks after this medication change.");
  if (needsUEs && rec && rec.name) {
-   pt.push(`You will also need a blood test to check kidney function and potassium levels 1–2 weeks after starting or increasing ${rec.name}. Please arrange this with the surgery.`);
+   pt.push(`You will also need a blood test (kidney function and potassium) 1–2 weeks after starting or increasing ${rec.name}. Please arrange this with the surgery.`);
  }
  }
 
