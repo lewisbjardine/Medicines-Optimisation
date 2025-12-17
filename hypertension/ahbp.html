@@ -43,7 +43,14 @@ input,textarea{width:100%;box-sizing:border-box}
 </div>
 
 <table id="bpTable">
-<thead><tr><th>#</th><th>Systolic</th><th>Diastolic</th><th></th></tr></thead>
+<thead>
+  <tr>
+    <th>#</th>
+    <th>Reading (mmHg)</th>
+    <th>Time</th>
+    <th></th>
+  </tr>
+</thead>
 <tbody id="tbody"></tbody>
 </table>
 
@@ -58,12 +65,21 @@ input,textarea{width:100%;box-sizing:border-box}
   const status=document.getElementById("ocrStatus");
   const countPill=document.getElementById("countPill");
 
-  function addRow(s="",d=""){
+  function addRow(bp=""){
     const tr=document.createElement("tr");
-    tr.innerHTML=`<td>${tbody.children.length+1}</td>
-      <td><input class="sys" inputmode="numeric" value="${s}"></td>
-      <td><input class="dia" inputmode="numeric" value="${d}"></td>
-      <td><button class="secondary delBtn">✕</button></td>`;
+    tr.innerHTML=`
+      <td>${tbody.children.length+1}</td>
+      <td>
+        <input class="bpPair" placeholder="e.g. 135/78" value="${bp}">
+      </td>
+      <td>
+        <select class="ampm">
+          <option value="AM">AM</option>
+          <option value="PM">PM</option>
+        </select>
+      </td>
+      <td><button class="secondary delBtn">✕</button></td>
+    `;
     tr.querySelector(".delBtn").onclick=()=>{
       tr.remove();
       renumber();
@@ -90,11 +106,12 @@ input,textarea{width:100%;box-sizing:border-box}
   function getVals(){
     const vals=[];
     for(const r of [...tbody.querySelectorAll("tr")]){
-      const sTxt=(r.querySelector(".sys")?.value||"").trim();
-      const dTxt=(r.querySelector(".dia")?.value||"").trim();
-      if(!sTxt || !dTxt) continue;
-      const s=parseFloat(sTxt), d=parseFloat(dTxt);
-      if(isNaN(s)||isNaN(d)) continue;
+      const txt=(r.querySelector(".bpPair")?.value||"").trim();
+      const m=txt.match(/(\d{2,3})\s*\/\s*(\d{2,3})/);
+      if(!m) continue;
+      const s=parseInt(m[1],10);
+      const d=parseInt(m[2],10);
+      if(s<90||s>250||d<50||d>150) continue;
       vals.push({s,d});
     }
     return vals;
@@ -107,7 +124,7 @@ input,textarea{width:100%;box-sizing:border-box}
   document.getElementById("parsePasteBtn").onclick=()=>{
     const t=document.getElementById("bulkPaste").value||"";
     const vals=parsePairs(t);
-    vals.forEach(v=>addRow(v.s,v.d));
+    vals.forEach(v=>addRow(`${v.s}/${v.d}`));
     updateCount();
   };
 
@@ -138,7 +155,7 @@ input,textarea{width:100%;box-sizing:border-box}
       if(!vals.length){
         status.textContent="No BP pairs detected — try a clearer image or paste readings instead.";
       } else {
-        vals.forEach(v=>addRow(v.s,v.d));
+        vals.forEach(v=>addRow(`${v.s}/${v.d}`));
         status.textContent="Image processed — please check values.";
       }
     }catch(err){
