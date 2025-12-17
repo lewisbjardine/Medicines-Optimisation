@@ -268,17 +268,20 @@ function renderSection(id){
  if(s.c===doses[i]) btn.classList.add("current");
  if(s.bd || s.b.has(doses[i])) btn.classList.add("blocked");
 
- btn.onclick=()=>{
+ btn.ondblclick = (e)=>{
+ e.preventDefault();
+ e.stopPropagation();
+
  if(s.bd) return;
- if(s.b.has(doses[i])) s.b.delete(doses[i]);
- else s.c = (s.c===doses[i]) ? null : doses[i];
+
+ if(s.b.has(doses[i])) {
+   s.b.delete(doses[i]);        // unblock
+ } else {
+   s.b.add(doses[i]);           // block
+   if(s.c === doses[i]) s.c = null; // only clear if same dose
+ }
  renderAll();
- };
- btn.ondblclick=()=>{
- if(s.bd) return;
- if(s.c===doses[i]) s.b.add(doses[i]);
- renderAll();
- };
+};
  cell.appendChild(btn);
  }
  row.appendChild(cell);
@@ -287,7 +290,15 @@ function renderSection(id){
  const block=document.createElement("button");
  block.className="secondary block-btn";
  block.textContent=s.bd ? "Unblock" : "Block";
- block.onclick=()=>{ s.bd=!s.bd; if(s.bd){ /* keep current dose selection */ s.b=new Set(doses); } else { s.b.clear(); } renderAll(); };
+ block.onclick = ()=>{
+  s.bd = !s.bd;
+  if(s.bd){
+    s.b = new Set(doses);   // block all doses, keep current selection
+  } else {
+    s.b.clear();
+  }
+  renderAll();
+ };
  row.appendChild(block);
 
  box.appendChild(row);
@@ -648,11 +659,6 @@ document.getElementById("clearBtn").addEventListener("click", ()=>location.reloa
 document.getElementById("copyPlan").addEventListener("click", ()=>{const txt=(document.getElementById("planBox").innerText||"").trim();navigator.clipboard.writeText(txt);});
 document.getElementById("copyPt").addEventListener("click", ()=>navigator.clipboard.writeText(document.getElementById("patientText").value));
 
-if(document.readyState==='loading'){
- document.addEventListener('DOMContentLoaded', __runInit);
-} else {
- __runInit();
-}
 if(typeof closeModal==='function') window.closeModal=closeModal;
 if(typeof confirmProceed==='function') window.confirmProceed=confirmProceed;
 
