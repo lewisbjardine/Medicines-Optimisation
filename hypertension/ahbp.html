@@ -32,6 +32,9 @@ input,textarea{width:100%;box-sizing:border-box}
   <button id="addRowBtn" class="secondary">Add row</button>
   <button id="clearRowsBtn" class="secondary">Clear all</button>
 </div>
+<label style="margin-top:.6rem;"><strong>Paste BP readings</strong></label>
+<textarea id="bulkPaste" rows="3" placeholder="e.g. 132/82, 128/80, 135/84"></textarea>
+<button id="parsePasteBtn" class="secondary">Add pasted readings</button>
 
 <div class="actions">
   <button id="calcBtn">Calculate mean</button>
@@ -100,6 +103,13 @@ input,textarea{width:100%;box-sizing:border-box}
   function updateCount(){
     countPill.textContent=`${getVals().length} readings`;
   }
+
+  document.getElementById("parsePasteBtn").onclick=()=>{
+    const t=document.getElementById("bulkPaste").value||"";
+    const vals=parsePairs(t);
+    vals.forEach(v=>addRow(v.s,v.d));
+    updateCount();
+  };
 
   document.getElementById("addRowBtn").onclick=()=>{
     addRow();
