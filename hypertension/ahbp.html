@@ -42,7 +42,7 @@ input,textarea{width:100%;box-sizing:border-box}
   <span class="pill" id="countPill">0 readings</span>
 </div>
 
-<table>
+<table id="bpTable">
 <thead><tr><th>#</th><th>Systolic</th><th>Diastolic</th><th></th></tr></thead>
 <tbody id="tbody"></tbody>
 </table>
@@ -163,6 +163,12 @@ input,textarea{width:100%;box-sizing:border-box}
     sessionStorage.setItem("hypertension_bp_type","home");
     window.location.href="index.html";
   };
+
+  // Ensure the table shows at least one editable row on load
+  if (!tbody.children.length) {
+    addRow();
+    updateCount();
+  }
 })();
 </script>
 
