@@ -5,7 +5,7 @@
 <title>Home / Ambulatory BP calculator</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="../shared/styles.css">
-<!-- OCR fallback (printed text). Handwritten charts should use AI extraction (planned). -->
+<!-- OCR fallback for printed text only. Handwritten charts should use AI vision (Gemini) via a private endpoint. -->
 <script src="https://unpkg.com/tesseract.js@4.0.2/dist/tesseract.min.js"></script>
 <style>
 main{max-width:1000px;margin:1.2rem auto;padding:1rem;background:#fff;border-radius:6px}
@@ -18,11 +18,8 @@ input,textarea{width:100%;box-sizing:border-box}
 .gridWrap{overflow:auto}
 .bpCell{min-width:110px}
 .dayCell{width:70px;font-weight:600}
-.smallNote{font-size:.9rem;color:#333;margin:.4rem 0 .8rem}
+.smallNote{font-size:.95rem;color:#333;margin:.4rem 0 .8rem}
 hr{border:none;border-top:1px solid #eee;margin:1rem 0}
-.extractedBox{border:1px solid #eee;border-radius:8px;padding:.8rem;background:#fafafa}
-.extractedList{margin:.4rem 0 0;padding-left:1.2rem;max-height:180px;overflow:auto}
-.extractedList li{margin:.15rem 0}
 .kbd{display:inline-block;border:1px solid #ddd;border-bottom-color:#bbb;border-radius:6px;padding:1px 6px;font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-size:.85em;background:#fff}
 .invalid{outline:2px solid #d33;outline-offset:1px}
 </style>
@@ -30,7 +27,7 @@ hr{border:none;border-top:1px solid #eee;margin:1rem 0}
 <body>
 <header>
   <h1>Home / Ambulatory BP calculator</h1>
-  <p class="subtitle">Enter readings in the table below (NICE-style). You can also paste readings or upload a photo to extract readings into a staging list, then insert into the table.</p>
+  <p class="subtitle">Paste readings or upload a photo to extract readings, then calculate a mean home BP. (Optional NICE table below for structured review.)</p>
   <a href="index.html" class="return-home">Back to Hypertension module</a>
 </header>
 
@@ -38,104 +35,180 @@ hr{border:none;border-top:1px solid #eee;margin:1rem 0}
 
   <div class="smallNote">
     <strong>How to use:</strong>
-    1) Add readings to the table (format <span class="kbd">135/78</span>).
-    2) Day 1 is excluded from the mean.
-    3) Click <strong>Calculate mean</strong>, then <strong>Use mean BP</strong> to send it back to the hypertension module.
+    Paste readings (format like <span class="kbd">135/78</span>) or upload a photo. Click <strong>Calculate mean</strong>, then <strong>Use mean BP</strong> to send it back to the hypertension module.
   </div>
 
-  <div class="gridWrap">
-    <table id="ahbpTable" aria-label="AHBPM table">
-      <thead>
-        <tr>
-          <th class="dayCell">Day</th>
-          <th>AM (1)</th>
-          <th>AM (2)</th>
-          <th>PM (1)</th>
-          <th>PM (2)</th>
-        </tr>
-      </thead>
-      <tbody id="tableBody"></tbody>
-    </table>
-  </div>
+  <label><strong>Paste BP readings</strong></label>
+  <textarea id="bulkPaste" rows="4" placeholder="e.g. 132/82, 128/80, 135/84&#10;or: Mon AM 132/82 128/80; Mon PM 140/86"></textarea>
 
-  <div class="status"><strong>Mean BP (Days 2–7):</strong> <span id="meanOut">–</span> <span id="validityOut"></span></div>
-
-  <div class="actions">
-    <button id="calcBtn">Calculate mean</button>
+  <div class="actions" style="margin-top:.5rem;">
+    <button id="calcTextBtn">Calculate mean</button>
     <button id="useBtn" class="secondary" disabled>Use mean BP</button>
-    <span class="pill" id="countPill">0 used</span>
-    <button id="clearTableBtn" class="secondary">Clear table</button>
+    <span class="pill" id="countPill">0 readings</span>
+    <button id="clearTextBtn" class="secondary">Clear text</button>
   </div>
+
+  <label style="margin-top:.6rem;"><strong>Upload BP image (beta OCR)</strong></label>
+  <input type="file" id="bpImage" accept="image/*">
+  <div class="status" id="ocrStatus"></div>
+
+  <div class="status"><strong>Mean BP:</strong> <span id="meanOut">–</span> <span id="validityOut"></span></div>
 
   <hr>
 
-  <div class="extractedBox">
-    <h3 style="margin:.2rem 0 .4rem;">Extracted readings (staging list)</h3>
-    <div class="smallNote" style="margin:.2rem 0 .6rem;">
-      Paste or upload a photo to extract BP pairs into this list. Then click <strong>Insert into table</strong>.
-      (Handwritten charts: OCR may miss values — AI extraction is planned.)
+  <details>
+    <summary><strong>Optional NICE-style table (manual entry / review)</strong></summary>
+    <div class="smallNote" style="margin-top:.6rem;">
+      This table matches the patient paper template (7 days; AM(1), AM(2), PM(1), PM(2)). Day 1 is excluded from the NICE mean.
+      The table is <strong>not</strong> auto-populated from paste or image.
     </div>
 
-    <label><strong>Paste readings</strong></label>
-    <textarea id="bulkPaste" rows="3" placeholder="e.g. 132/82, 128/80, 135/84&#10;or: Mon AM 132/82 128/80; Mon PM 140/86"></textarea>
-    <div class="actions" style="margin-top:.5rem;">
-      <button id="parsePasteBtn" class="secondary">Extract from paste</button>
-      <button id="clearExtractedBtn" class="secondary">Clear extracted list</button>
-      <span class="pill" id="extractedPill">0 extracted</span>
+    <div class="gridWrap">
+      <table id="ahbpTable" aria-label="AHBPM table">
+        <thead>
+          <tr>
+            <th class="dayCell">Day</th>
+            <th>AM (1)</th>
+            <th>AM (2)</th>
+            <th>PM (1)</th>
+            <th>PM (2)</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
     </div>
-
-    <label style="margin-top:.6rem;"><strong>Upload BP image (beta OCR)</strong></label>
-    <input type="file" id="bpImage" accept="image/*">
-    <div class="status" id="ocrStatus"></div>
 
     <div class="actions">
-      <button id="insertBtn">Insert into table</button>
-      <button id="clearAllBtn" class="secondary">Clear everything</button>
+      <button id="calcTableBtn" class="secondary">Calculate NICE mean (Days 2–7)</button>
+      <span class="pill" id="tableCountPill">0 used</span>
+      <button id="clearTableBtn" class="secondary">Clear table</button>
     </div>
-
-    <ol class="extractedList" id="extractedList"></ol>
-  </div>
+  </details>
 
 </main>
 
 <script>
 (function(){
   const SLOTS = ["AM1","AM2","PM1","PM2"];
-  const tableBody = document.getElementById("tableBody");
   const meanOut = document.getElementById("meanOut");
   const validityOut = document.getElementById("validityOut");
   const useBtn = document.getElementById("useBtn");
   const countPill = document.getElementById("countPill");
-
-  const extracted = []; // array of "SYS/DIA" strings
-  const extractedList = document.getElementById("extractedList");
-  const extractedPill = document.getElementById("extractedPill");
   const ocrStatus = document.getElementById("ocrStatus");
+  const bulkPaste = document.getElementById("bulkPaste");
 
+  const tableBody = document.getElementById("tableBody");
+  const tableCountPill = document.getElementById("tableCountPill");
+
+  function parsePairs(text){
+    const rx = /(\d{2,3})\s*[^\d]{0,6}\s*(\d{2,3})/g;
+    const out = [];
+    let m;
+    while((m = rx.exec(text)) !== null){
+      const s = parseInt(m[1],10), d = parseInt(m[2],10);
+      if(s>=90 && s<=250 && d>=50 && d<=150) out.push({s,d,txt:`${s}/${d}`});
+    }
+    return out;
+  }
+
+  function setMean(ms, md, n, note){
+    if(!n){
+      meanOut.textContent = "–";
+      validityOut.textContent = "";
+      countPill.textContent = "0 readings";
+      useBtn.disabled = true;
+      delete useBtn.dataset.bp;
+      if(note) ocrStatus.textContent = note;
+      return;
+    }
+    meanOut.textContent = `${ms}/${md} mmHg`;
+    countPill.textContent = `${n} reading${n===1?"":"s"}`;
+    // Validity note is just about count here (unstructured). NICE validity is available in table mode.
+    validityOut.textContent = n >= 12 ? ` (n=${n})` : ` (low count: n=${n})`;
+    useBtn.disabled = false;
+    useBtn.dataset.bp = `${ms}/${md}`;
+    if(note) ocrStatus.textContent = note;
+  }
+
+  function calcMeanFromText(){
+    const vals = parsePairs(bulkPaste.value || "");
+    if(!vals.length){
+      setMean(null,null,0,"No BP pairs found.");
+      return;
+    }
+    const ms = Math.round(vals.reduce((a,v)=>a+v.s,0) / vals.length);
+    const md = Math.round(vals.reduce((a,v)=>a+v.d,0) / vals.length);
+    setMean(ms, md, vals.length, `Calculated mean from ${vals.length} reading${vals.length===1?"":"s"}.`);
+  }
+
+  document.getElementById("calcTextBtn").onclick = ()=>calcMeanFromText();
+
+  document.getElementById("clearTextBtn").onclick = ()=>{
+    bulkPaste.value = "";
+    setMean(null,null,0,"");
+    ocrStatus.textContent = "";
+    document.getElementById("bpImage").value = "";
+  };
+
+  // OCR: extract pairs and append to the same text box, then calculate mean (same pathway as paste)
+  document.getElementById("bpImage").onchange = async (e)=>{
+    const f = e.target.files && e.target.files[0];
+    if(!f) return;
+    ocrStatus.textContent = "Reading image… (OCR, may take 10–30s)";
+    try{
+      const r = await Tesseract.recognize(f, "eng", {
+        logger: m=>{
+          if(m.status && typeof m.progress==="number"){
+            ocrStatus.textContent = `Reading image… ${Math.round(m.progress*100)}%`;
+          }
+        }
+      });
+      const vals = parsePairs((r && r.data && r.data.text) ? r.data.text : "");
+      if(!vals.length){
+        ocrStatus.textContent = "No BP pairs detected — try pasting readings instead.";
+        return;
+      }
+      // append extracted readings to textarea (one per line) without overwriting existing text
+      const existing = (bulkPaste.value || "").trim();
+      const add = vals.map(v=>v.txt).join("\n");
+      bulkPaste.value = existing ? (existing + "\n" + add) : add;
+      calcMeanFromText();
+      ocrStatus.textContent = `Extracted ${vals.length} reading${vals.length===1?"":"s"} from image into the text box. Please verify then use Calculate mean.`;
+    }catch(err){
+      ocrStatus.textContent = "Image OCR failed in this browser — try pasting readings instead.";
+    }
+  };
+
+  useBtn.onclick = ()=>{
+    if(!useBtn.dataset.bp) return;
+    sessionStorage.setItem("hypertension_bp_value", useBtn.dataset.bp);
+    sessionStorage.setItem("hypertension_bp_type", "home");
+    window.location.href = "index.html";
+  };
+
+  // ---- Optional NICE table (manual) ----
   function buildTable(){
+    if(!tableBody) return;
     tableBody.innerHTML = "";
     for(let day=1; day<=7; day++){
       const tr = document.createElement("tr");
       tr.innerHTML = `
         <td class="dayCell">${day}</td>
-        ${SLOTS.map((slot,idx)=>`
-          <td>
-            <input class="bpCell" data-day="${day}" data-slot="${slot}" placeholder="e.g. 135/78" inputmode="numeric">
-          </td>
+        ${SLOTS.map(slot=>`
+          <td><input class="bpCell" data-day="${day}" data-slot="${slot}" placeholder="e.g. 135/78" inputmode="numeric"></td>
         `).join("")}
       `;
       tableBody.appendChild(tr);
     }
-    // attach validation handlers
     document.querySelectorAll(".bpCell").forEach(inp=>{
       inp.addEventListener("blur", ()=>validateCell(inp));
       inp.addEventListener("input", ()=>{ inp.classList.remove("invalid"); });
     });
+    updateTableCount();
   }
 
   function normalizeBP(text){
     if(!text) return "";
-    // allow 135/78, 135 / 78, 135-78, 135\78 etc
     const m = String(text).trim().match(/(\d{2,3})\s*[^\d]{0,3}\s*(\d{2,3})/);
     if(!m) return "";
     const s = parseInt(m[1],10), d = parseInt(m[2],10);
@@ -153,66 +226,7 @@ hr{border:none;border-top:1px solid #eee;margin:1rem 0}
     return true;
   }
 
-  function parsePairs(text){
-    const rx = /(\d{2,3})\s*[^\d]{0,6}\s*(\d{2,3})/g;
-    const out = [];
-    let m;
-    while((m = rx.exec(text)) !== null){
-      const s = parseInt(m[1],10), d = parseInt(m[2],10);
-      if(s>=90 && s<=250 && d>=50 && d<=150) out.push(`${s}/${d}`);
-    }
-    return out;
-  }
-
-  function renderExtracted(){
-    extractedList.innerHTML = "";
-    extracted.forEach((bp, i)=>{
-      const li = document.createElement("li");
-      li.innerHTML = `${bp} <button class="secondary" data-i="${i}" style="margin-left:.5rem;">Remove</button>`;
-      li.querySelector("button").onclick = (e)=>{
-        const idx = parseInt(e.target.getAttribute("data-i"),10);
-        extracted.splice(idx,1);
-        renderExtracted();
-      };
-      extractedList.appendChild(li);
-    });
-    extractedPill.textContent = `${extracted.length} extracted`;
-  }
-
-  function allTableInputsInOrder(){
-    // day 1..7, slots AM1 AM2 PM1 PM2
-    const inputs = [];
-    for(let day=1; day<=7; day++){
-      for(const slot of SLOTS){
-        inputs.push(document.querySelector(`.bpCell[data-day="${day}"][data-slot="${slot}"]`));
-      }
-    }
-    return inputs.filter(Boolean);
-  }
-
-  function insertExtractedIntoTable(){
-    if(!extracted.length) return;
-    const inputs = allTableInputsInOrder();
-    let used = 0;
-    for(const inp of inputs){
-      if(!extracted.length) break;
-      if(inp.value.trim()) continue; // don't overwrite
-      const bp = extracted.shift();
-      inp.value = bp;
-      validateCell(inp);
-      used++;
-    }
-    if(used===0 && extracted.length){
-      // table full
-      ocrStatus.textContent = "Table is full — clear some cells to insert more.";
-    } else if(used>0){
-      ocrStatus.textContent = `Inserted ${used} reading${used===1?"":"s"} into the table. Please review.`;
-    }
-    renderExtracted();
-  }
-
-  function getUsedVals(){
-    // NICE: exclude Day 1. Use Days 2–7.
+  function getNICEVals(){
     const vals = [];
     for(let day=2; day<=7; day++){
       for(const slot of SLOTS){
@@ -228,104 +242,37 @@ hr{border:none;border-top:1px solid #eee;margin:1rem 0}
     return vals;
   }
 
-  function updateUsedCount(){
-    const vals = getUsedVals();
-    countPill.textContent = `${vals.length} used`;
-    return vals.length;
+  function updateTableCount(){
+    if(!tableCountPill) return 0;
+    const n = getNICEVals().length;
+    tableCountPill.textContent = `${n} used`;
+    return n;
   }
 
-  document.getElementById("parsePasteBtn").onclick = ()=>{
-    const t = document.getElementById("bulkPaste").value || "";
-    const vals = parsePairs(t);
-    if(!vals.length){
-      ocrStatus.textContent = "No BP pairs found in pasted text.";
-      return;
-    }
-    extracted.push(...vals);
-    ocrStatus.textContent = `Extracted ${vals.length} reading${vals.length===1?"":"s"} from paste.`;
-    renderExtracted();
-  };
-
-  document.getElementById("clearExtractedBtn").onclick = ()=>{
-    extracted.length = 0;
-    renderExtracted();
-    ocrStatus.textContent = "";
-  };
-
-  document.getElementById("insertBtn").onclick = ()=>{
-    insertExtractedIntoTable();
-  };
-
-  document.getElementById("clearTableBtn").onclick = ()=>{
-    document.querySelectorAll(".bpCell").forEach(inp=>{ inp.value=""; inp.classList.remove("invalid"); });
-    meanOut.textContent = "–";
-    validityOut.textContent = "";
-    useBtn.disabled = true;
-    updateUsedCount();
-  };
-
-  document.getElementById("clearAllBtn").onclick = ()=>{
-    document.getElementById("clearTableBtn").click();
-    document.getElementById("clearExtractedBtn").click();
-    document.getElementById("bulkPaste").value = "";
-    document.getElementById("bpImage").value = "";
-    ocrStatus.textContent = "";
-  };
-
-  document.getElementById("bpImage").onchange = async (e)=>{
-    const f = e.target.files && e.target.files[0];
-    if(!f) return;
-    ocrStatus.textContent = "Reading image… (OCR, may take 10–30s)";
-    try{
-      const r = await Tesseract.recognize(f, "eng", {
-        logger: m=>{
-          if(m.status && typeof m.progress==="number"){
-            ocrStatus.textContent = `Reading image… ${Math.round(m.progress*100)}%`;
-          }
-        }
-      });
-      const vals = parsePairs((r && r.data && r.data.text) ? r.data.text : "");
+  const calcTableBtn = document.getElementById("calcTableBtn");
+  if(calcTableBtn){
+    calcTableBtn.onclick = ()=>{
+      const vals = getNICEVals();
+      updateTableCount();
       if(!vals.length){
-        ocrStatus.textContent = "No BP pairs detected — try pasting readings instead.";
-      } else {
-        extracted.push(...vals);
-        ocrStatus.textContent = `Extracted ${vals.length} reading${vals.length===1?"":"s"} from image. Please review and insert into the table.`;
+        ocrStatus.textContent = "No valid readings in table (Days 2–7).";
+        return;
       }
-      renderExtracted();
-    }catch(err){
-      ocrStatus.textContent = "Image OCR failed in this browser — try pasting readings instead.";
-    }
-  };
+      const ms = Math.round(vals.reduce((a,v)=>a+v.s,0) / vals.length);
+      const md = Math.round(vals.reduce((a,v)=>a+v.d,0) / vals.length);
+      setMean(ms, md, vals.length, `Calculated NICE mean from table (Days 2–7), n=${vals.length}.`);
+    };
+  }
 
-  document.getElementById("calcBtn").onclick = ()=>{
-    const vals = getUsedVals();
-    countPill.textContent = `${vals.length} used`;
-    if(!vals.length){
-      meanOut.textContent = "–";
-      validityOut.textContent = "";
-      useBtn.disabled = true;
-      return;
-    }
-    const ms = Math.round(vals.reduce((a,v)=>a+v.s,0) / vals.length);
-    const md = Math.round(vals.reduce((a,v)=>a+v.d,0) / vals.length);
-    meanOut.textContent = `${ms}/${md} mmHg`;
-    const ok = vals.length >= 12;
-    validityOut.textContent = ok ? ` (valid: ${vals.length} readings)` : ` (low count: ${vals.length} readings)`;
-    useBtn.disabled = false;
-    useBtn.dataset.bp = `${ms}/${md}`;
-  };
+  const clearTableBtn = document.getElementById("clearTableBtn");
+  if(clearTableBtn){
+    clearTableBtn.onclick = ()=>{
+      document.querySelectorAll(".bpCell").forEach(inp=>{ inp.value=""; inp.classList.remove("invalid"); });
+      updateTableCount();
+    };
+  }
 
-  useBtn.onclick = ()=>{
-    if(!useBtn.dataset.bp) return;
-    sessionStorage.setItem("hypertension_bp_value", useBtn.dataset.bp);
-    sessionStorage.setItem("hypertension_bp_type", "home");
-    window.location.href = "index.html";
-  };
-
-  // init
   buildTable();
-  renderExtracted();
-  updateUsedCount();
 })();
 </script>
 
