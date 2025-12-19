@@ -66,14 +66,15 @@ details{margin-top:1rem}
 </main>
 
 <script>
-const GEMINI_API_KEY = "AIzaSyCUqAG5w8XbIsOt0pBiNm36o-S0UOcJd7g";
-const GEMINI_MODEL = "gemini-1.0-pro-vision-latest";
+/* ============================================================
+   CLOUD FUNCTION CONFIG – SEARCH AND REPLACE
+   ============================================================ */
 
+const CLOUD_FUNCTION_URL = "PASTE_YOUR_GOOGLE_CLOUD_FUNCTION_URL_HERE";
 
-
-const GEMINI_PROMPT = `Extract blood pressure readings from this image.
-Return only systolic/diastolic pairs, one per line, e.g.
-135/78`;
+/* ============================================================
+   HELPERS
+   ============================================================ */
 
 function parsePairs(text){
   const rx=/(\d{2,3})\s*\/\s*(\d{2,3})/g;
@@ -94,28 +95,26 @@ function fileToBase64(file){
   });
 }
 
-async function interpretImageWithGemini(file){
-  const b64=await fileToBase64(file);
-  const res=await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`,
-    {
-      method:"POST",
-      headers:{ "Content-Type":"application/json" },
-      body:JSON.stringify({
-        contents:[{
-          role:"user",
-          parts:[
-            { text:GEMINI_PROMPT },
-            { inline_data:{ mime_type:file.type, data:b64 } }
-          ]
-        }]
-      })
-    }
-  );
-  if(!res.ok) throw new Error(await res.text());
+async function sendImageToCloudFunction(file){
+  const base64=await fileToBase64(file);
+
+  const res=await fetch(CLOUD_FUNCTION_URL,{
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body:JSON.stringify({
+      imageBase64: base64,
+      mimeType: file.type
+    })
+  });
+
+  if(!res.ok) throw new Error("Cloud function failed");
   const j=await res.json();
-  return j.candidates?.[0]?.content?.parts?.[0]?.text?.trim()||"";
+  return j.text || "";
 }
+
+/* ============================================================
+   UI WIRING
+   ============================================================ */
 
 const bpText=document.getElementById("bpText");
 const meanOut=document.getElementById("meanOut");
@@ -124,7 +123,11 @@ const imageStatus=document.getElementById("imageStatus");
 
 document.getElementById("calcBtn").onclick=()=>{
   const v=parsePairs(bpText.value);
-  if(!v.length){ meanOut.textContent="–"; useBtn.disabled=true; return; }
+  if(!v.length){
+    meanOut.textContent="–";
+    useBtn.disabled=true;
+    return;
+  }
   const ms=Math.round(v.reduce((a,x)=>a+x.s,0)/v.length);
   const md=Math.round(v.reduce((a,x)=>a+x.d,0)/v.length);
   meanOut.textContent=`${ms}/${md} mmHg (n=${v.length})`;
@@ -140,11 +143,14 @@ useBtn.onclick=()=>{
 
 document.getElementById("aiInterpretBtn").onclick=async()=>{
   const f=document.getElementById("bpImage").files[0];
-  if(!f){ alert("Select an image first"); return; }
+  if(!f){
+    alert("Select an image first");
+    return;
+  }
   imageStatus.textContent="Interpreting image with AI…";
   try{
-    const t=await interpretImageWithGemini(f);
-    bpText.value=bpText.value.trim()?bpText.value.trim()+"\n"+t:t;
+    const t=await sendImageToCloudFunction(f);
+    bpText.value = bpText.value.trim() ? bpText.value.trim()+"\n"+t : t;
     imageStatus.textContent="AI extracted BP readings. Please check.";
   }catch(e){
     console.error(e);
