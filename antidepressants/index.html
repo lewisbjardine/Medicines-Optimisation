@@ -78,10 +78,11 @@ main {
   color: var(--nhs-grey);
 }
 
-.grid {
+/* Explicit 2-column layout for switching */
+.switch-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 0.8rem 1.5rem;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem 2rem;
 }
 
 .field label {
@@ -164,7 +165,7 @@ button.secondary {
   position: fixed;
   top: 0; left: 0; width: 100%; height: 100%;
   background: rgba(0,0,0,0.6);
-  display: none; /* Hidden by default */
+  display: none; 
   align-items: center;
   justify-content: center;
   z-index: 9999;
@@ -201,18 +202,18 @@ button.secondary {
 
   <section id="switching" class="tab card">
     <h2>Switching</h2>
-    <div class="grid">
+    <div class="switch-grid">
       <div class="field">
         <label for="fromDrug">Current Drug</label>
         <select id="fromDrug"></select>
       </div>
       <div class="field">
-        <label for="fromDose">Current Dose (mg)</label>
-        <select id="fromDose"></select>
-      </div>
-      <div class="field">
         <label for="toDrug">New Drug</label>
         <select id="toDrug"></select>
+      </div>
+      <div class="field">
+        <label for="fromDose">Current Dose (mg)</label>
+        <select id="fromDose"></select>
       </div>
       <div class="field">
         <label for="toDose">Starting Dose (mg)</label>
@@ -287,6 +288,8 @@ const drugs = [
   { id: "venlafaxine_sr", name: "Venlafaxine SR", dailyDoses: [37.5, 75, 150, 225], unitStrengths: [225, 150, 75, 37.5], freq: "OD" },
   { id: "duloxetine", name: "Duloxetine", dailyDoses: [30, 60, 90, 120], unitStrengths: [60, 30], freq: "OD" },
   { id: "mirtazapine", name: "Mirtazapine", dailyDoses: [15, 30, 45], unitStrengths: [45, 30, 15], freq: "OD" },
+  { id: "vortioxetine", name: "Vortioxetine", dailyDoses: [5, 10, 15, 20], unitStrengths: [20, 10, 5], freq: "OD" },
+  { id: "trazodone", name: "Trazodone", dailyDoses: [50, 100, 150, 200, 300], unitStrengths: [150, 100, 50], freq: "OD" },
   { id: "amitriptyline", name: "Amitriptyline", dailyDoses: [10, 25, 50, 75, 100], unitStrengths: [50, 25, 10], freq: "OD" }
 ];
 
@@ -319,17 +322,6 @@ function updateDoseOptions(drugSelectId) {
   });
 }
 
-function getDosingInstruction(drug, dose) {
-  if (drug.id === "venlafaxine_ir") {
-    const half = (dose / 2).toFixed(1);
-    return `${dose}mg daily taken as ${half}mg twice daily morning and evening. Use any combination of 37.5mg or 75mg tablets.`;
-  }
-  if (drug.id === "venlafaxine_sr") {
-    return `${dose}mg once daily using any combination of available SR strengths.`;
-  }
-  return `${dose}mg once daily.`;
-}
-
 document.getElementById("generateSwitch").onclick = () => {
   const from = drugs.find(d => d.id === document.getElementById("fromDrug").value);
   const to = drugs.find(d => d.id === document.getElementById("toDrug").value);
@@ -337,7 +329,7 @@ document.getElementById("generateSwitch").onclick = () => {
   const tDose = parseFloat(document.getElementById("toDose").value);
 
   const clin = `Switch: ${from.name} ${fDose}mg to ${to.name} ${tDose}mg. Reduce ${from.name} to ${fDose/2}mg for 7 days then stop and start ${to.name}.`;
-  const sms = `Plan: Take half your usual dose of ${from.name} (${fDose/2}mg) for 7 days. Then stop it and start ${to.name} at ${getDosingInstruction(to, tDose)}`;
+  const sms = `Plan: Take half your usual dose of ${from.name} (${fDose/2}mg) for 7 days. Then stop it and start ${to.name} ${tDose}mg once daily.`;
   
   document.getElementById("switchClinician").textContent = clin;
   document.getElementById("switchSMS").textContent = sms;
