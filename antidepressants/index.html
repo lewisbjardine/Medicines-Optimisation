@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<title>Switch & Stop AD - UK Clinical Suite</title>
+<title>Switch & Stop AD - Full Clinical Suite</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <style>
 :root {
@@ -51,14 +51,14 @@ button.primary { padding: 0.8rem 2rem; background: var(--nhs-blue); color: white
       <div class="field"><label>Current Dose</label><select id="fromDose"></select></div>
       <div class="field"><label>Target Start Dose</label><select id="toDose"></select></div>
     </div>
-    <div class="field" style="margin-top:1rem;"><label>Speed</label>
+    <div class="field" style="margin-top:1rem;"><label>Switch Speed</label>
       <div class="speed-btn-group">
         <button class="speed-btn active" data-mod="switch" data-speed="standard">Standard</button>
         <button class="speed-btn" data-mod="switch" data-speed="slow">Slow</button>
       </div>
     </div>
-    <button id="genSwitch" class="primary" style="margin-top:2rem">Generate Plan</button>
-    <div class="output-header"><strong>Schedule</strong><button class="secondary-btn copy-btn" data-target="switchSchedule">Copy</button></div>
+    <button id="genSwitch" class="primary" style="margin-top:2rem">Generate Switch Plan</button>
+    <div class="output-header"><strong>Schedule</strong><div><span class="copy-feedback s-fb">Copied!</span><button class="secondary-btn copy-btn" data-target="switchSchedule">Copy</button></div></div>
     <div id="switchSchedule" class="output-box"></div>
     <div id="switchTally" class="output-box tally-box"></div>
   </section>
@@ -77,134 +77,168 @@ button.primary { padding: 0.8rem 2rem; background: var(--nhs-blue); color: white
       </div>
     </div>
     <button id="genStop" class="primary" style="margin-top:2rem">Generate Taper Plan</button>
-    
-    <div class="output-header">
-      <div style="font-weight:700; color:var(--nhs-blue)">Patient Taper Schedule</div>
-      <div><span class="copy-feedback">Copied!</span><button class="secondary-btn copy-btn" data-target="stopSchedule">Copy</button></div>
-    </div>
+    <div class="output-header"><strong>Taper Schedule</strong><div><span class="copy-feedback t-fb">Copied!</span><button class="secondary-btn copy-btn" data-target="stopSchedule">Copy</button></div></div>
     <div id="stopSchedule" class="output-box"></div>
     <div id="stopTally" class="output-box tally-box"></div>
   </section>
 </main>
 
 <script>
-const drugs = [
+const antidepressants = [
   { id: "sertraline", name: "Sertraline", start: 50, doses: [25,50,100,150,200], freq: "OD", tabs: [100, 50, 25] },
   { id: "citalopram", name: "Citalopram", start: 20, doses: [10,20,40], freq: "OD", tabs: [20, 10] },
   { id: "fluoxetine", name: "Fluoxetine", start: 20, doses: [20,40,60], freq: "OD", tabs: [60, 20] },
+  { id: "escitalopram", name: "Escitalopram", start: 10, doses: [5,10,20], freq: "OD", tabs: [20, 10, 5] },
+  { id: "paroxetine", name: "Paroxetine", start: 20, doses: [10,20,30,40,50], freq: "OD", tabs: [30, 20, 10] },
   { id: "venlafaxine_ir", name: "Venlafaxine Standard", start: 75, doses: [37.5,75,112.5,150,225,300,375], freq: "BD", tabs: [75, 37.5] },
+  { id: "venlafaxine_mr", name: "Venlafaxine MR", start: 75, doses: [75,150,225,300,375], freq: "OD", tabs: [225, 150, 75, 37.5] },
+  { id: "duloxetine", name: "Duloxetine", start: 60, doses: [30,60,90,120], freq: "OD", tabs: [60, 30] },
   { id: "mirtazapine", name: "Mirtazapine", start: 15, doses: [15,30,45], freq: "OD", tabs: [45, 30, 15] },
   { id: "trazodone", name: "Trazodone", start: 150, doses: [50,100,150,300,450,600], freq: "OD", tabs: [150, 100, 50] },
   { id: "amitriptyline", name: "Amitriptyline", start: 25, doses: [10,25,50,75,100], freq: "OD", tabs: [50, 25, 10] },
-  { id: "lofepramine", name: "Lofepramine", start: 70, doses: [70,140,210], freq: "OD", tabs: [70] }
+  { id: "lofepramine", name: "Lofepramine", start: 70, doses: [70,140,210], freq: "OD", tabs: [70] },
+  { id: "vortioxetine", name: "Vortioxetine", start: 10, doses: [5,10,20], freq: "OD", tabs: [20, 10, 5] },
+  { id: "clomipramine", name: "Clomipramine", start: 25, doses: [10,25,50,75,100,150], freq: "OD", tabs: [50, 25, 10] }
 ];
 
-let switchSpeed = 'standard';
-let stopSpeed = 'standard';
+let s_speed = 'standard';
+let t_speed = 'standard';
 
-function populate() {
-  const ids = ["fromDrug", "toDrug", "stopDrug"];
-  ids.forEach(id => {
-    const el = document.getElementById(id);
-    drugs.sort((a,b)=>a.name.localeCompare(b.name)).forEach(d => el.add(new Option(d.name, d.id)));
-    el.onchange = () => updateDoses(id);
+function init() {
+  const selectors = ["fromDrug", "toDrug", "stopDrug"];
+  selectors.forEach(sId => {
+    const el = document.getElementById(sId);
+    antidepressants.sort((a,b)=>a.name.localeCompare(b.name)).forEach(d => {
+      el.add(new Option(d.name, d.id));
+    });
+    el.onchange = () => updateDoseList(sId);
   });
-  updateDoses("fromDrug"); updateDoses("toDrug"); updateDoses("stopDrug");
+  updateDoseList("fromDrug"); updateDoseList("toDrug"); updateDoseList("stopDrug");
 }
 
-function updateDoses(sid) {
-  const drug = drugs.find(d => d.id === document.getElementById(sid).value);
-  const did = sid.includes("from") ? "fromDose" : (sid.includes("to") ? "toDose" : "stopDose");
-  const el = document.getElementById(did);
+function updateDoseList(sId) {
+  const drugId = document.getElementById(sId).value;
+  const drug = antidepressants.find(d => d.id === drugId);
+  const targetDoseId = sId === "fromDrug" ? "fromDose" : (sId === "toDrug" ? "toDose" : "stopDose");
+  const el = document.getElementById(targetDoseId);
   el.innerHTML = "";
-  drug.doses.forEach(v => el.add(new Option(v + "mg", v)));
+  drug.doses.forEach(v => {
+    let label = v + "mg";
+    if (v === drug.start) label += " (Start)";
+    el.add(new Option(label, v));
+  });
 }
 
-function getTablets(totalMg, tabs) {
-  let res = {}; let rem = totalMg;
-  tabs.slice().sort((a,b)=>b-a).forEach(t => {
-    let c = Math.floor(rem/t); if(c>0){ res[t]=c; rem-=(c*t); }
+function getTabs(mg, drugTabs) {
+  let res = {}; let rem = mg;
+  drugTabs.slice().sort((a,b)=>b-a).forEach(t => {
+    let count = Math.floor(rem/t); if(count>0){ res[t]=count; rem-=(count*t); }
   });
   return res;
 }
 
 function format(drug, mg) {
   if (mg <= 0) return "STOPPED";
-  const b = getTablets(mg, drug.tabs);
+  const b = getTabs(mg, drug.tabs);
   let p = []; for(let t in b) p.push(`${b[t]} x ${t}mg`);
-  if (drug.freq === "BD") return `${mg}mg daily (Split dose: HALF morning, HALF evening)`;
+  if (drug.freq === "BD") {
+      const half = mg/2;
+      const hb = getTabs(half, drug.tabs);
+      let hp = []; for(let t in hb) hp.push(`${hb[t]} x ${t}mg`);
+      return `${mg}mg total (Take ${hp.join(" AND ")} AM and PM)`;
+  }
   return `${mg}mg daily (${p.join(" AND ")})`;
 }
 
 const safety = `\nSAFETY INFORMATION:
-- Seek medical advice if you experience flu-like symptoms, dizziness, sleep disturbances, or "brain zaps".
-- Seek URGENT medical advice if you experience high fever, agitation, confusion, trembling, or rapid heartbeat.`;
+- Seek medical advice for flu-like symptoms, dizziness, or "brain zaps".
+- Seek URGENT advice for high fever, agitation, confusion, or rapid heartbeat.`;
 
-// STOPPING LOGIC
-document.getElementById("genStop").onclick = () => {
-  const drug = drugs.find(d => d.id === document.getElementById("stopDrug").value);
-  const startMg = parseFloat(document.getElementById("stopDose").value);
-  const minT = drug.tabs[drug.tabs.length-1];
-  
-  let steps = [];
-  if (stopSpeed === 'standard') steps = [0.5];
-  else if (stopSpeed === 'slow') steps = [0.75, 0.5, 0.25];
-  else steps = [0.85, 0.70, 0.55, 0.40, 0.25, 0.10];
+// SWITCH LOGIC
+document.getElementById("genSwitch").onclick = () => {
+  const from = antidepressants.find(d => d.id === document.getElementById("fromDrug").value);
+  const to = antidepressants.find(d => d.id === document.getElementById("toDrug").value);
+  const fMg = parseFloat(document.getElementById("fromDose").value);
+  const tMg = parseFloat(document.getElementById("toDose").value);
+  const minTab = from.tabs[from.tabs.length-1];
 
   let schedule = ""; let tally = {};
-  let currentWk = 1;
-  
-  let lastDose = startMg;
-  steps.forEach(m => {
-    let d = Math.round((startMg * m) / minT) * minT;
-    if (d > 0 && d < lastDose) {
-      schedule += `WEEK ${currentWk}\n--- REDUCE ${drug.name}: ${format(drug, d)}\n\n`;
-      const t = getTablets(d, drug.tabs);
-      for(let mg in t) { const k = `${drug.name} ${mg}mg`; tally[k] = (tally[k]||0)+(t[mg]*7); }
-      lastDose = d; currentWk++;
-    }
-  });
+  const addTally = (dr, mg) => { if(mg<=0) return; const b = getTabs(mg, dr.tabs); for(let t in b){ let k=`${dr.name} ${t}mg`; tally[k]=(tally[k]||0)+(b[t]*7); } };
 
-  schedule += `WEEK ${currentWk}\n--- STOP ${drug.name} entirely.\n` + safety;
-  
-  let tallyTxt = ""; for(let k in tally) tallyTxt += `${k}: ${tally[k]} tablets\n`;
-  document.getElementById("stopSchedule").textContent = schedule;
-  document.getElementById("stopTally").textContent = tallyTxt;
+  if(s_speed === 'standard') {
+      const w1 = Math.max(minTab, Math.round((fMg/2)/minTab)*minTab);
+      schedule += `WEEK 1\n- REDUCE ${from.name}: ${format(from, w1)}\n- START ${to.name}: ${format(to, tMg)}\n`;
+      addTally(from, w1); addTally(to, tMg);
+      schedule += `\nWEEK 2\n- STOP ${from.name}\n- CONTINUE ${to.name}: ${format(to, tMg)}\n`;
+      addTally(to, tMg);
+  } else {
+      const steps = [0.75, 0.5, 0.25];
+      steps.forEach((m, i) => {
+          let d = Math.max(minTab, Math.round((fMg*m)/minTab)*minTab);
+          schedule += `WEEK ${i+1}\n- REDUCE ${from.name}: ${format(from, d)}\n- START ${to.name}: ${format(to, tMg)}\n\n`;
+          addTally(from, d); addTally(to, tMg);
+      });
+      schedule += `WEEK 4\n- STOP ${from.name}\n- CONTINUE ${to.name}: ${format(to, tMg)}\n`;
+      addTally(to, tMg);
+  }
+  document.getElementById("switchSchedule").textContent = schedule + safety;
+  let tTxt = ""; for(let k in tally) tTxt += `${k}: ${tally[k]} tablets\n`;
+  document.getElementById("switchTally").textContent = tTxt;
 };
 
-// Speed Toggle Handler
-document.querySelectorAll('.speed-btn').forEach(btn => {
+// STOP LOGIC
+document.getElementById("genStop").onclick = () => {
+  const drug = antidepressants.find(d => d.id === document.getElementById("stopDrug").value);
+  const startMg = parseFloat(document.getElementById("stopDose").value);
+  const minTab = drug.tabs[drug.tabs.length-1];
+  
+  let steps = (t_speed === 'standard') ? [0.5] : (t_speed === 'slow' ? [0.75, 0.5, 0.25] : [0.85, 0.70, 0.55, 0.40, 0.25, 0.10]);
+  let schedule = ""; let tally = {}; let wk = 1; let lastDose = startMg;
+
+  steps.forEach(m => {
+      let d = Math.round((startMg * m) / minTab) * minTab;
+      if (d > 0 && d < lastDose) {
+          schedule += `WEEK ${wk}\n- REDUCE ${drug.name}: ${format(drug, d)}\n\n`;
+          const b = getTabs(d, drug.tabs); for(let t in b){ let k=`${drug.name} ${t}mg`; tally[k]=(tally[k]||0)+(b[t]*7); }
+          lastDose = d; wk++;
+      }
+  });
+  schedule += `WEEK ${wk}\n- STOP ${drug.name} entirely.`;
+  document.getElementById("stopSchedule").textContent = schedule + safety;
+  let tTxt = ""; for(let k in tally) tTxt += `${k}: ${tally[k]} tablets\n`;
+  document.getElementById("stopTally").textContent = tTxt;
+};
+
+// Controls
+document.querySelectorAll(".speed-btn").forEach(btn => {
   btn.onclick = () => {
-    const parent = btn.parentElement;
-    parent.querySelectorAll('.speed-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    if(btn.dataset.mod === 'switch') switchSpeed = btn.dataset.speed;
-    else stopSpeed = btn.dataset.speed;
+      btn.parentElement.querySelectorAll(".speed-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      if(btn.dataset.mod === 'switch') s_speed = btn.dataset.speed;
+      else t_speed = btn.dataset.speed;
   };
 });
 
-// Copy Handler
-document.querySelectorAll('.copy-btn').forEach(btn => {
+document.querySelectorAll(".copy-btn").forEach(btn => {
   btn.onclick = () => {
-    const txt = document.getElementById(btn.dataset.target).textContent;
-    navigator.clipboard.writeText(txt).then(() => {
-      const f = btn.parentElement.querySelector('.copy-feedback');
-      if(f) { f.style.display='inline'; setTimeout(()=>f.style.display='none', 2000); }
-    });
+      const txt = document.getElementById(btn.dataset.target).textContent;
+      navigator.clipboard.writeText(txt).then(() => {
+          const f = btn.parentElement.querySelector(".copy-feedback");
+          f.style.display="inline"; setTimeout(()=>f.style.display="none", 2000);
+      });
   };
 });
 
-// Tab Switcher
 document.querySelectorAll(".tab-button").forEach(b => {
   b.onclick = () => {
-    document.querySelectorAll(".tab-button, .tab").forEach(x => {
-      x.classList.remove("active"); if(x.classList.contains("tab")) x.classList.add("hidden");
-    });
-    b.classList.add("active"); document.getElementById(b.dataset.tab).classList.remove("hidden");
+      document.querySelectorAll(".tab-button, .tab").forEach(x => {
+          x.classList.remove("active"); if(x.classList.contains("tab")) x.classList.add("hidden");
+      });
+      b.classList.add("active"); document.getElementById(b.dataset.tab).classList.remove("hidden");
   };
 });
 
-populate();
+init();
 </script>
 </body>
 </html>
