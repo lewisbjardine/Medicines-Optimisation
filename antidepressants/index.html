@@ -62,7 +62,6 @@ main {
   margin-bottom: 1rem;
 }
 
-/* Two-column grid for Side-by-Side layout */
 .switch-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -136,7 +135,7 @@ button.primary {
   background: white;
   padding: 2rem;
   border-radius: 0.5rem;
-  max-width: 400px;
+  max-width: 450px;
   width: 90%;
 }
 
@@ -223,11 +222,11 @@ const antidepressants = [
   { id: "fluoxetine", name: "Fluoxetine", doses: [20, 40, 60], freq: "OD" },
   { id: "escitalopram", name: "Escitalopram", doses: [5, 10, 20], freq: "OD" },
   { id: "paroxetine", name: "Paroxetine", doses: [10, 20, 30, 40, 50], freq: "OD" },
-  { id: "venlafaxine_ir", name: "Venlafaxine Standard Release", doses: [37.5, 75, 112.5, 150, 225], freq: "BD" },
-  { id: "venlafaxine_mr", name: "Venlafaxine Modified Release", doses: [37.5, 75, 150, 225], freq: "OD" },
+  { id: "venlafaxine_ir", name: "Venlafaxine Standard Release", doses: [37.5, 75, 112.5, 150, 225, 300, 375], freq: "BD" },
+  { id: "venlafaxine_mr", name: "Venlafaxine Modified Release", doses: [37.5, 75, 150, 225, 300, 375], freq: "OD" },
   { id: "duloxetine", name: "Duloxetine", doses: [30, 60, 90, 120], freq: "OD" },
   { id: "mirtazapine", name: "Mirtazapine", doses: [15, 30, 45], freq: "OD" },
-  { id: "trazodone", name: "Trazodone", doses: [50, 100, 150, 300], freq: "OD" },
+  { id: "trazodone", name: "Trazodone", doses: [50, 100, 150, 300, 450, 600], freq: "OD" },
   { id: "vortioxetine", name: "Vortioxetine", doses: [5, 10, 20], freq: "OD" },
   { id: "amitriptyline", name: "Amitriptyline", doses: [10, 25, 50, 75, 100], freq: "OD" }
 ];
@@ -242,8 +241,10 @@ function populate() {
       opt.textContent = d.name;
       el.appendChild(opt);
     });
+    // Ensure dose updates when drug selection changes
     el.addEventListener("change", () => updateDoses(id));
   });
+  // Initial population
   updateDoses("fromDrug");
   updateDoses("toDrug");
   updateDoses("stopDrug");
@@ -252,7 +253,12 @@ function populate() {
 function updateDoses(drugSelectId) {
   const drugId = document.getElementById(drugSelectId).value;
   const drug = antidepressants.find(d => d.id === drugId);
-  let targetId = drugSelectId.includes("from") ? "fromDose" : (drugSelectId.includes("to") ? "toDose" : "stopDose");
+  
+  let targetId = "";
+  if (drugSelectId === "fromDrug") targetId = "fromDose";
+  if (drugSelectId === "toDrug") targetId = "toDose";
+  if (drugSelectId === "stopDrug") targetId = "stopDose";
+
   const doseEl = document.getElementById(targetId);
   doseEl.innerHTML = "";
   drug.doses.forEach(dose => {
@@ -269,7 +275,7 @@ function getDosingString(drug, dose) {
     return `${dose}mg total daily dose taken as ${split}mg twice daily (morning and evening). This can be made with any combination of 37.5mg or 75mg tablets.`;
   }
   if (drug.id === "venlafaxine_mr") {
-    return `${dose}mg once daily using any combination of available modified release strengths.`;
+    return `${dose}mg once daily using any combination of available modified release strengths (37.5mg, 75mg, 150mg, 225mg).`;
   }
   return `${dose}mg once daily.`;
 }
@@ -280,7 +286,7 @@ document.getElementById("generateSwitch").onclick = () => {
   const fDose = document.getElementById("fromDose").value;
   const tDose = document.getElementById("toDose").value;
 
-  const clin = `Switching ${from.name} ${fDose}mg to ${to.name} ${tDose}mg. Reduce current medication to half dose for 7 days then stop and start new medication.`;
+  const clin = `Switch: ${from.name} ${fDose}mg to ${to.name} ${tDose}mg. Reduce current medication to half dose for 7 days then stop and start new medication. Monitor for discontinuation symptoms.`;
   const sms = `Your switching plan: Reduce your ${from.name} to ${fDose/2}mg for 7 days. After 7 days stop it and start ${to.name} at ${getDosingString(to, tDose)}`;
   
   document.getElementById("switchClinician").textContent = clin;
@@ -293,7 +299,7 @@ document.getElementById("taperCancel").onclick = () => document.getElementById("
 document.getElementById("taperConservative").onclick = () => {
   const drug = antidepressants.find(d => d.id === document.getElementById("stopDrug").value);
   const dose = document.getElementById("stopDose").value;
-  document.getElementById("stopClinician").textContent = `Conservative taper for ${drug.name} from ${dose}mg. Reduce dose by 25 percent every 2 to 4 weeks.`;
+  document.getElementById("stopClinician").textContent = `Hyperbolic taper for ${drug.name} from ${dose}mg. Reduce dose by 25 percent every 2 to 4 weeks based on tolerance.`;
   document.getElementById("stopSMS").textContent = `Taper plan for ${drug.name}: Reduce your current ${dose}mg dose by one quarter. We will review this in 4 weeks time.`;
   document.getElementById("taperModal").classList.remove("active");
 };
