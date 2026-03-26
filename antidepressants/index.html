@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<title>Switch & Stop AD - Full Clinical Suite</title>
+<title>Switch & Stop AD - Cautious Taper Suite</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <style>
 :root {
@@ -53,7 +53,7 @@ button.primary { padding: 0.8rem 2rem; background: var(--nhs-blue); color: white
     </div>
     <div class="field" style="margin-top:1rem;"><label>Switch Speed</label>
       <div class="speed-btn-group">
-        <button class="speed-btn active" data-mod="switch" data-speed="standard">Standard</button>
+        <button class="speed-btn active" data-mod="switch" data-speed="standard">Standard (Cautious)</button>
         <button class="speed-btn" data-mod="switch" data-speed="slow">Slow</button>
       </div>
     </div>
@@ -71,9 +71,9 @@ button.primary { padding: 0.8rem 2rem; background: var(--nhs-blue); color: white
     <div class="field" style="margin-top:1.5rem;">
       <label>Reduction Speed</label>
       <div class="speed-btn-group">
-        <button class="speed-btn active" data-mod="stop" data-speed="standard">Standard</button>
+        <button class="speed-btn active" data-mod="stop" data-speed="standard">Standard (Cautious)</button>
         <button class="speed-btn" data-mod="stop" data-speed="slow">Slow</button>
-        <button class="speed-btn" data-mod="stop" data-speed="extended">Extended</button>
+        <button class="speed-btn" data-mod="stop" data-speed="extended">Extended (Max Gradual)</button>
       </div>
     </div>
     <button id="genStop" class="primary" style="margin-top:2rem">Generate Taper Plan</button>
@@ -108,9 +108,7 @@ function init() {
   const selectors = ["fromDrug", "toDrug", "stopDrug"];
   selectors.forEach(sId => {
     const el = document.getElementById(sId);
-    antidepressants.sort((a,b)=>a.name.localeCompare(b.name)).forEach(d => {
-      el.add(new Option(d.name, d.id));
-    });
+    antidepressants.sort((a,b)=>a.name.localeCompare(b.name)).forEach(d => el.add(new Option(d.name, d.id)));
     el.onchange = () => updateDoseList(sId);
   });
   updateDoseList("fromDrug"); updateDoseList("toDrug"); updateDoseList("stopDrug");
@@ -122,11 +120,7 @@ function updateDoseList(sId) {
   const targetDoseId = sId === "fromDrug" ? "fromDose" : (sId === "toDrug" ? "toDose" : "stopDose");
   const el = document.getElementById(targetDoseId);
   el.innerHTML = "";
-  drug.doses.forEach(v => {
-    let label = v + "mg";
-    if (v === drug.start) label += " (Start)";
-    el.add(new Option(label, v));
-  });
+  drug.doses.forEach(v => el.add(new Option(v + "mg", v)));
 }
 
 function getTabs(mg, drugTabs) {
@@ -147,7 +141,7 @@ function format(drug, mg) {
       let hp = []; for(let t in hb) hp.push(`${hb[t]} x ${t}mg`);
       return `${mg}mg total (Take ${hp.join(" AND ")} AM and PM)`;
   }
-  return `${mg}mg daily (${p.join(" AND ")})`;
+  return `${mg}mg once daily (${p.join(" AND ")})`;
 }
 
 const safety = `\nSAFETY INFORMATION:
@@ -165,22 +159,18 @@ document.getElementById("genSwitch").onclick = () => {
   let schedule = ""; let tally = {};
   const addTally = (dr, mg) => { if(mg<=0) return; const b = getTabs(mg, dr.tabs); for(let t in b){ let k=`${dr.name} ${t}mg`; tally[k]=(tally[k]||0)+(b[t]*7); } };
 
-  if(s_speed === 'standard') {
-      const w1 = Math.max(minTab, Math.round((fMg/2)/minTab)*minTab);
-      schedule += `WEEK 1\n- REDUCE ${from.name}: ${format(from, w1)}\n- START ${to.name}: ${format(to, tMg)}\n`;
-      addTally(from, w1); addTally(to, tMg);
-      schedule += `\nWEEK 2\n- STOP ${from.name}\n- CONTINUE ${to.name}: ${format(to, tMg)}\n`;
-      addTally(to, tMg);
-  } else {
-      const steps = [0.75, 0.5, 0.25];
-      steps.forEach((m, i) => {
-          let d = Math.max(minTab, Math.round((fMg*m)/minTab)*minTab);
-          schedule += `WEEK ${i+1}\n- REDUCE ${from.name}: ${format(from, d)}\n- START ${to.name}: ${format(to, tMg)}\n\n`;
-          addTally(from, d); addTally(to, tMg);
-      });
-      schedule += `WEEK 4\n- STOP ${from.name}\n- CONTINUE ${to.name}: ${format(to, tMg)}\n`;
-      addTally(to, tMg);
-  }
+  const steps = (s_speed === 'standard') ? [0.75, 0.5, 0.25] : [0.85, 0.70, 0.55, 0.40, 0.25, 0.10];
+  
+  steps.forEach((m, i) => {
+      let d = Math.max(minTab, Math.round((fMg*m)/minTab)*minTab);
+      if (i > 0 && d === Math.max(minTab, Math.round((fMg*steps[i-1])/minTab)*minTab)) return;
+      schedule += `WEEK ${i+1}\n- REDUCE ${from.name}: ${format(from, d)}\n- START ${to.name}: ${format(to, tMg)}\n\n`;
+      addTally(from, d); addTally(to, tMg);
+  });
+  const finalWk = schedule.split('WEEK').length;
+  schedule += `WEEK ${finalWk}\n- STOP ${from.name}\n- CONTINUE ${to.name}: ${format(to, tMg)}\n`;
+  addTally(to, tMg);
+
   document.getElementById("switchSchedule").textContent = schedule + safety;
   let tTxt = ""; for(let k in tally) tTxt += `${k}: ${tally[k]} tablets\n`;
   document.getElementById("switchTally").textContent = tTxt;
@@ -192,11 +182,15 @@ document.getElementById("genStop").onclick = () => {
   const startMg = parseFloat(document.getElementById("stopDose").value);
   const minTab = drug.tabs[drug.tabs.length-1];
   
-  let steps = (t_speed === 'standard') ? [0.5] : (t_speed === 'slow' ? [0.75, 0.5, 0.25] : [0.85, 0.70, 0.55, 0.40, 0.25, 0.10]);
+  // Revised Cautious Percentages
+  let steps = (t_speed === 'standard') ? [0.75, 0.50, 0.25] : 
+              (t_speed === 'slow' ? [0.85, 0.70, 0.55, 0.40, 0.25, 0.10] : 
+              [0.90, 0.80, 0.70, 0.60, 0.50, 0.40, 0.30, 0.20, 0.10, 0.05]);
+
   let schedule = ""; let tally = {}; let wk = 1; let lastDose = startMg;
 
   steps.forEach(m => {
-      let d = Math.round((startMg * m) / minTab) * minTab;
+      let d = Math.max(minTab, Math.round((startMg * m) / minTab) * minTab);
       if (d > 0 && d < lastDose) {
           schedule += `WEEK ${wk}\n- REDUCE ${drug.name}: ${format(drug, d)}\n\n`;
           const b = getTabs(d, drug.tabs); for(let t in b){ let k=`${drug.name} ${t}mg`; tally[k]=(tally[k]||0)+(b[t]*7); }
@@ -209,7 +203,6 @@ document.getElementById("genStop").onclick = () => {
   document.getElementById("stopTally").textContent = tTxt;
 };
 
-// Controls
 document.querySelectorAll(".speed-btn").forEach(btn => {
   btn.onclick = () => {
       btn.parentElement.querySelectorAll(".speed-btn").forEach(b => b.classList.remove("active"));
