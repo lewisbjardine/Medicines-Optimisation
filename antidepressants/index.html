@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<meta charset="UTF-8" />
+<title>Switch &amp; Stop AD</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <style>
 :root {
   --nhs-blue: #005eb8;
@@ -156,35 +159,38 @@ button.secondary {
   color: var(--nhs-grey);
 }
 
-/* Modal styles for tapering options */
-#taperModal {
+/* Modal Styling */
+.modal-overlay {
   position: fixed;
   top: 0; left: 0; width: 100%; height: 100%;
-  background: rgba(0,0,0,0.5);
-  display: flex;
+  background: rgba(0,0,0,0.6);
+  display: none; /* Hidden by default */
   align-items: center;
   justify-content: center;
-  z-index: 1000;
+  z-index: 9999;
+}
+
+.modal-overlay.active {
+  display: flex;
 }
 
 .modal-content {
   background: var(--nhs-white);
   padding: 1.5rem;
   border-radius: 0.5rem;
-  max-width: 500px;
+  max-width: 450px;
   width: 90%;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
 
 .hidden { display: none; }
 </style>
-<meta charset="UTF-8" />
-<title>Switch &amp; Stop AD</title>
 </head>
 <body>
 
 <header>
   <h1>Switch &amp; Stop AD</h1>
-  <p>Guidance for stopping or switching antidepressants (SPS/BNF based)</p>
+  <p>Clinical support for antidepressant transitions</p>
 </header>
 
 <main>
@@ -194,30 +200,30 @@ button.secondary {
   </div>
 
   <section id="switching" class="tab card">
-    <h2>Switching Plan</h2>
+    <h2>Switching</h2>
     <div class="grid">
       <div class="field">
         <label for="fromDrug">Current Drug</label>
         <select id="fromDrug"></select>
       </div>
       <div class="field">
-        <label for="fromDose">Current Daily Dose (mg)</label>
+        <label for="fromDose">Current Dose (mg)</label>
         <select id="fromDose"></select>
       </div>
       <div class="field">
-        <label for="toDrug">Target Drug</label>
+        <label for="toDrug">New Drug</label>
         <select id="toDrug"></select>
       </div>
       <div class="field">
-        <label for="toDose">Target Dose (mg)</label>
+        <label for="toDose">Starting Dose (mg)</label>
         <select id="toDose"></select>
       </div>
     </div>
     <div class="button-row">
-      <button id="generateSwitch" class="primary">Generate Switch Plan</button>
+      <button id="generateSwitch" class="primary">Generate Plan</button>
       <button id="clearSwitch" class="secondary">Clear</button>
     </div>
-    <div class="outputs" style="margin-top:1rem">
+    <div class="outputs" style="margin-top:1.5rem">
       <div>
         <div class="output-label">Clinician Note</div>
         <div id="switchClinician" class="output-box"></div>
@@ -230,22 +236,22 @@ button.secondary {
   </section>
 
   <section id="stopping" class="tab card hidden">
-    <h2>Cessation Plan</h2>
+    <h2>Stopping</h2>
     <div class="grid">
       <div class="field">
         <label for="stopDrug">Drug to Stop</label>
         <select id="stopDrug"></select>
       </div>
       <div class="field">
-        <label for="stopDose">Current Daily Dose (mg)</label>
+        <label for="stopDose">Current Dose (mg)</label>
         <select id="stopDose"></select>
       </div>
     </div>
     <div class="button-row">
-      <button id="generateStop" class="primary">Generate Taper</button>
+      <button id="btnOpenStopModal" class="primary">Generate Taper</button>
       <button id="clearStop" class="secondary">Clear</button>
     </div>
-    <div class="outputs" style="margin-top:1rem">
+    <div class="outputs" style="margin-top:1.5rem">
       <div>
         <div class="output-label">Clinician Note</div>
         <div id="stopClinician" class="output-box"></div>
@@ -258,13 +264,13 @@ button.secondary {
   </section>
 </main>
 
-<div id="taperModal" class="hidden">
+<div id="taperModal" class="modal-overlay">
   <div class="modal-content">
     <h3>Select Taper Method</h3>
-    <p>Please select the preferred speed for this taper:</p>
+    <p>Choose the preferred tapering speed for this patient.</p>
     <div class="button-row">
-      <button id="taperFast" class="secondary">Fast (2-4 weeks)</button>
       <button id="taperConservative" class="primary">Conservative (Hyperbolic)</button>
+      <button id="taperFast" class="secondary">Standard (2-4 weeks)</button>
       <button id="taperCancel" class="secondary">Cancel</button>
     </div>
   </div>
@@ -313,10 +319,13 @@ function updateDoseOptions(drugSelectId) {
   });
 }
 
-function getInstruction(drug, dose) {
-  if (drug.freq === "BD") {
+function getDosingInstruction(drug, dose) {
+  if (drug.id === "venlafaxine_ir") {
     const half = (dose / 2).toFixed(1);
     return `${dose}mg daily taken as ${half}mg twice daily morning and evening. Use any combination of 37.5mg or 75mg tablets.`;
+  }
+  if (drug.id === "venlafaxine_sr") {
+    return `${dose}mg once daily using any combination of available SR strengths.`;
   }
   return `${dose}mg once daily.`;
 }
@@ -324,33 +333,33 @@ function getInstruction(drug, dose) {
 document.getElementById("generateSwitch").onclick = () => {
   const from = drugs.find(d => d.id === document.getElementById("fromDrug").value);
   const to = drugs.find(d => d.id === document.getElementById("toDrug").value);
-  const fDose = document.getElementById("fromDose").value;
-  const tDose = document.getElementById("toDose").value;
+  const fDose = parseFloat(document.getElementById("fromDose").value);
+  const tDose = parseFloat(document.getElementById("toDose").value);
 
-  const clinician = `Switching from ${from.name} ${fDose}mg to ${to.name} ${tDose}mg. Suggested cross taper over 2 weeks. Reduce ${from.name} to half dose for 7 days then stop and start ${to.name} at ${tDose}mg. Monitor for discontinuation symptoms.`;
-  const sms = `Switch plan: Continue ${from.name} at a reduced dose of ${fDose/2}mg for 7 days. Then stop it and start your new ${to.name} ${getInstruction(to, tDose)}`;
-
-  document.getElementById("switchClinician").textContent = clinician;
+  const clin = `Switch: ${from.name} ${fDose}mg to ${to.name} ${tDose}mg. Reduce ${from.name} to ${fDose/2}mg for 7 days then stop and start ${to.name}.`;
+  const sms = `Plan: Take half your usual dose of ${from.name} (${fDose/2}mg) for 7 days. Then stop it and start ${to.name} at ${getDosingInstruction(to, tDose)}`;
+  
+  document.getElementById("switchClinician").textContent = clin;
   document.getElementById("switchSMS").textContent = sms;
 };
 
-document.getElementById("generateStop").onclick = () => {
-  document.getElementById("taperModal").classList.remove("hidden");
+document.getElementById("btnOpenStopModal").onclick = () => {
+  document.getElementById("taperModal").classList.add("active");
 };
 
 document.getElementById("taperCancel").onclick = () => {
-  document.getElementById("taperModal").classList.add("hidden");
+  document.getElementById("taperModal").classList.remove("active");
 };
 
 document.getElementById("taperConservative").onclick = () => {
   const drug = drugs.find(d => d.id === document.getElementById("stopDrug").value);
-  const dose = document.getElementById("stopDose").value;
-  const clinician = `Hyperbolic taper for ${drug.name} starting from ${dose}mg. Reduce dose by approximately 25 percent every 2 to 4 weeks based on patient tolerance.`;
-  const sms = `Taper plan for ${drug.name}: We will reduce your dose slowly over several months. To start reduce your current ${dose}mg dose by one quarter. We will review in 4 weeks.`;
+  const dose = parseFloat(document.getElementById("stopDose").value);
+  const clin = `Hyperbolic taper for ${drug.name} starting from ${dose}mg. Reduce by 25 percent every 2 to 4 weeks.`;
+  const sms = `Slow taper for ${drug.name}: Reduce your current ${dose}mg dose by one quarter. We will review this in 4 weeks.`;
   
-  document.getElementById("stopClinician").textContent = clinician;
+  document.getElementById("stopClinician").textContent = clin;
   document.getElementById("stopSMS").textContent = sms;
-  document.getElementById("taperModal").classList.add("hidden");
+  document.getElementById("taperModal").classList.remove("active");
 };
 
 document.querySelectorAll(".tab-button").forEach(btn => {
