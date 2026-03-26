@@ -10,6 +10,7 @@
   --nhs-grey: #425563;
   --nhs-white: #ffffff;
   --nhs-orange: #ed8b00;
+  --nhs-green: #007f3b;
 }
 body { margin: 0; font-family: system-ui, sans-serif; background: #f5f5f5; color: #222; }
 header { background: var(--nhs-blue); color: white; padding: 1rem 1.5rem; }
@@ -21,13 +22,17 @@ main { max-width: 1000px; margin: 1.5rem auto; padding: 0 1rem; }
 .switch-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
 .field label { display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.4rem; color: var(--nhs-grey); text-transform: uppercase; }
 .field select { width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 0.25rem; font-size: 1rem; }
-.output-box { padding: 1rem; background: #fafafa; border: 1px solid #ddd; min-height: 80px; white-space: pre-wrap; font-family: ui-monospace, monospace; margin-top: 0.5rem; line-height: 1.5; font-size: 0.95rem; }
+.output-header { display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem; }
+.output-box { padding: 1rem; background: #fafafa; border: 1px solid #ddd; min-height: 80px; white-space: pre-wrap; font-family: ui-monospace, monospace; margin-top: 0.5rem; line-height: 1.5; font-size: 0.95rem; position: relative; }
 .tally-box { border-left: 5px solid var(--nhs-orange); background: #fffdfa; }
 .hidden { display: none; }
 button.primary { padding: 0.8rem 2rem; background: var(--nhs-blue); color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 1rem; }
+.secondary-btn { padding: 0.4rem 0.8rem; background: #f0f4f7; color: var(--nhs-blue); border: 1px solid var(--nhs-blue); border-radius: 4px; cursor: pointer; font-size: 0.85rem; font-weight: 600; }
+.secondary-btn:hover { background: var(--nhs-light-blue); }
 .speed-btn-group { display: flex; gap: 0.5rem; margin-top: 1rem; }
 .speed-btn { flex: 1; padding: 0.6rem; border: 1px solid var(--nhs-blue); background: white; color: var(--nhs-blue); cursor: pointer; border-radius: 4px; font-weight: 600; }
 .speed-btn.active { background: var(--nhs-blue); color: white; }
+.copy-feedback { color: var(--nhs-green); font-size: 0.8rem; margin-left: 10px; display: none; }
 </style>
 </head>
 <body>
@@ -63,7 +68,13 @@ button.primary { padding: 0.8rem 2rem; background: var(--nhs-blue); color: white
     </div>
 
     <div style="margin-top:2rem">
-      <div style="font-weight:700; color:var(--nhs-blue)">Patient Weekly Schedule</div>
+      <div class="output-header">
+        <div style="font-weight:700; color:var(--nhs-blue)">Patient Weekly Schedule</div>
+        <div>
+            <span id="copyFeedback" class="copy-feedback">Copied!</span>
+            <button id="copySchedule" class="secondary-btn">Copy Schedule</button>
+        </div>
+      </div>
       <div id="switchSchedule" class="output-box"></div>
       
       <div style="font-weight:700; margin-top:1.5rem; color:var(--nhs-orange)">Total Prescription Tally</div>
@@ -109,7 +120,8 @@ function populate() {
 }
 
 function updateDoses(sid) {
-  const drug = antidepressants.find(d => d.id === document.getElementById(sid).value);
+  const drugId = document.getElementById(sid).value;
+  const drug = antidepressants.find(d => d.id === drugId);
   const did = sid.includes("from") ? "fromDose" : (sid.includes("to") ? "toDose" : "stopDose");
   const el = document.getElementById(did);
   el.innerHTML = "";
@@ -124,7 +136,7 @@ function updateDoses(sid) {
 function getTabletBreakdown(totalMg, availableTabs) {
   let breakdown = {};
   let remaining = totalMg;
-  availableTabs.sort((a, b) => b - a).forEach(tab => {
+  availableTabs.slice().sort((a, b) => b - a).forEach(tab => {
     let count = Math.floor(remaining / tab);
     if (count > 0) {
       breakdown[tab] = count;
@@ -141,7 +153,7 @@ function formatInstruction(drug, totalMg) {
   for (let mg in breakdown) parts.push(`${breakdown[mg]} x ${mg}mg`);
   let instr = parts.join(" AND ");
   if (drug.freq === "BD") {
-    return `${totalMg}mg daily (Split dose: HALF morning and HALF evening)`;
+    return `${totalMg}mg total daily (Split dose: HALF morning and HALF evening)`;
   }
   return `${totalMg}mg once daily (${instr})`;
 }
@@ -175,31 +187,30 @@ document.getElementById("generateSwitch").onclick = () => {
   const minTab = from.tabs[from.tabs.length - 1];
   
   if (selectedSpeed === 'standard') {
-    // Week 1: 50% Reduction + Start New
     const w1From = Math.max(minTab, Math.round((fDoseVal / 2) / minTab) * minTab);
     schedule += `WEEK 1\n--- REDUCE ${from.name}: ${formatInstruction(from, w1From)}\n--- START ${to.name}: ${formatInstruction(to, tStartVal)}\n`;
     addToTally(from, w1From); addToTally(to, tStartVal);
 
-    // Week 2: Stop Old
     schedule += `\nWEEK 2\n--- STOP ${from.name} entirely.\n--- CONTINUE ${to.name}: ${formatInstruction(to, tStartVal)}\n`;
     addToTally(to, tStartVal);
   } else {
-    // Slow Switch: 75% -> 50% -> 25% -> Stop
-    const steps = [0.75, 0.5, 0.25];
-    steps.forEach((multiplier, i) => {
-      let dose = Math.max(minTab, Math.round((fDoseVal * multiplier) / minTab) * minTab);
-      // Ensure doses are unique or skipped
-      if (i > 0 && dose === Math.max(minTab, Math.round((fDoseVal * steps[i-1]) / minTab) * minTab)) return;
-      
+    const multipliers = [0.75, 0.5, 0.25];
+    let actualSteps = [];
+    multipliers.forEach(m => {
+        let d = Math.max(minTab, Math.round((fDoseVal * m) / minTab) * minTab);
+        if (actualSteps.length === 0 || d < actualSteps[actualSteps.length - 1]) actualSteps.push(d);
+    });
+
+    actualSteps.forEach((dose, i) => {
       schedule += `WEEK ${i + 1}\n--- REDUCE ${from.name}: ${formatInstruction(from, dose)}\n--- START ${to.name}: ${formatInstruction(to, tStartVal)}\n\n`;
       addToTally(from, dose); addToTally(to, tStartVal);
     });
-    const finalWeek = schedule.split('WEEK').length;
+    const finalWeek = actualSteps.length + 1;
     schedule += `WEEK ${finalWeek}\n--- STOP ${from.name} entirely.\n--- CONTINUE ${to.name}: ${formatInstruction(to, tStartVal)}\n`;
     addToTally(to, tStartVal);
   }
 
-  schedule += `\nCLINICAL NOTE: Patient to remain on starting dose of ${to.name} for 2-4 weeks. Clinical review required before further titration.`;
+  schedule += `\nCLINICAL NOTE: Patient to remain on starting dose for 2-4 weeks. Clinical review required before further titration.`;
 
   let tallyText = "";
   for (let item in masterTally) {
@@ -208,6 +219,16 @@ document.getElementById("generateSwitch").onclick = () => {
 
   document.getElementById("switchSchedule").textContent = schedule;
   document.getElementById("switchTally").textContent = tallyText;
+};
+
+document.getElementById("copySchedule").onclick = () => {
+    const text = document.getElementById("switchSchedule").textContent;
+    if (!text) return;
+    navigator.clipboard.writeText(text).then(() => {
+        const feedback = document.getElementById("copyFeedback");
+        feedback.style.display = "inline";
+        setTimeout(() => { feedback.style.display = "none"; }, 2000);
+    });
 };
 
 populate();
