@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<title>Switch &amp; Stop AD</title>
+<title>Switch & Stop AD - UK Primary Care</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <style>
 :root {
@@ -61,7 +61,6 @@ main {
   margin-bottom: 1rem;
 }
 
-/* Fixed 2-column layout for switching */
 .switch-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -107,23 +106,13 @@ button.primary {
   margin-top: 0.5rem;
 }
 
-.modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.5);
-  display: none; /* Hidden by default */
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-}
-
 .hidden { display: none; }
 </style>
 </head>
 <body>
 
 <header>
-  <h1>Switch &amp; Stop AD</h1>
+  <h1>Switch & Stop AD</h1>
 </header>
 
 <main>
@@ -176,12 +165,20 @@ button.primary {
 </main>
 
 <script>
+// Complete dataset of commonly used UK antidepressants and doses
 const antidepressants = [
   { id: "sertraline", name: "Sertraline", doses: [25, 50, 100, 150, 200] },
   { id: "citalopram", name: "Citalopram", doses: [10, 20, 40] },
-  { id: "trazodone", name: "Trazodone", doses: [50, 100, 150, 300] },
+  { id: "fluoxetine", name: "Fluoxetine", doses: [10, 20, 30, 40, 60] },
+  { id: "escitalopram", name: "Escitalopram", doses: [5, 10, 15, 20] },
+  { id: "paroxetine", name: "Paroxetine", doses: [10, 20, 30, 40, 50] },
+  { id: "venlafaxine_mr", name: "Venlafaxine MR", doses: [75, 150, 225, 300] },
+  { id: "duloxetine", name: "Duloxetine", doses: [30, 60, 90, 120] },
+  { id: "mirtazapine", name: "Mirtazapine", doses: [15, 30, 45] },
+  { id: "amitriptyline", name: "Amitriptyline", doses: [10, 25, 50, 75, 100, 150] },
+  { id: "trazodone", name: "Trazodone", doses: [50, 100, 150, 200, 300] },
   { id: "vortioxetine", name: "Vortioxetine", doses: [5, 10, 20] },
-  { id: "mirtazapine", name: "Mirtazapine", doses: [15, 30, 45] }
+  { id: "lofepramine", name: "Lofepramine", doses: [70, 140, 210] }
 ];
 
 function populateDrugs() {
@@ -194,6 +191,7 @@ function populateDrugs() {
       opt.textContent = d.name;
       el.appendChild(opt);
     });
+    // Fix: Add event listener to each drug selection to update its respective doses
     el.addEventListener("change", () => updateDoses(id));
   });
   // Initial dose population
@@ -202,15 +200,17 @@ function populateDrugs() {
   updateDoses("stopDrug");
 }
 
-function updateDoses(drugId) {
-  const drug = antidepressants.find(d => d.id === document.getElementById(drugId).value);
-  let doseSelectId = "";
-  if (drugId === "fromDrug") doseSelectId = "fromDose";
-  if (drugId === "toDrug") doseSelectId = "toDose";
-  if (drugId === "stopDrug") doseSelectId = "stopDose";
+function updateDoses(drugSelectId) {
+  const drug = antidepressants.find(d => d.id === document.getElementById(drugSelectId).value);
+  let targetDoseSelectId = "";
   
-  const doseEl = document.getElementById(doseSelectId);
+  if (drugSelectId === "fromDrug") targetDoseSelectId = "fromDose";
+  if (drugSelectId === "toDrug") targetDoseSelectId = "toDose";
+  if (drugSelectId === "stopDrug") targetDoseSelectId = "stopDose";
+  
+  const doseEl = document.getElementById(targetDoseSelectId);
   doseEl.innerHTML = "";
+  
   drug.doses.forEach(dose => {
     const opt = document.createElement("option");
     opt.value = dose;
@@ -236,13 +236,17 @@ document.getElementById("generateSwitch").onclick = () => {
   const tDrug = document.getElementById("toDrug").selectedOptions[0].text;
   const fDose = document.getElementById("fromDose").value;
   const tDose = document.getElementById("toDose").value;
-  document.getElementById("switchOutput").textContent = `Plan: Taper ${fDrug} ${fDose}mg over 1-2 weeks then start ${tDrug} ${tDose}mg.`;
+  document.getElementById("switchOutput").textContent = `Plan: Taper ${fDrug} ${fDose}mg over 1-2 weeks then start ${tDrug} ${tDose}mg. Monitor for withdrawal and serotonin syndrome.`;
 };
 
 document.getElementById("generateStop").onclick = () => {
   const sDrug = document.getElementById("stopDrug").selectedOptions[0].text;
   const sDose = document.getElementById("stopDose").value;
-  document.getElementById("stopOutput").textContent = `Taper Plan for ${sDrug} ${sDose}mg: Reduce dose by 25-50% every 2-4 weeks until stopped.`;
+  // Generated text formatted for advice and guidance (no bullet points)
+  document.getElementById("stopOutput").textContent = `Taper Plan for ${sDrug} ${sDose}mg:
+Reduce dose by 25-50% every 2-4 weeks. 
+If withdrawal symptoms occur, remain on the current dose until they resolve before next reduction. 
+Patient to seek review if mood deteriorates or thoughts of self-harm occur.`;
 };
 </script>
 </body>
