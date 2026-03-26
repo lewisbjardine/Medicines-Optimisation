@@ -11,6 +11,7 @@
   --nhs-white: #ffffff;
   --nhs-orange: #ed8b00;
   --nhs-green: #007f3b;
+  --nhs-red: #d5281b;
 }
 body { margin: 0; font-family: system-ui, sans-serif; background: #f5f5f5; color: #222; }
 header { background: var(--nhs-blue); color: white; padding: 1rem 1.5rem; }
@@ -23,12 +24,11 @@ main { max-width: 1000px; margin: 1.5rem auto; padding: 0 1rem; }
 .field label { display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.4rem; color: var(--nhs-grey); text-transform: uppercase; }
 .field select { width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 0.25rem; font-size: 1rem; }
 .output-header { display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem; }
-.output-box { padding: 1rem; background: #fafafa; border: 1px solid #ddd; min-height: 80px; white-space: pre-wrap; font-family: ui-monospace, monospace; margin-top: 0.5rem; line-height: 1.5; font-size: 0.95rem; position: relative; }
+.output-box { padding: 1rem; background: #fafafa; border: 1px solid #ddd; min-height: 80px; white-space: pre-wrap; font-family: ui-monospace, monospace; margin-top: 0.5rem; line-height: 1.5; font-size: 0.95rem; }
 .tally-box { border-left: 5px solid var(--nhs-orange); background: #fffdfa; }
 .hidden { display: none; }
 button.primary { padding: 0.8rem 2rem; background: var(--nhs-blue); color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 1rem; }
 .secondary-btn { padding: 0.4rem 0.8rem; background: #f0f4f7; color: var(--nhs-blue); border: 1px solid var(--nhs-blue); border-radius: 4px; cursor: pointer; font-size: 0.85rem; font-weight: 600; }
-.secondary-btn:hover { background: var(--nhs-light-blue); }
 .speed-btn-group { display: flex; gap: 0.5rem; margin-top: 1rem; }
 .speed-btn { flex: 1; padding: 0.6rem; border: 1px solid var(--nhs-blue); background: white; color: var(--nhs-blue); cursor: pointer; border-radius: 4px; font-weight: 600; }
 .speed-btn.active { background: var(--nhs-blue); color: white; }
@@ -153,7 +153,11 @@ function formatInstruction(drug, totalMg) {
   for (let mg in breakdown) parts.push(`${breakdown[mg]} x ${mg}mg`);
   let instr = parts.join(" AND ");
   if (drug.freq === "BD") {
-    return `${totalMg}mg total daily (Split dose: HALF morning and HALF evening)`;
+    const half = (totalMg / 2);
+    const halfBreakdown = getTabletBreakdown(half, drug.tabs);
+    let halfParts = [];
+    for (let mg in halfBreakdown) halfParts.push(`${halfBreakdown[mg]} x ${mg}mg`);
+    return `${totalMg}mg daily (Take ${halfParts.join(" AND ")} in the MORNING AND ${halfParts.join(" AND ")} in the EVENING)`;
   }
   return `${totalMg}mg once daily (${instr})`;
 }
@@ -210,7 +214,9 @@ document.getElementById("generateSwitch").onclick = () => {
     addToTally(to, tStartVal);
   }
 
-  schedule += `\nCLINICAL NOTE: Patient to remain on starting dose for 2-4 weeks. Clinical review required before further titration.`;
+  schedule += `\nSAFETY INFORMATION:
+- Seek medical advice if you experience flu-like symptoms, dizziness, sleep disturbances, or "brain zaps" (withdrawal symptoms).
+- Seek URGENT medical advice if you experience high fever, agitation, confusion, trembling, or rapid heartbeat (signs of serotonin syndrome).`;
 
   let tallyText = "";
   for (let item in masterTally) {
