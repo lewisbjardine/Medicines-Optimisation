@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<title>Switch & Stop AD - UK GP Edition</title>
+<title>Switch & Stop AD - UK Clinical Titration</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <style>
 :root {
@@ -66,7 +66,7 @@ main {
 .switch-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1.5rem 3rem;
+  gap: 1.5rem 3.5rem;
 }
 
 .field label {
@@ -86,27 +86,11 @@ main {
   background-color: white;
 }
 
-.button-row {
-  margin-top: 1.5rem;
-  display: flex;
-  gap: 0.5rem;
-}
-
-button.primary {
-  background: var(--nhs-blue);
-  color: white;
-  border: none;
-  padding: 0.8rem 1.5rem;
-  border-radius: 0.3rem;
-  cursor: pointer;
-  font-weight: 600;
-}
-
 .output-container {
   margin-top: 1.5rem;
   display: grid;
   grid-template-columns: 1fr;
-  gap: 1rem;
+  gap: 1.2rem;
 }
 
 @media (min-width: 768px) {
@@ -120,14 +104,13 @@ button.primary {
   color: var(--nhs-grey);
   margin-bottom: 0.3rem;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
 }
 
 .output-box {
   padding: 1rem;
   background: #fafafa;
   border: 1px solid #ddd;
-  min-height: 100px;
+  min-height: 80px;
   white-space: pre-wrap;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   font-size: 0.9rem;
@@ -137,27 +120,7 @@ button.primary {
 
 .tally-box {
   border-left: 4px solid var(--nhs-orange);
-  background: #fff9f0;
-}
-
-.modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.6);
-  display: none; 
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-}
-
-.modal-overlay.active { display: flex; }
-
-.modal-content {
-  background: white;
-  padding: 2rem;
-  border-radius: 0.5rem;
-  max-width: 500px;
-  width: 90%;
+  background: #fffdfa;
 }
 
 .hidden { display: none; }
@@ -186,34 +149,30 @@ button.primary {
         <select id="toDrug"></select>
       </div>
       <div class="field">
-        <label for="fromDose">Current Dose (Total Daily)</label>
+        <label for="fromDose">Current Dose (Daily Total)</label>
         <select id="fromDose"></select>
       </div>
       <div class="field">
-        <label for="toDose">Desired Final Dose</label>
+        <label for="toDose">Final Desired Dose</label>
         <select id="toDose"></select>
       </div>
     </div>
-    <div class="button-row">
-      <button id="generateSwitch" class="primary">Generate Titration Plan</button>
+    <div style="margin-top:1.5rem;">
+      <button id="generateSwitch" class="primary" style="background:var(--nhs-blue); color:white; border:none; padding:0.8rem 1.5rem; border-radius:0.3rem; cursor:pointer; font-weight:600;">Generate Schedule</button>
     </div>
 
     <div class="output-container">
       <div class="full-width">
-        <div class="output-label">Titration Schedule (Week by Week)</div>
+        <div class="output-label">Titration Schedule</div>
         <div id="switchSchedule" class="output-box"></div>
       </div>
-      <div>
-        <div class="output-label">Clinician Note</div>
-        <div id="switchClinician" class="output-box"></div>
-      </div>
-      <div>
+      <div class="full-width">
         <div class="output-label">Total Prescription Tally</div>
         <div id="switchTally" class="output-box tally-box"></div>
       </div>
       <div class="full-width">
-        <div class="output-label">Patient SMS Instructions</div>
-        <div id="switchSMS" class="output-box"></div>
+        <div class="output-label">Clinician Record</div>
+        <div id="switchClinician" class="output-box"></div>
       </div>
     </div>
   </section>
@@ -225,46 +184,31 @@ button.primary {
         <select id="stopDrug"></select>
       </div>
       <div class="field">
-        <label for="stopDose">Current Dose (Total Daily)</label>
+        <label for="stopDose">Current Dose</label>
         <select id="stopDose"></select>
       </div>
     </div>
-    <div class="button-row">
-      <button id="btnOpenStopModal" class="primary">Generate Taper</button>
+    <div style="margin-top:1.5rem">
+       <button id="generateStop" class="primary" style="background:var(--nhs-blue); color:white; border:none; padding:0.8rem 1.5rem; border-radius:0.3rem; cursor:pointer; font-weight:600;">Generate Taper</button>
     </div>
-    <div class="output-container">
-      <div class="full-width">
-        <div class="output-label">Tapering Schedule</div>
-        <div id="stopSchedule" class="output-box"></div>
-      </div>
-      <div>
-        <div class="output-label">Total Tally</div>
-        <div id="stopTally" class="output-box tally-box"></div>
-      </div>
-      <div class="full-width">
-        <div id="stopSMS" class="output-box"></div>
-      </div>
-    </div>
+    <div id="stopOutput" class="output-box" style="margin-top:1rem"></div>
   </section>
 </main>
 
 <script>
 const antidepressants = [
-  { id: "sertraline", name: "Sertraline", startDose: 50, doses: [
-      {v: 25, t: "25mg"}, {v: 50, t: "50mg (Starting)"}, {v: 100, t: "100mg"}, {v: 150, t: "150mg"}, {v: 200, t: "200mg (Max)"}
-    ], freq: "OD", tabs: [50, 100] },
-  { id: "citalopram", name: "Citalopram", startDose: 20, doses: [
-      {v: 10, t: "10mg (Elderly Start)"}, {v: 20, t: "20mg (Starting / Elderly Max)"}, {v: 40, t: "40mg (Max)"}
-    ], freq: "OD", tabs: [10, 20, 40] },
-  { id: "mirtazapine", name: "Mirtazapine", startDose: 15, doses: [
-      {v: 15, t: "15mg (Starting)"}, {v: 30, t: "30mg"}, {v: 45, t: "45mg (Max)"}
-    ], freq: "OD", tabs: [15, 30, 45] },
-  { id: "venlafaxine_ir", name: "Venlafaxine Standard Release", startDose: 75, doses: [
-      {v: 37.5, t: "37.5mg"}, {v: 75, t: "75mg (Starting)"}, {v: 112.5, t: "112.5mg"}, {v: 150, t: "150mg"}, {v: 225, t: "225mg"}, {v: 300, t: "300mg"}, {v: 375, t: "375mg (Max)"}
-    ], freq: "BD", tabs: [37.5, 75] },
-  { id: "venlafaxine_mr", name: "Venlafaxine Modified Release", startDose: 75, doses: [
-      {v: 37.5, t: "37.5mg"}, {v: 75, t: "75mg (Starting)"}, {v: 150, t: "150mg"}, {v: 225, t: "225mg"}, {v: 300, t: "300mg"}, {v: 375, t: "375mg (Max)"}
-    ], freq: "OD", tabs: [37.5, 75, 150, 225] }
+  { id: "sertraline", name: "Sertraline", startDose: 50, doses: [{v:25, t:"25mg"}, {v:50, t:"50mg (Start)"}, {v:100, t:"100mg"}, {v:150, t:"150mg"}, {v:200, t:"200mg (Max)"}], freq: "OD", tabs: [50, 100] },
+  { id: "citalopram", name: "Citalopram", startDose: 20, doses: [{v:10, t:"10mg (Elderly Start)"}, {v:20, t:"20mg (Start / Elderly Max)"}, {v:40, t:"40mg (Max)"}], freq: "OD", tabs: [10, 20] },
+  { id: "fluoxetine", name: "Fluoxetine", startDose: 20, doses: [{v:20, t:"20mg (Start)"}, {v:40, t:"40mg"}, {v:60, t:"60mg (Max)"}], freq: "OD", tabs: [20, 60] },
+  { id: "escitalopram", name: "Escitalopram", startDose: 10, doses: [{v:5, t:"5mg (Elderly Start)"}, {v:10, t:"10mg (Start / Elderly Max)"}, {v:20, t:"20mg (Max)"}], freq: "OD", tabs: [5, 10, 20] },
+  { id: "venlafaxine_ir", name: "Venlafaxine Standard Release", startDose: 75, doses: [{v:37.5, t:"37.5mg"}, {v:75, t:"75mg (Start)"}, {v:112.5, t:"112.5mg"}, {v:150, t:"150mg"}, {v:225, t:"225mg"}, {v:300, t:"300mg"}, {v:375, t:"375mg (Max)"}], freq: "BD", tabs: [37.5, 75] },
+  { id: "venlafaxine_mr", name: "Venlafaxine Modified Release", startDose: 75, doses: [{v:75, t:"75mg (Start)"}, {v:150, t:"150mg"}, {v:225, t:"225mg"}, {v:300, t:"300mg"}, {v:375, t:"375mg (Max)"}], freq: "OD", tabs: [75, 150, 225] },
+  { id: "mirtazapine", name: "Mirtazapine", startDose: 15, doses: [{v:15, t:"15mg (Start)"}, {v:30, t:"30mg"}, {v:45, t:"45mg (Max)"}], freq: "OD", tabs: [15, 30, 45] },
+  { id: "trazodone", name: "Trazodone", startDose: 150, doses: [{v:50, t:"50mg"}, {v:100, t:"100mg"}, {v:150, t:"150mg (Start)"}, {v:300, t:"300mg"}, {v:450, t:"450mg"}, {v:600, t:"600mg (Max)"}], freq: "OD", tabs: [50, 100, 150] },
+  { id: "vortioxetine", name: "Vortioxetine", startDose: 10, doses: [{v:5, t:"5mg (Elderly Start)"}, {v:10, t:"10mg (Start)"}, {v:20, t:"20mg (Max)"}], freq: "OD", tabs: [5, 10, 20] },
+  { id: "paroxetine", name: "Paroxetine", startDose: 20, doses: [{v:10, t:"10mg"}, {v:20, t:"20mg (Start)"}, {v:30, t:"30mg"}, {v:40, t:"40mg"}, {v:50, t:"50mg (Max)"}], freq: "OD", tabs: [10, 20, 30] },
+  { id: "duloxetine", name: "Duloxetine", startDose: 60, doses: [{v:30, t:"30mg"}, {v:60, t:"60mg (Start)"}, {v:90, t:"90mg"}, {v:120, t:"120mg (Max)"}], freq: "OD", tabs: [30, 60] },
+  { id: "amitriptyline", name: "Amitriptyline", startDose: 25, doses: [{v:10, t:"10mg"}, {v:25, t:"25mg (Start)"}, {v:50, t:"50mg"}, {v:75, t:"75mg"}, {v:100, t:"100mg (Max)"}], freq: "OD", tabs: [10, 25, 50] }
 ];
 
 function populate() {
@@ -277,87 +221,88 @@ function populate() {
       opt.textContent = d.name;
       el.appendChild(opt);
     });
-    el.addEventListener("change", () => updateDoses(id));
+    el.addEventListener("change", () => updateDoseMenu(id));
   });
-  updateDoses("fromDrug"); updateDoses("toDrug"); updateDoses("stopDrug");
+  updateDoseMenu("fromDrug"); updateDoseMenu("toDrug"); updateDoseMenu("stopDrug");
 }
 
-function updateDoses(drugSelectId) {
+function updateDoseMenu(drugSelectId) {
   const drugId = document.getElementById(drugSelectId).value;
   const drug = antidepressants.find(d => d.id === drugId);
-  const targetId = drugSelectId.includes("from") ? "fromDose" : (drugSelectId.includes("to") ? "toDose" : "stopDose");
-  const doseEl = document.getElementById(targetId);
-  doseEl.innerHTML = "";
+  const targetDoseId = drugSelectId.includes("from") ? "fromDose" : (drugSelectId.includes("to") ? "toDose" : "stopDose");
+  const el = document.getElementById(targetDoseId);
+  el.innerHTML = "";
   drug.doses.forEach(d => {
     const opt = document.createElement("option");
     opt.value = d.v;
     opt.textContent = d.t;
-    doseEl.appendChild(opt);
+    el.appendChild(opt);
   });
 }
 
-function generateTitration(toDrug, targetDoseValue) {
-  let steps = [];
-  let current = toDrug.startDose;
-  
-  // Starting step
-  steps.push(current);
-  
-  // Incrementing steps
-  while (current < targetDoseValue) {
-    if (toDrug.id === "mirtazapine") current += 15;
-    else if (toDrug.id === "sertraline") current += 50;
-    else if (toDrug.id.includes("venlafaxine")) current += 75;
-    else if (toDrug.id === "citalopram") current += 10;
-    
-    if (current <= targetDoseValue) steps.push(current);
-    if (steps.length > 10) break; // Safety break
+function getPatientInstruction(drug, dose) {
+  if (drug.freq === "BD") {
+    const half = (dose / 2).toFixed(1);
+    return `${dose}mg daily (taken as ${half}mg in the morning AND ${half}mg in the evening)`;
   }
-  return steps;
+  return `${dose}mg once daily (usually in the morning)`;
 }
 
 document.getElementById("generateSwitch").onclick = () => {
   const from = antidepressants.find(d => d.id === document.getElementById("fromDrug").value);
   const to = antidepressants.find(d => d.id === document.getElementById("toDrug").value);
-  const fDose = parseFloat(document.getElementById("fromDose").value);
-  const tFinalDose = parseFloat(document.getElementById("toDose").value);
+  const fDoseStart = parseFloat(document.getElementById("fromDose").value);
+  const tDoseTarget = parseFloat(document.getElementById("toDose").value);
 
-  const titrationSteps = generateTitration(to, tFinalDose);
   let schedule = "";
-  let tally = {};
+  let finalTally = {};
 
-  // Week 1: Cross-taper (Halve current, Start new at lowest)
-  schedule += `WEEK 1\nTake ${from.name} ${fDose/2}mg total daily dose.\nAND start ${to.name} ${titrationSteps[0]}mg total daily dose.\n\n`;
-  
-  // Subsequent Weeks: Increment new drug
-  for (let i = 1; i < titrationSteps.length; i++) {
-    schedule += `WEEK ${i + 1}\nStop ${from.name} entirely.\nTake ${to.name} ${titrationSteps[i]}mg total daily dose.\n\n`;
+  const addTally = (drugName, dose) => {
+    const key = `${drugName} (${dose}mg)`;
+    finalTally[key] = (finalTally[key] || 0) + 7;
+  };
+
+  // Step 1: Cross taper Week 1
+  const fWeek1 = fDoseStart / 2;
+  const tWeek1 = to.startDose;
+  schedule += `WEEK 1\nTake ${from.name}: ${getPatientInstruction(from, fWeek1)}\nAND start ${to.name}: ${getPatientInstruction(to, tWeek1)}\n\n`;
+  addTally(from.name, fWeek1);
+  addTally(to.name, tWeek1);
+
+  // Step 2+: Titration weeks
+  let currentToDose = tWeek1;
+  let week = 2;
+  while (currentToDose < tDoseTarget) {
+    // Basic increment logic (Maudsley compliant)
+    if (to.id === "mirtazapine") currentToDose += 15;
+    else if (to.id.includes("venlafaxine")) currentToDose += 75;
+    else if (to.id === "sertraline") currentToDose += 50;
+    else if (to.id === "citalopram") currentToDose += 10;
+    else currentToDose = tDoseTarget; // Jump for others not defined
+
+    if (currentToDose > tDoseTarget) currentToDose = tDoseTarget;
+
+    schedule += `WEEK ${week}\nStop ${from.name} completely.\nTake ${to.name}: ${getPatientInstruction(to, currentToDose)}\n\n`;
+    addTally(to.name, currentToDose);
+    week++;
+    if (week > 8) break;
   }
 
-  // Tally Logic (Simplistic example for 7 days per step)
-  schedule.split('\n').forEach(line => {
-    if (line.includes('Take')) {
-      const match = line.match(/(\d+\.?\d*)mg/);
-      if (match) {
-        const mg = match[1];
-        tally[mg] = (tally[mg] || 0) + 7;
-      }
-    }
-  });
+  if (week === 2) { // Case where start dose is target dose
+     schedule += `WEEK 2 onwards\nStop ${from.name} completely.\nTake ${to.name}: ${getPatientInstruction(to, currentToDose)}\n`;
+  }
 
-  let tallyText = "";
-  for (let mg in tally) tallyText += `${tally[mg]} tablets of ${mg}mg\n`;
+  let tallyText = "Items required for complete titration:\n";
+  for (let item in finalTally) {
+    tallyText += `- ${item}: ${finalTally[item]} tablets total\n`;
+  }
 
   document.getElementById("switchSchedule").textContent = schedule;
   document.getElementById("switchTally").textContent = tallyText;
-  document.getElementById("switchClinician").textContent = `Direct cross-taper from ${from.name} to ${to.name}. Monitored titration over ${titrationSteps.length} weeks.`;
-  document.getElementById("switchSMS").textContent = `Your new medication schedule:\n\n${schedule}Please contact the surgery if you feel unwell during these changes.`;
+  document.getElementById("switchClinician").textContent = `Switch from ${from.name} ${fDoseStart}mg to ${to.name} ${tDoseTarget}mg. Titration over ${week-1} weeks.`;
 };
 
-// Initialise
 populate();
-
-// Tab logic
 document.querySelectorAll(".tab-button").forEach(btn => {
   btn.onclick = () => {
     document.querySelectorAll(".tab").forEach(t => t.classList.add("hidden"));
