@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<title>Switch & Stop AD - UK Clinical Titration</title>
+<title>Switch & Stop AD - UK GP Edition</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <style>
 :root {
@@ -15,20 +15,23 @@ body { margin: 0; font-family: system-ui, sans-serif; background: #f5f5f5; color
 header { background: var(--nhs-blue); color: white; padding: 1rem 1.5rem; }
 main { max-width: 1000px; margin: 1.5rem auto; padding: 0 1rem; }
 .tabs { display: flex; gap: 0.5rem; margin-bottom: 1rem; }
-.tab-button { border: 1px solid var(--nhs-blue); background: white; color: var(--nhs-blue); padding: 0.6rem 1.2rem; border-radius: 999px; cursor: pointer; }
+.tab-button { border: 1px solid var(--nhs-blue); background: white; color: var(--nhs-blue); padding: 0.6rem 1.2rem; border-radius: 999px; cursor: pointer; font-weight: 600; }
 .tab-button.active { background: var(--nhs-blue); color: white; }
 .card { background: white; border-radius: 0.5rem; padding: 1.5rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 1rem; }
-.switch-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
-.field label { display: block; font-size: 0.9rem; font-weight: 700; margin-bottom: 0.4rem; }
-.field select { width: 100%; padding: 0.7rem; border: 1px solid #ccc; border-radius: 0.25rem; }
-.output-box { padding: 1rem; background: #fafafa; border: 1px solid #ddd; min-height: 80px; white-space: pre-wrap; font-family: monospace; margin-top: 0.5rem; line-height: 1.5; }
+.switch-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+.field label { display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.4rem; color: var(--nhs-grey); text-transform: uppercase; }
+.field select { width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 0.25rem; font-size: 1rem; }
+.output-box { padding: 1rem; background: #fafafa; border: 1px solid #ddd; min-height: 80px; white-space: pre-wrap; font-family: ui-monospace, monospace; margin-top: 0.5rem; line-height: 1.5; font-size: 0.95rem; }
 .tally-box { border-left: 5px solid var(--nhs-orange); background: #fffdfa; }
 .hidden { display: none; }
+button.primary { padding: 0.8rem 1.5rem; background: var(--nhs-blue); color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 700; }
 </style>
 </head>
 <body>
 
-<header><h1>Switch & Stop AD</h1></header>
+<header>
+  <h1>Switch & Stop AD</h1>
+</header>
 
 <main>
   <div class="tabs">
@@ -43,21 +46,23 @@ main { max-width: 1000px; margin: 1.5rem auto; padding: 0 1rem; }
       <div class="field"><label>Current Dose (Total Daily)</label><select id="fromDose"></select></div>
       <div class="field"><label>Desired Final Dose</label><select id="toDose"></select></div>
     </div>
-    <button id="generateSwitch" style="margin-top:1.5rem; padding:0.8rem 1.5rem; background:var(--nhs-blue); color:white; border:none; border-radius:4px; cursor:pointer;">Generate Plan & Tally</button>
+    
+    <div style="margin-top:2rem">
+      <button id="generateSwitch" class="primary">Generate Plan & Prescription Tally</button>
+    </div>
 
-    <div style="margin-top:1.5rem">
-      <div style="font-weight:700">Patient Schedule (Week by Week)</div>
+    <div style="margin-top:2rem">
+      <div style="font-weight:700; color:var(--nhs-blue)">Patient Schedule (Week-by-Week)</div>
       <div id="switchSchedule" class="output-box"></div>
       
-      <div style="font-weight:700; margin-top:1rem">Prescription Tally (Total Quantity Needed)</div>
+      <div style="font-weight:700; margin-top:1.5rem; color:var(--nhs-orange)">Total Prescription Requirement</div>
       <div id="switchTally" class="output-box tally-box"></div>
     </div>
   </section>
 
   <section id="stopping" class="tab card hidden">
-    <p>Stopping module enabled. Select drug and dose to generate taper.</p>
     <div class="switch-grid">
-      <div class="field"><label>Drug to Stop</label><select id="stopDrug"></select></div>
+      <div class="field"><label>Medication to Stop</label><select id="stopDrug"></select></div>
       <div class="field"><label>Current Dose</label><select id="stopDose"></select></div>
     </div>
   </section>
@@ -65,22 +70,22 @@ main { max-width: 1000px; margin: 1.5rem auto; padding: 0 1rem; }
 
 <script>
 const antidepressants = [
-  { id: "sertraline", name: "Sertraline", start: 50, inc: 50, doses: [25,50,100,150,200], freq: "OD", tabs: [100, 50] },
+  { id: "sertraline", name: "Sertraline", start: 50, inc: 50, doses: [25,50,100,150,200], freq: "OD", tabs: [100, 50, 25] },
   { id: "venlafaxine_ir", name: "Venlafaxine Standard", start: 75, inc: 75, doses: [37.5,75,112.5,150,225,300,375], freq: "BD", tabs: [75, 37.5] },
-  { id: "venlafaxine_mr", name: "Venlafaxine MR", start: 75, inc: 75, doses: [75,150,225,300,375], freq: "OD", tabs: [225, 150, 75] },
+  { id: "venlafaxine_mr", name: "Venlafaxine MR", start: 75, inc: 75, doses: [75,150,225,300,375], freq: "OD", tabs: [225, 150, 75, 37.5] },
   { id: "citalopram", name: "Citalopram", start: 20, inc: 10, doses: [10,20,40], freq: "OD", tabs: [20, 10] },
   { id: "mirtazapine", name: "Mirtazapine", start: 15, inc: 15, doses: [15,30,45], freq: "OD", tabs: [45, 30, 15] },
   { id: "fluoxetine", name: "Fluoxetine", start: 20, inc: 20, doses: [20,40,60], freq: "OD", tabs: [60, 20] },
+  { id: "escitalopram", name: "Escitalopram", start: 10, inc: 10, doses: [5,10,20], freq: "OD", tabs: [20, 10, 5] },
+  { id: "paroxetine", name: "Paroxetine", start: 20, inc: 10, doses: [10,20,30,40,50], freq: "OD", tabs: [30, 20, 10] },
+  { id: "duloxetine", name: "Duloxetine", start: 60, inc: 30, doses: [30,60,90,120], freq: "OD", tabs: [60, 30] },
   { id: "vortioxetine", name: "Vortioxetine", start: 10, inc: 10, doses: [5,10,20], freq: "OD", tabs: [20, 10, 5] }
 ];
 
 function populate() {
   ["fromDrug", "toDrug", "stopDrug"].forEach(id => {
     const el = document.getElementById(id);
-    antidepressants.forEach(d => {
-      let opt = new Option(d.name, d.id);
-      el.add(opt);
-    });
+    antidepressants.forEach(d => el.add(new Option(d.name, d.id)));
     el.onchange = () => updateDoses(id);
   });
   updateDoses("fromDrug"); updateDoses("toDrug"); updateDoses("stopDrug");
@@ -91,78 +96,97 @@ function updateDoses(sid) {
   const did = sid.includes("from") ? "fromDose" : (sid.includes("to") ? "toDose" : "stopDose");
   const el = document.getElementById(did);
   el.innerHTML = "";
-  drug.doses.forEach(v => el.add(new Option(v + "mg", v)));
+  drug.doses.forEach(v => {
+    let label = v + "mg";
+    if (v === drug.start) label += " (Starting)";
+    if (v === Math.max(...drug.doses)) label += " (Max)";
+    if (drug.id === "citalopram" && v === 10) label += " (Elderly Start)";
+    el.add(new Option(label, v));
+  });
 }
 
-function calculateTablets(totalMg, availableTabs) {
-  let result = {};
+function getTabletBreakdown(totalMg, availableTabs) {
+  let breakdown = {};
   let remaining = totalMg;
-  // Use greedy algorithm to find tablet combination
   availableTabs.sort((a, b) => b - a).forEach(tab => {
     let count = Math.floor(remaining / tab);
     if (count > 0) {
-      result[tab] = count;
-      remaining -= count * tab;
+      breakdown[tab] = count;
+      remaining -= (count * tab);
     }
   });
-  return result;
+  return breakdown;
+}
+
+function formatInstruction(drug, totalMg) {
+  const breakdown = getTabletBreakdown(totalMg, drug.tabs);
+  let parts = [];
+  for (let mg in breakdown) {
+    parts.push(`${breakdown[mg]} x ${mg}mg tablet(s)`);
+  }
+  let instr = parts.join(" AND ");
+  if (drug.freq === "BD") {
+    return `${totalMg}mg total daily (Take HALF in the morning and HALF in the evening: ${instr} divided)`;
+  }
+  return `${totalMg}mg once daily (${instr})`;
 }
 
 document.getElementById("generateSwitch").onclick = () => {
   const from = antidepressants.find(d => d.id === document.getElementById("fromDrug").value);
   const to = antidepressants.find(d => d.id === document.getElementById("toDrug").value);
-  const fDose = parseFloat(document.getElementById("fromDose").value);
-  const tGoal = parseFloat(document.getElementById("toDose").value);
+  const fDoseVal = parseFloat(document.getElementById("fromDose").value);
+  const tGoalVal = parseFloat(document.getElementById("toDose").value);
 
   let schedule = "";
   let masterTally = {};
 
-  const addToTally = (drugName, dailyMg, tabs) => {
-    const breakDown = calculateTablets(dailyMg, tabs);
-    for (let mg in breakDown) {
-      const key = `${drugName} ${mg}mg tablets`;
-      masterTally[key] = (masterTally[key] || 0) + (breakDown[mg] * 7);
+  const addToTally = (drug, dailyMg) => {
+    const tabs = getTabletBreakdown(dailyMg, drug.tabs);
+    for (let mg in tabs) {
+      const key = `${drug.name} ${mg}mg`;
+      masterTally[key] = (masterTally[key] || 0) + (tabs[mg] * 7);
     }
   };
 
-  // WEEK 1: Cross Taper
-  const w1From = fDose / 2;
+  // STEP 1: Cross Taper (Week 1)
+  // Fix: Round the half-dose to the nearest available tablet strength to avoid "93.8mg"
+  const minTab = from.tabs[from.tabs.length - 1];
+  const w1From = Math.max(minTab, Math.round((fDoseVal / 2) / minTab) * minTab);
   const w1To = to.start;
-  schedule += `WEEK 1\n--- Current Drug: Take ${from.name} ${w1From}mg daily.\n--- New Drug: Start ${to.name} ${w1To}mg daily.\n`;
-  if (from.freq === "BD") schedule += `(Take ${from.name} as ${(w1From/2).toFixed(1)}mg Morning & Evening)\n`;
-  if (to.freq === "BD") schedule += `(Take ${to.name} as ${(w1To/2).toFixed(1)}mg Morning & Evening)\n`;
-  addToTally(from.name, w1From, from.tabs);
-  addToTally(to.name, w1To, to.tabs);
 
-  // WEEK 2+
+  schedule += `WEEK 1\n--- REDUCE ${from.name}: ${formatInstruction(from, w1From)}\n--- START ${to.name}: ${formatInstruction(to, w1To)}\n`;
+  addToTally(from, w1From);
+  addToTally(to, w1To);
+
+  // STEP 2+: Titration
   let currentTo = w1To;
   let wk = 2;
-  while (currentTo < tGoal) {
+  while (currentTo < tGoalVal) {
     currentTo += to.inc;
-    if (currentTo > tGoal) currentTo = tGoal;
-    schedule += `\nWEEK ${wk}\n--- Stop ${from.name}.\n--- New Drug: Increase ${to.name} to ${currentTo}mg daily.\n`;
-    if (to.freq === "BD") schedule += `(Take as ${(currentTo/2).toFixed(1)}mg Morning & Evening)\n`;
-    addToTally(to.name, currentTo, to.tabs);
+    if (currentTo > tGoalVal) currentTo = tGoalVal;
+    schedule += `\nWEEK ${wk}\n--- STOP ${from.name} entirely.\n--- INCREASE ${to.name}: ${formatInstruction(to, currentTo)}\n`;
+    addToTally(to, currentTo);
     wk++;
-    if (wk > 10) break;
   }
 
-  if (wk === 2) schedule += `\nWEEK 2 onwards: Stop ${from.name} and continue ${to.name} ${currentTo}mg.`;
+  if (wk === 2) schedule += `\nWEEK 2 onwards: Stop ${from.name} and continue ${to.name} ${tGoalVal}mg daily.`;
 
-  let tallyHtml = "";
-  for (let label in masterTally) {
-    tallyHtml += `${label}: ${masterTally[label]} tablets total\n`;
+  let tallyText = "";
+  for (let item in masterTally) {
+    tallyText += `${item} tablets: ${masterTally[item]} total\n`;
   }
 
   document.getElementById("switchSchedule").textContent = schedule;
-  document.getElementById("switchTally").textContent = tallyHtml;
+  document.getElementById("switchTally").textContent = tallyText;
 };
 
 populate();
 document.querySelectorAll(".tab-button").forEach(b => {
   b.onclick = () => {
-    document.querySelectorAll(".tab-button").forEach(x => x.classList.remove("active"));
-    document.querySelectorAll(".tab").forEach(x => x.classList.add("hidden"));
+    document.querySelectorAll(".tab-button, .tab").forEach(x => {
+      x.classList.remove("active");
+      if (x.classList.contains("tab")) x.classList.add("hidden");
+    });
     b.classList.add("active");
     document.getElementById(b.dataset.tab).classList.remove("hidden");
   };
