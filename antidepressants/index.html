@@ -25,16 +25,7 @@ header {
   padding: 1rem 1.5rem;
 }
 
-header h1 {
-  margin: 0;
-  font-size: 1.5rem;
-}
-
-header p {
-  margin: 0.25rem 0 0;
-  font-size: 0.9rem;
-  opacity: 0.9;
-}
+header h1 { margin: 0; font-size: 1.5rem; }
 
 main {
   max-width: 960px;
@@ -46,7 +37,6 @@ main {
   display: flex;
   gap: 0.5rem;
   margin-bottom: 1rem;
-  flex-wrap: wrap;
 }
 
 .tab-button {
@@ -55,7 +45,6 @@ main {
   color: var(--nhs-blue);
   padding: 0.5rem 0.9rem;
   border-radius: 999px;
-  font-size: 0.95rem;
   cursor: pointer;
 }
 
@@ -67,18 +56,12 @@ main {
 .card {
   background: var(--nhs-white);
   border-radius: 0.5rem;
-  padding: 1rem 1.2rem;
+  padding: 1.2rem;
   box-shadow: 0 2px 4px rgba(0,0,0,0.06);
   margin-bottom: 1rem;
 }
 
-.card h2 {
-  margin-top: 0;
-  font-size: 1.2rem;
-  color: var(--nhs-grey);
-}
-
-/* Explicit 2-column layout for switching */
+/* Fixed 2-column layout for switching */
 .switch-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -92,96 +75,46 @@ main {
   margin-bottom: 0.25rem;
 }
 
-.field select,
-.field input {
+.field select {
   width: 100%;
-  padding: 0.4rem 0.5rem;
-  font-size: 0.95rem;
-  border-radius: 0.25rem;
+  padding: 0.4rem;
   border: 1px solid #ccc;
-  box-sizing: border-box;
+  border-radius: 0.25rem;
 }
 
 .button-row {
   margin-top: 1rem;
   display: flex;
-  flex-wrap: wrap;
   gap: 0.5rem;
 }
 
 button.primary {
   background: var(--nhs-blue);
-  color: var(--nhs-white);
+  color: white;
   border: none;
   padding: 0.6rem 1.1rem;
-  font-size: 0.95rem;
   border-radius: 0.3rem;
   cursor: pointer;
-}
-
-button.secondary {
-  background: var(--nhs-light-blue);
-  color: var(--nhs-grey);
-  border: none;
-  padding: 0.6rem 1.1rem;
-  font-size: 0.9rem;
-  border-radius: 0.3rem;
-  cursor: pointer;
-}
-
-.outputs {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1rem;
-}
-
-@media (min-width: 768px) {
-  .outputs {
-    grid-template-columns: 1fr 1fr;
-  }
 }
 
 .output-box {
   padding: 0.5rem;
-  border-radius: 0.3rem;
   background: #fafafa;
   border: 1px solid #ddd;
-  font-family: monospace;
-  font-size: 0.9rem;
+  min-height: 100px;
   white-space: pre-wrap;
-  word-wrap: break-word;
-  min-height: 120px;
+  font-family: monospace;
+  margin-top: 0.5rem;
 }
 
-.output-label {
-  font-size: 0.85rem;
-  font-weight: 600;
-  margin-bottom: 0.25rem;
-  color: var(--nhs-grey);
-}
-
-/* Modal Styling */
 .modal-overlay {
   position: fixed;
-  top: 0; left: 0; width: 100%; height: 100%;
-  background: rgba(0,0,0,0.6);
-  display: none; 
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  display: none; /* Hidden by default */
   align-items: center;
   justify-content: center;
-  z-index: 9999;
-}
-
-.modal-overlay.active {
-  display: flex;
-}
-
-.modal-content {
-  background: var(--nhs-white);
-  padding: 1.5rem;
-  border-radius: 0.5rem;
-  max-width: 450px;
-  width: 90%;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  z-index: 1000;
 }
 
 .hidden { display: none; }
@@ -191,7 +124,6 @@ button.secondary {
 
 <header>
   <h1>Switch &amp; Stop AD</h1>
-  <p>Clinical support for antidepressant transitions</p>
 </header>
 
 <main>
@@ -201,7 +133,6 @@ button.secondary {
   </div>
 
   <section id="switching" class="tab card">
-    <h2>Switching</h2>
     <div class="switch-grid">
       <div class="field">
         <label for="fromDrug">Current Drug</label>
@@ -222,23 +153,12 @@ button.secondary {
     </div>
     <div class="button-row">
       <button id="generateSwitch" class="primary">Generate Plan</button>
-      <button id="clearSwitch" class="secondary">Clear</button>
     </div>
-    <div class="outputs" style="margin-top:1.5rem">
-      <div>
-        <div class="output-label">Clinician Note</div>
-        <div id="switchClinician" class="output-box"></div>
-      </div>
-      <div>
-        <div class="output-label">Patient SMS</div>
-        <div id="switchSMS" class="output-box"></div>
-      </div>
-    </div>
+    <div id="switchOutput" class="output-box" style="margin-top:1rem"></div>
   </section>
 
   <section id="stopping" class="tab card hidden">
-    <h2>Stopping</h2>
-    <div class="grid">
+    <div class="switch-grid">
       <div class="field">
         <label for="stopDrug">Drug to Stop</label>
         <select id="stopDrug"></select>
@@ -249,111 +169,57 @@ button.secondary {
       </div>
     </div>
     <div class="button-row">
-      <button id="btnOpenStopModal" class="primary">Generate Taper</button>
-      <button id="clearStop" class="secondary">Clear</button>
+      <button id="generateStop" class="primary">Generate Taper</button>
     </div>
-    <div class="outputs" style="margin-top:1.5rem">
-      <div>
-        <div class="output-label">Clinician Note</div>
-        <div id="stopClinician" class="output-box"></div>
-      </div>
-      <div>
-        <div class="output-label">Patient SMS</div>
-        <div id="stopSMS" class="output-box"></div>
-      </div>
-    </div>
+    <div id="stopOutput" class="output-box" style="margin-top:1rem"></div>
   </section>
 </main>
 
-<div id="taperModal" class="modal-overlay">
-  <div class="modal-content">
-    <h3>Select Taper Method</h3>
-    <p>Choose the preferred tapering speed for this patient.</p>
-    <div class="button-row">
-      <button id="taperConservative" class="primary">Conservative (Hyperbolic)</button>
-      <button id="taperFast" class="secondary">Standard (2-4 weeks)</button>
-      <button id="taperCancel" class="secondary">Cancel</button>
-    </div>
-  </div>
-</div>
-
 <script>
-const drugs = [
-  { id: "sertraline", name: "Sertraline", dailyDoses: [50, 100, 150, 200], unitStrengths: [100, 50], freq: "OD" },
-  { id: "citalopram", name: "Citalopram", dailyDoses: [10, 20, 30, 40], unitStrengths: [40, 20, 10], freq: "OD" },
-  { id: "escitalopram", name: "Escitalopram", dailyDoses: [5, 10, 15, 20], unitStrengths: [20, 10, 5], freq: "OD" },
-  { id: "fluoxetine", name: "Fluoxetine", dailyDoses: [20, 40, 60], unitStrengths: [60, 20], freq: "OD" },
-  { id: "paroxetine", name: "Paroxetine", dailyDoses: [10, 20, 30, 40], unitStrengths: [40, 30, 20, 10], freq: "OD" },
-  { id: "venlafaxine_ir", name: "Venlafaxine IR", dailyDoses: [37.5, 75, 112.5, 150, 225, 300, 375], unitStrengths: [75, 37.5], freq: "BD" },
-  { id: "venlafaxine_sr", name: "Venlafaxine SR", dailyDoses: [37.5, 75, 150, 225], unitStrengths: [225, 150, 75, 37.5], freq: "OD" },
-  { id: "duloxetine", name: "Duloxetine", dailyDoses: [30, 60, 90, 120], unitStrengths: [60, 30], freq: "OD" },
-  { id: "mirtazapine", name: "Mirtazapine", dailyDoses: [15, 30, 45], unitStrengths: [45, 30, 15], freq: "OD" },
-  { id: "vortioxetine", name: "Vortioxetine", dailyDoses: [5, 10, 15, 20], unitStrengths: [20, 10, 5], freq: "OD" },
-  { id: "trazodone", name: "Trazodone", dailyDoses: [50, 100, 150, 200, 300], unitStrengths: [150, 100, 50], freq: "OD" },
-  { id: "amitriptyline", name: "Amitriptyline", dailyDoses: [10, 25, 50, 75, 100], unitStrengths: [50, 25, 10], freq: "OD" }
+const antidepressants = [
+  { id: "sertraline", name: "Sertraline", doses: [25, 50, 100, 150, 200] },
+  { id: "citalopram", name: "Citalopram", doses: [10, 20, 40] },
+  { id: "trazodone", name: "Trazodone", doses: [50, 100, 150, 300] },
+  { id: "vortioxetine", name: "Vortioxetine", doses: [5, 10, 20] },
+  { id: "mirtazapine", name: "Mirtazapine", doses: [15, 30, 45] }
 ];
 
-function populate() {
-  const ids = ["fromDrug", "toDrug", "stopDrug"];
-  ids.forEach(id => {
+function populateDrugs() {
+  const selects = ["fromDrug", "toDrug", "stopDrug"];
+  selects.forEach(id => {
     const el = document.getElementById(id);
-    drugs.forEach(d => {
+    antidepressants.forEach(d => {
       const opt = document.createElement("option");
       opt.value = d.id;
       opt.textContent = d.name;
       el.appendChild(opt);
     });
-    el.addEventListener("change", () => updateDoseOptions(id));
-    updateDoseOptions(id);
+    el.addEventListener("change", () => updateDoses(id));
   });
+  // Initial dose population
+  updateDoses("fromDrug");
+  updateDoses("toDrug");
+  updateDoses("stopDrug");
 }
 
-function updateDoseOptions(drugSelectId) {
-  const drugId = document.getElementById(drugSelectId).value;
-  const drug = drugs.find(d => d.id === drugId);
-  const doseSelectId = drugSelectId.includes("from") ? "fromDose" : (drugSelectId.includes("to") ? "toDose" : "stopDose");
+function updateDoses(drugId) {
+  const drug = antidepressants.find(d => d.id === document.getElementById(drugId).value);
+  let doseSelectId = "";
+  if (drugId === "fromDrug") doseSelectId = "fromDose";
+  if (drugId === "toDrug") doseSelectId = "toDose";
+  if (drugId === "stopDrug") doseSelectId = "stopDose";
+  
   const doseEl = document.getElementById(doseSelectId);
   doseEl.innerHTML = "";
-  drug.dailyDoses.forEach(dose => {
+  drug.doses.forEach(dose => {
     const opt = document.createElement("option");
     opt.value = dose;
-    opt.textContent = dose;
+    opt.textContent = dose + " mg";
     doseEl.appendChild(opt);
   });
 }
 
-document.getElementById("generateSwitch").onclick = () => {
-  const from = drugs.find(d => d.id === document.getElementById("fromDrug").value);
-  const to = drugs.find(d => d.id === document.getElementById("toDrug").value);
-  const fDose = parseFloat(document.getElementById("fromDose").value);
-  const tDose = parseFloat(document.getElementById("toDose").value);
-
-  const clin = `Switch: ${from.name} ${fDose}mg to ${to.name} ${tDose}mg. Reduce ${from.name} to ${fDose/2}mg for 7 days then stop and start ${to.name}.`;
-  const sms = `Plan: Take half your usual dose of ${from.name} (${fDose/2}mg) for 7 days. Then stop it and start ${to.name} ${tDose}mg once daily.`;
-  
-  document.getElementById("switchClinician").textContent = clin;
-  document.getElementById("switchSMS").textContent = sms;
-};
-
-document.getElementById("btnOpenStopModal").onclick = () => {
-  document.getElementById("taperModal").classList.add("active");
-};
-
-document.getElementById("taperCancel").onclick = () => {
-  document.getElementById("taperModal").classList.remove("active");
-};
-
-document.getElementById("taperConservative").onclick = () => {
-  const drug = drugs.find(d => d.id === document.getElementById("stopDrug").value);
-  const dose = parseFloat(document.getElementById("stopDose").value);
-  const clin = `Hyperbolic taper for ${drug.name} starting from ${dose}mg. Reduce by 25 percent every 2 to 4 weeks.`;
-  const sms = `Slow taper for ${drug.name}: Reduce your current ${dose}mg dose by one quarter. We will review this in 4 weeks.`;
-  
-  document.getElementById("stopClinician").textContent = clin;
-  document.getElementById("stopSMS").textContent = sms;
-  document.getElementById("taperModal").classList.remove("active");
-};
-
+// Tab Switching
 document.querySelectorAll(".tab-button").forEach(btn => {
   btn.onclick = () => {
     document.querySelectorAll(".tab").forEach(t => t.classList.add("hidden"));
@@ -363,7 +229,21 @@ document.querySelectorAll(".tab-button").forEach(btn => {
   };
 });
 
-populate();
+populateDrugs();
+
+document.getElementById("generateSwitch").onclick = () => {
+  const fDrug = document.getElementById("fromDrug").selectedOptions[0].text;
+  const tDrug = document.getElementById("toDrug").selectedOptions[0].text;
+  const fDose = document.getElementById("fromDose").value;
+  const tDose = document.getElementById("toDose").value;
+  document.getElementById("switchOutput").textContent = `Plan: Taper ${fDrug} ${fDose}mg over 1-2 weeks then start ${tDrug} ${tDose}mg.`;
+};
+
+document.getElementById("generateStop").onclick = () => {
+  const sDrug = document.getElementById("stopDrug").selectedOptions[0].text;
+  const sDose = document.getElementById("stopDose").value;
+  document.getElementById("stopOutput").textContent = `Taper Plan for ${sDrug} ${sDose}mg: Reduce dose by 25-50% every 2-4 weeks until stopped.`;
+};
 </script>
 </body>
 </html>
