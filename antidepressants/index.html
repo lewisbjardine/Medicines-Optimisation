@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<title>Switch & Stop AD - UK Primary Care</title>
+<title>Switch & Stop AD - UK Clinical Support</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <style>
 :root {
@@ -46,6 +46,7 @@ main {
   padding: 0.5rem 0.9rem;
   border-radius: 999px;
   cursor: pointer;
+  font-weight: 500;
 }
 
 .tab-button.active {
@@ -56,33 +57,36 @@ main {
 .card {
   background: var(--nhs-white);
   border-radius: 0.5rem;
-  padding: 1.2rem;
+  padding: 1.5rem;
   box-shadow: 0 2px 4px rgba(0,0,0,0.06);
   margin-bottom: 1rem;
 }
 
+/* Two-column grid for Side-by-Side layout */
 .switch-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1rem 2rem;
+  gap: 1.5rem 2.5rem;
 }
 
 .field label {
   display: block;
   font-size: 0.9rem;
-  font-weight: 600;
-  margin-bottom: 0.25rem;
+  font-weight: 700;
+  margin-bottom: 0.4rem;
+  color: var(--nhs-grey);
 }
 
 .field select {
   width: 100%;
-  padding: 0.4rem;
+  padding: 0.6rem;
   border: 1px solid #ccc;
   border-radius: 0.25rem;
+  font-size: 1rem;
 }
 
 .button-row {
-  margin-top: 1rem;
+  margin-top: 1.5rem;
   display: flex;
   gap: 0.5rem;
 }
@@ -91,19 +95,49 @@ button.primary {
   background: var(--nhs-blue);
   color: white;
   border: none;
-  padding: 0.6rem 1.1rem;
+  padding: 0.7rem 1.3rem;
   border-radius: 0.3rem;
   cursor: pointer;
+  font-weight: 600;
+}
+
+.output-label {
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--nhs-grey);
+  margin-top: 1rem;
 }
 
 .output-box {
-  padding: 0.5rem;
+  padding: 0.8rem;
   background: #fafafa;
   border: 1px solid #ddd;
-  min-height: 100px;
+  min-height: 80px;
   white-space: pre-wrap;
   font-family: monospace;
-  margin-top: 0.5rem;
+  margin-top: 0.3rem;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  display: none; 
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-overlay.active { display: flex; }
+
+.modal-content {
+  background: white;
+  padding: 2rem;
+  border-radius: 0.5rem;
+  max-width: 400px;
+  width: 90%;
 }
 
 .hidden { display: none; }
@@ -124,66 +158,83 @@ button.primary {
   <section id="switching" class="tab card">
     <div class="switch-grid">
       <div class="field">
-        <label for="fromDrug">Current Drug</label>
+        <label for="fromDrug">Current Antidepressant</label>
         <select id="fromDrug"></select>
       </div>
       <div class="field">
-        <label for="toDrug">New Drug</label>
+        <label for="toDrug">Target Antidepressant</label>
         <select id="toDrug"></select>
       </div>
       <div class="field">
-        <label for="fromDose">Current Dose (mg)</label>
+        <label for="fromDose">Current Total Daily Dose</label>
         <select id="fromDose"></select>
       </div>
       <div class="field">
-        <label for="toDose">Starting Dose (mg)</label>
+        <label for="toDose">Starting Total Daily Dose</label>
         <select id="toDose"></select>
       </div>
     </div>
     <div class="button-row">
-      <button id="generateSwitch" class="primary">Generate Plan</button>
+      <button id="generateSwitch" class="primary">Generate Switching Plan</button>
     </div>
-    <div id="switchOutput" class="output-box" style="margin-top:1rem"></div>
+    <div class="output-label">Clinician Note</div>
+    <div id="switchClinician" class="output-box"></div>
+    <div class="output-label">Patient SMS Instructions</div>
+    <div id="switchSMS" class="output-box"></div>
   </section>
 
   <section id="stopping" class="tab card hidden">
     <div class="switch-grid">
       <div class="field">
-        <label for="stopDrug">Drug to Stop</label>
+        <label for="stopDrug">Antidepressant to Stop</label>
         <select id="stopDrug"></select>
       </div>
       <div class="field">
-        <label for="stopDose">Current Dose (mg)</label>
+        <label for="stopDose">Current Total Daily Dose</label>
         <select id="stopDose"></select>
       </div>
     </div>
     <div class="button-row">
-      <button id="generateStop" class="primary">Generate Taper</button>
+      <button id="btnOpenStopModal" class="primary">Generate Tapering Plan</button>
     </div>
-    <div id="stopOutput" class="output-box" style="margin-top:1rem"></div>
+    <div class="output-label">Clinician Note</div>
+    <div id="stopClinician" class="output-box"></div>
+    <div class="output-label">Patient SMS Instructions</div>
+    <div id="stopSMS" class="output-box"></div>
   </section>
 </main>
 
+<div id="taperModal" class="modal-overlay">
+  <div class="modal-content">
+    <h3>Taper Method</h3>
+    <p>Select the preferred speed for cessation:</p>
+    <div class="button-row">
+      <button id="taperConservative" class="primary">Hyperbolic (Slow)</button>
+      <button id="taperFast" style="background:#eee; color:#333; border:1px solid #ccc; padding:0.7rem 1.3rem; border-radius:0.3rem; cursor:pointer;">Standard (2-4 weeks)</button>
+    </div>
+    <button id="taperCancel" style="margin-top:1rem; background:none; border:none; color:var(--nhs-blue); cursor:pointer; text-decoration:underline;">Cancel</button>
+  </div>
+</div>
+
 <script>
-// Complete dataset of commonly used UK antidepressants and doses
 const antidepressants = [
-  { id: "sertraline", name: "Sertraline", doses: [25, 50, 100, 150, 200] },
-  { id: "citalopram", name: "Citalopram", doses: [10, 20, 40] },
-  { id: "fluoxetine", name: "Fluoxetine", doses: [10, 20, 30, 40, 60] },
-  { id: "escitalopram", name: "Escitalopram", doses: [5, 10, 15, 20] },
-  { id: "paroxetine", name: "Paroxetine", doses: [10, 20, 30, 40, 50] },
-  { id: "venlafaxine_mr", name: "Venlafaxine MR", doses: [75, 150, 225, 300] },
-  { id: "duloxetine", name: "Duloxetine", doses: [30, 60, 90, 120] },
-  { id: "mirtazapine", name: "Mirtazapine", doses: [15, 30, 45] },
-  { id: "amitriptyline", name: "Amitriptyline", doses: [10, 25, 50, 75, 100, 150] },
-  { id: "trazodone", name: "Trazodone", doses: [50, 100, 150, 200, 300] },
-  { id: "vortioxetine", name: "Vortioxetine", doses: [5, 10, 20] },
-  { id: "lofepramine", name: "Lofepramine", doses: [70, 140, 210] }
+  { id: "sertraline", name: "Sertraline", doses: [25, 50, 100, 150, 200], freq: "OD" },
+  { id: "citalopram", name: "Citalopram", doses: [10, 20, 40], freq: "OD" },
+  { id: "fluoxetine", name: "Fluoxetine", doses: [20, 40, 60], freq: "OD" },
+  { id: "escitalopram", name: "Escitalopram", doses: [5, 10, 20], freq: "OD" },
+  { id: "paroxetine", name: "Paroxetine", doses: [10, 20, 30, 40, 50], freq: "OD" },
+  { id: "venlafaxine_ir", name: "Venlafaxine Standard Release", doses: [37.5, 75, 112.5, 150, 225], freq: "BD" },
+  { id: "venlafaxine_mr", name: "Venlafaxine Modified Release", doses: [37.5, 75, 150, 225], freq: "OD" },
+  { id: "duloxetine", name: "Duloxetine", doses: [30, 60, 90, 120], freq: "OD" },
+  { id: "mirtazapine", name: "Mirtazapine", doses: [15, 30, 45], freq: "OD" },
+  { id: "trazodone", name: "Trazodone", doses: [50, 100, 150, 300], freq: "OD" },
+  { id: "vortioxetine", name: "Vortioxetine", doses: [5, 10, 20], freq: "OD" },
+  { id: "amitriptyline", name: "Amitriptyline", doses: [10, 25, 50, 75, 100], freq: "OD" }
 ];
 
-function populateDrugs() {
-  const selects = ["fromDrug", "toDrug", "stopDrug"];
-  selects.forEach(id => {
+function populate() {
+  const ids = ["fromDrug", "toDrug", "stopDrug"];
+  ids.forEach(id => {
     const el = document.getElementById(id);
     antidepressants.forEach(d => {
       const opt = document.createElement("option");
@@ -191,26 +242,19 @@ function populateDrugs() {
       opt.textContent = d.name;
       el.appendChild(opt);
     });
-    // Fix: Add event listener to each drug selection to update its respective doses
     el.addEventListener("change", () => updateDoses(id));
   });
-  // Initial dose population
   updateDoses("fromDrug");
   updateDoses("toDrug");
   updateDoses("stopDrug");
 }
 
 function updateDoses(drugSelectId) {
-  const drug = antidepressants.find(d => d.id === document.getElementById(drugSelectId).value);
-  let targetDoseSelectId = "";
-  
-  if (drugSelectId === "fromDrug") targetDoseSelectId = "fromDose";
-  if (drugSelectId === "toDrug") targetDoseSelectId = "toDose";
-  if (drugSelectId === "stopDrug") targetDoseSelectId = "stopDose";
-  
-  const doseEl = document.getElementById(targetDoseSelectId);
+  const drugId = document.getElementById(drugSelectId).value;
+  const drug = antidepressants.find(d => d.id === drugId);
+  let targetId = drugSelectId.includes("from") ? "fromDose" : (drugSelectId.includes("to") ? "toDose" : "stopDose");
+  const doseEl = document.getElementById(targetId);
   doseEl.innerHTML = "";
-  
   drug.doses.forEach(dose => {
     const opt = document.createElement("option");
     opt.value = dose;
@@ -219,7 +263,41 @@ function updateDoses(drugSelectId) {
   });
 }
 
-// Tab Switching
+function getDosingString(drug, dose) {
+  if (drug.id === "venlafaxine_ir") {
+    const split = (dose / 2).toFixed(1);
+    return `${dose}mg total daily dose taken as ${split}mg twice daily (morning and evening). This can be made with any combination of 37.5mg or 75mg tablets.`;
+  }
+  if (drug.id === "venlafaxine_mr") {
+    return `${dose}mg once daily using any combination of available modified release strengths.`;
+  }
+  return `${dose}mg once daily.`;
+}
+
+document.getElementById("generateSwitch").onclick = () => {
+  const from = antidepressants.find(d => d.id === document.getElementById("fromDrug").value);
+  const to = antidepressants.find(d => d.id === document.getElementById("toDrug").value);
+  const fDose = document.getElementById("fromDose").value;
+  const tDose = document.getElementById("toDose").value;
+
+  const clin = `Switching ${from.name} ${fDose}mg to ${to.name} ${tDose}mg. Reduce current medication to half dose for 7 days then stop and start new medication.`;
+  const sms = `Your switching plan: Reduce your ${from.name} to ${fDose/2}mg for 7 days. After 7 days stop it and start ${to.name} at ${getDosingString(to, tDose)}`;
+  
+  document.getElementById("switchClinician").textContent = clin;
+  document.getElementById("switchSMS").textContent = sms;
+};
+
+document.getElementById("btnOpenStopModal").onclick = () => document.getElementById("taperModal").classList.add("active");
+document.getElementById("taperCancel").onclick = () => document.getElementById("taperModal").classList.remove("active");
+
+document.getElementById("taperConservative").onclick = () => {
+  const drug = antidepressants.find(d => d.id === document.getElementById("stopDrug").value);
+  const dose = document.getElementById("stopDose").value;
+  document.getElementById("stopClinician").textContent = `Conservative taper for ${drug.name} from ${dose}mg. Reduce dose by 25 percent every 2 to 4 weeks.`;
+  document.getElementById("stopSMS").textContent = `Taper plan for ${drug.name}: Reduce your current ${dose}mg dose by one quarter. We will review this in 4 weeks time.`;
+  document.getElementById("taperModal").classList.remove("active");
+};
+
 document.querySelectorAll(".tab-button").forEach(btn => {
   btn.onclick = () => {
     document.querySelectorAll(".tab").forEach(t => t.classList.add("hidden"));
@@ -229,25 +307,7 @@ document.querySelectorAll(".tab-button").forEach(btn => {
   };
 });
 
-populateDrugs();
-
-document.getElementById("generateSwitch").onclick = () => {
-  const fDrug = document.getElementById("fromDrug").selectedOptions[0].text;
-  const tDrug = document.getElementById("toDrug").selectedOptions[0].text;
-  const fDose = document.getElementById("fromDose").value;
-  const tDose = document.getElementById("toDose").value;
-  document.getElementById("switchOutput").textContent = `Plan: Taper ${fDrug} ${fDose}mg over 1-2 weeks then start ${tDrug} ${tDose}mg. Monitor for withdrawal and serotonin syndrome.`;
-};
-
-document.getElementById("generateStop").onclick = () => {
-  const sDrug = document.getElementById("stopDrug").selectedOptions[0].text;
-  const sDose = document.getElementById("stopDose").value;
-  // Generated text formatted for advice and guidance (no bullet points)
-  document.getElementById("stopOutput").textContent = `Taper Plan for ${sDrug} ${sDose}mg:
-Reduce dose by 25-50% every 2-4 weeks. 
-If withdrawal symptoms occur, remain on the current dose until they resolve before next reduction. 
-Patient to seek review if mood deteriorates or thoughts of self-harm occur.`;
-};
+populate();
 </script>
 </body>
 </html>
